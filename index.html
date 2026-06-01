@@ -145,36 +145,46 @@ body::before{
 /* ── MAIN ── */
 .main{width:100%;max-width:800px;margin:0 auto;padding:0 0 120px;box-sizing:border-box}
 .sidebar{
-  width:var(--sidebar);flex-shrink:0;
+  width:auto;flex-shrink:0;
   position:fixed;
-  top:var(--topbar);left:0;
-  height:calc(100vh - var(--topbar));
-  padding:0 14px;
-  border-right:none;
+  top:50%;left:32px;
+  transform:translateY(-50%);
+  height:auto;
+  padding:0;
+  border:none;
+  background:transparent;
   display:flex;flex-direction:column;
   align-items:flex-start;
   justify-content:center;
   pointer-events:none;
   z-index:100;
+  overflow:visible;
 }
 .sidebar::-webkit-scrollbar{display:none}
 .nav-cap{
-  border:1px solid var(--border);border-radius:20px;
-  padding:6px;
-  background:#FDFCFA;
-  box-shadow:0 1px 4px rgba(27,26,24,.05);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:12px 8px;
+  background:#FFFFFF;
+  box-shadow:0 2px 12px rgba(27,26,24,.1),0 0 0 1px rgba(27,26,24,.05);
   pointer-events:all;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  width:auto;
 }
 /* push page content right to account for fixed sidebar */
 .nav-item{
   display:flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:14px;
+  padding:10px 14px;
+  border-radius:12px;
   cursor:pointer;text-decoration:none;
-  transition:background .2s var(--ease),box-shadow .2s var(--ease);
+  transition:background .2s var(--ease),color .2s var(--ease);
 }
-.nav-item:first-child{border-radius:13px 13px 10px 10px}
-.nav-item:last-child{border-radius:10px 10px 13px 13px}
-.nav-item:hover{background:var(--accent-l)}
+.nav-item:first-child{border-radius:12px}
+.nav-item:last-child{border-radius:12px}
+.nav-item.on{border-radius:12px}
+.nav-item:hover{background:var(--accent-l);border-radius:12px}
 .nav-item.on{background:var(--accent-l)}
 /* nav icon */
 .nav-icon{
@@ -477,7 +487,7 @@ body::before{
     align-items:center;justify-content:center;
     gap:4px;
     padding:4px 6px;
-    border-radius:8px;
+    border-radius:16px;
     text-align:center;
   }
   .nav-icon{
@@ -632,7 +642,7 @@ body::before{
   left:0;
   background:#1B1A18;
   color:#F6F4F1;
-  border-radius:8px;
+  border-radius:16px;
   padding:8px 12px;
   white-space:nowrap;
   pointer-events:none;
@@ -759,7 +769,7 @@ body::before{
 .about-outside-section{margin-top:32px;padding-top:24px;border-top:1px solid var(--border)}
 .about-outside-label{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
 .about-outside-thumbs{display:flex;align-items:center;height:72px}
-.about-outside-thumb{width:88px;height:64px;flex-shrink:0;border-radius:8px;overflow:hidden;cursor:pointer;border:1px solid var(--border);position:relative;margin-left:-74px;transition:margin-left .45s cubic-bezier(.4,0,.2,1),transform .45s cubic-bezier(.4,0,.2,1)}
+.about-outside-thumb{width:88px;height:64px;flex-shrink:0;border-radius:16px;overflow:hidden;cursor:pointer;border:1px solid var(--border);position:relative;margin-left:-74px;transition:margin-left .45s cubic-bezier(.4,0,.2,1),transform .45s cubic-bezier(.4,0,.2,1)}
 .about-outside-thumb:first-child{margin-left:0;z-index:5}
 .about-outside-thumb:nth-child(2){z-index:4;transform:rotate(-2.5deg)}
 .about-outside-thumb:nth-child(3){z-index:3;transform:rotate(1.5deg)}
@@ -831,7 +841,7 @@ body::before{
 .snip-insight{font-size:13px;font-style:italic;color:var(--text-s);line-height:1.75;border-left:2px solid var(--accent);padding-left:12px;margin-bottom:16px}
 /* image grid */
 .snip-img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.snip-img-grid img{width:100%;height:200px;object-fit:cover;border-radius:8px;border:1px solid var(--border);display:block;cursor:zoom-in;transition:opacity .15s var(--ease)}
+.snip-img-grid img{width:100%;height:200px;object-fit:cover;border-radius:16px;border:1px solid var(--border);display:block;cursor:zoom-in;transition:opacity .15s var(--ease)}
 .snip-img-grid img:hover{opacity:.88}
 .lb-overlay.lb-single .lb-prev,.lb-overlay.lb-single .lb-next{display:none}
 /* link */
@@ -864,7 +874,7 @@ body::before{
 .cred-row-link:hover{background:var(--bg-alt)}
 .cred-row-link:hover .cred-row-title{color:var(--text)}
 .cred-row-link:hover .cred-row-arrow{color:var(--accent-d)}
-.cred-row-year{font-size:13px;color:var(--text-m);flex-shrink:0;width:40px}
+.cred-row-year{font-size:13px;color:var(--text-m);flex-shrink:0;width:60px}
 .cred-row-title{font-size:13px;color:var(--text-s);flex:1;transition:color .8s ease}
 .cred-row-arrow{font-size:13px;color:var(--text-m);flex-shrink:0;transition:color .8s ease}
 
@@ -888,7 +898,7 @@ body::before{
 /* ── HERO CTA ── */
 .hero-cta{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
 .hero-cta-primary{
-  padding:12px 24px;border-radius:8px;
+  padding:12px 24px;border-radius:16px;
   background:var(--accent-d);color:#fff;
   border:none;cursor:pointer;
   font-size:13px;font-weight:500;letter-spacing:.02em;
@@ -896,7 +906,7 @@ body::before{
 }
 .hero-cta-primary:hover{background:var(--accent-h);transform:translateY(-1px)}
 .hero-cta-secondary{
-  padding:12px 24px;border-radius:8px;
+  padding:12px 24px;border-radius:16px;
   background:transparent;color:var(--text);
   border:1px solid var(--border);cursor:pointer;
   font-size:13px;font-weight:400;letter-spacing:.02em;
@@ -1099,7 +1109,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
       <h1 class="hero-h" id="heroH" aria-label="I help people feel safe in systems they don't trust yet.">
         <span class="w">I </span><span class="w">help </span><span class="w">people </span><span class="w">feel </span><span class="w">safe </span><span class="w">in </span><span class="w">systems </span><span class="w">they </span><span class="w">don't </span><span class="w">trust </span><span class="w">yet.</span>
       </h1>
-      <p class="sub">I design for human error and the moments systems forget people exist. Psychological depth, behavioral systems — and I also build it.</p>
+      <p class="sub">I design the behavior and systems layer — for the moments products forget people exist, and for the problems nobody has named yet. From research to prototype.</p>
       <button class="scroll-cue" onclick="smoothScrollTo('work')" aria-label="Scroll to case studies">
         <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg>
       </button>
@@ -1116,22 +1126,22 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
 
         <a onclick="event.preventDefault();smoothScrollTo('cs0',80)" href="#cs0" style="display:flex;align-items:center;gap:6px;text-decoration:none;transition:opacity .15s" onmouseenter="this.style.opacity='.5'" onmouseleave="this.style.opacity='1'">
           <span style="font-size:12px;color:var(--text-m);font-variant-numeric:tabular-nums">01</span>
-          <span style="font-size:13px;color:var(--text);white-space:nowrap">Tribe</span>
+          <span style="font-size:13px;color:var(--text);white-space:nowrap">Human-First NLP</span>
         </a>
         <span style="color:var(--text-m);font-size:13px;flex-shrink:0">→</span>
         <a onclick="event.preventDefault();smoothScrollTo('cs1',80)" href="#cs1" style="display:flex;align-items:center;gap:6px;text-decoration:none;transition:opacity .15s" onmouseenter="this.style.opacity='.5'" onmouseleave="this.style.opacity='1'">
           <span style="font-size:12px;color:var(--text-m);font-variant-numeric:tabular-nums">02</span>
-          <span style="font-size:13px;color:var(--text);white-space:nowrap">Ethical guardrail</span>
+          <span style="font-size:13px;color:var(--text);white-space:nowrap">Multi-Modal Feedback</span>
         </a>
         <span style="color:var(--text-m);font-size:13px;flex-shrink:0">→</span>
         <a onclick="event.preventDefault();smoothScrollTo('cs2',80)" href="#cs2" style="display:flex;align-items:center;gap:6px;text-decoration:none;transition:opacity .15s" onmouseenter="this.style.opacity='.5'" onmouseleave="this.style.opacity='1'">
           <span style="font-size:12px;color:var(--text-m);font-variant-numeric:tabular-nums">03</span>
-          <span style="font-size:13px;color:var(--text);white-space:nowrap">Anxiety dashboard</span>
+          <span style="font-size:13px;color:var(--text);white-space:nowrap">Career Anxiety Research</span>
         </a>
         <span style="color:var(--text-m);font-size:13px;flex-shrink:0">→</span>
         <a onclick="event.preventDefault();smoothScrollTo('cs3',80)" href="#cs3" style="display:flex;align-items:center;gap:6px;text-decoration:none;transition:opacity .15s" onmouseenter="this.style.opacity='.5'" onmouseleave="this.style.opacity='1'">
           <span style="font-size:12px;color:var(--text-m);font-variant-numeric:tabular-nums">04</span>
-          <span style="font-size:12px;color:var(--text);white-space:nowrap">Artboard as therapy</span>
+          <span style="font-size:12px;color:var(--text);white-space:nowrap">Therapy on Artboard</span>
         </a>
 
       </div>
@@ -1353,7 +1363,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
           </div>
           <div class="snip-expand" id="se1"><div class="snip-expand-inner">
             <p class="snip-insight">No prior users. Wireframed entry flow, dashboard architecture, and deep business analytics from first principles — cognitive load, trust, orientation under uncertainty.</p>
-            <iframe style="border:1px solid rgba(27,26,24,.1);border-radius:8px;display:block" width="100%" height="420" src="https://embed.figma.com/design/n4DM2W93BK7IbBhUS6SfbC/Business-Registration?node-id=1-998&embed-host=share" allowfullscreen loading="lazy"></iframe>
+            <iframe style="border:1px solid rgba(27,26,24,.1);border-radius:16px;display:block" width="100%" height="420" src="https://embed.figma.com/design/n4DM2W93BK7IbBhUS6SfbC/Business-Registration?node-id=1-998&embed-host=share" allowfullscreen loading="lazy"></iframe>
           </div></div>
 
           <!-- Row 3 — Nonprofit -->
@@ -1367,7 +1377,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
           </div>
           <div class="snip-expand" id="se2"><div class="snip-expand-inner">
             <p class="snip-insight">Making legal frameworks and public grants approachable for the families who need them the most — but get lost before they ever reach the application.</p>
-            <img src="workcard3_thumbnail.png" alt="Családjainkért website preview" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin-bottom:14px;cursor:zoom-in" onclick="openImg(this.src)">
+            <img src="workcard3_thumbnail.png" alt="Családjainkért website preview" style="width:100%;border-radius:16px;border:1px solid var(--border);display:block;margin-bottom:14px;cursor:zoom-in" onclick="openImg(this.src)">
             <a class="snip-link" href="https://csaladjainkertalapitvany.hu/" target="_blank" rel="noopener">Visit live site ↗</a>
           </div></div>
 
@@ -1430,19 +1440,19 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
         <a href="https://www.coursera.org/account/accomplishments/specialization/LL9M9F51S9EU" target="_blank" class="cred-row-link">
           <span class="cred-row-year">2025</span>
           <span class="cred-row-title">Google UX Design — Professional Certificate · Google</span>
-          <span class="cred-row-arrow">↗</span>
+          <span class="cred-row-arrow">View ↗</span>
         </a>
 
         <a href="https://www.coursera.org/account/accomplishments/verify/MQX255JM40YY" target="_blank" class="cred-row-link">
           <span class="cred-row-year">2025</span>
           <span class="cred-row-title">AI, Empathy and Ethics — Certificate · University of California Santa Cruz</span>
-          <span class="cred-row-arrow">↗</span>
+          <span class="cred-row-arrow">View ↗</span>
         </a>
 
         <a href="https://www.udemy.com/certificate/UC-5c5e00c5-566d-4837-bdaf-42e0b7f47db4/" target="_blank" class="cred-row-link">
           <span class="cred-row-year">2025</span>
           <span class="cred-row-title">KPIs for User Experience: Measuring Success in Design — Certificate · Udemy</span>
-          <span class="cred-row-arrow">↗</span>
+          <span class="cred-row-arrow">View ↗</span>
         </a>
 
         <div class="cred-row-link" style="cursor:default">
@@ -1469,20 +1479,31 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
 
           <div class="about-tabs">
             <button class="about-tab on" onclick="aboutTab(0)">Who I am</button>
-            <button class="about-tab" onclick="aboutTab(1)">How I think</button>
-            <button class="about-tab" onclick="aboutTab(2)">What drives me</button>
+            <button class="about-tab" onclick="aboutTab(1)">My focus</button>
+            <button class="about-tab" onclick="aboutTab(2)">Working with me</button>
+            <button class="about-tab" onclick="aboutTab(3)">What I believe</button>
           </div>
 
           <div class="about-panel on" id="ap0">
-            <p class="about-panel-text">Product designer from Szombathely, Hungary. Six years across visual design, motion, and product — always drawn to the friction between humans and complex systems.</p>
+            <p class="about-panel-text">I design for the human nervous system. My background runs through graphic design, live broadcasting, and spatial motion in AR/VR — environments where cognitive load is real, timing is everything, and there's no room for error.</p>
+            <p class="about-panel-text">Somewhere in the middle of that, I spent years moving through Borneo, Australia, and across Asia — living alongside indigenous communities where the relationship between people and their environment was immediate and unfiltered. That became my first education in human factors.</p>
+            <p class="about-panel-text">I'm based in Szombathely, Hungary, and I bring all of it into product design.</p>
           </div>
 
           <div class="about-panel" id="ap1">
-            <p class="about-panel-text">How people read systems, where trust breaks, what attention costs — that's where my work starts. Years backpacking across Australia and Asia — deserts, rainforests, indigenous communities — taught me that environment and behaviour can't be separated. That curiosity became a practice: cognitive science, human factors, the specific problem of why complex systems lose people at the wrong moment.</p>
+            <p class="about-panel-text">Trust, attention, timing. The moments that decide whether someone feels safe enough to keep going — or quietly closes the tab. I'm drawn to the invisible layers of the problem, the friction nobody has named yet.</p>
           </div>
 
           <div class="about-panel" id="ap2">
-            <p class="about-panel-text">I work best where research comes before wireframes and nobody's afraid of the question that changes the direction. I'm a bad fit for speed over understanding, ethics as a checkbox, complexity treated as a feature.</p>
+            <p class="about-panel-text">I go deep before I go wide. I need to understand how a problem behaves in the real world before I start shaping a solution.</p>
+            <p class="about-panel-text">I find honest collaboration easier than polite collaboration. Not blunt — just direct.</p>
+            <p class="about-panel-text">If I go quiet in a meeting, I'm not disengaged. I'm mapping the logic in my head, finding where it breaks.</p>
+          </div>
+
+          <div class="about-panel" id="ap3">
+            <p class="about-panel-text">When I lived in remote villages across Australia and Asia, I watched how people built their tools. Nobody designed for a perfect scenario — they designed for the actual mud, heat, and exhaustion they dealt with every day.</p>
+            <p class="about-panel-text">Software should do the same. When someone struggles with an app, they're not stupid. The interface was just built for someone sitting at a quiet desk — not someone on a slow connection, in a noisy room, on a hard day.</p>
+            <p class="about-panel-text">I believe every design decision revolves around this reality. At least this is what I design for.</p>
           </div>
 
 
@@ -1502,11 +1523,11 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
       <div class="about-outside-section">
         <p class="about-outside-label">Outside work</p>
         <div class="about-outside-thumbs">
-          <div class="about-outside-thumb" onclick="openLb(0)"><img src="public/about_me_ducks.jpg" alt=""></div>
-          <div class="about-outside-thumb" onclick="openLb(1)"><img src="public/about_me_ha_giang_lookout.jpg" alt="Ha Giang lookout"></div>
-          <div class="about-outside-thumb" onclick="openLb(2)"><img src="public/about_me_image_2.PNG" alt=""></div>
-          <div class="about-outside-thumb" onclick="openLb(3)"><img src="public/about_me_image_3.PNG" alt=""></div>
-          <div class="about-outside-thumb" onclick="openLb(4)"><img src="public/about_me_terrain.jpeg" alt=""></div>
+          <div class="about-outside-thumb" onclick="openLb(0)"><img src="about_me_ducks.jpg" alt=""></div>
+          <div class="about-outside-thumb" onclick="openLb(1)"><img src="about_me_ha_giang_lookout.jpg" alt="Ha Giang lookout"></div>
+          <div class="about-outside-thumb" onclick="openLb(2)"><img src="about_me_image_2.png" alt=""></div>
+          <div class="about-outside-thumb" onclick="openLb(3)"><img src="about_me_image_3.png" alt=""></div>
+          <div class="about-outside-thumb" onclick="openLb(4)"><img src="about_me_terrain.jpeg" alt=""></div>
         </div>
       </div>
 
@@ -1620,16 +1641,19 @@ $$('.sec-card').forEach(s=>revObs.observe(s));
 const navItems=$$('.nav-item[data-s]');
 const sections=['hello','work','lens','about'];
 function setNav(id){navItems.forEach(n=>n.classList.toggle('on',n.dataset.s===id))}
-const _navActive=new Set();
-const navObs=new IntersectionObserver(entries=>{
-  entries.forEach(en=>{
-    if(en.isIntersecting)_navActive.add(en.target.id);
-    else _navActive.delete(en.target.id);
+window.addEventListener('scroll',()=>{
+  // Find which section is closest to viewport top
+  let closestId=null;
+  let closestDistance=Infinity;
+  sections.forEach(id=>{
+    const el=$(id);
+    if(!el)return;
+    const rect=el.getBoundingClientRect();
+    const distance=Math.abs(rect.top);
+    if(distance<closestDistance){closestDistance=distance;closestId=id;}
   });
-  const top=sections.find(id=>_navActive.has(id));
-  if(top)setNav(top);
-},{threshold:0,rootMargin:'-8% 0px -60% 0px'});
-sections.forEach(id=>{const el=$(id);if(el)navObs.observe(el)});
+  if(closestId)setNav(closestId);
+},{passive:true});
 function smoothScrollTo(id,off){
   const el=document.getElementById(id);if(!el)return;
   const top=el.getBoundingClientRect().top+window.scrollY-(off===undefined?64:off);
