@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tribe — Intent-Based Human Search · Orsolya G.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F1ED;--bg-alt:#EBE7E1;--bg-deep:#E2DDD6;
+  --bg-white:#FFFFFF;--bg-lifted:#FDFCFA;
+  --text:#1B1A18;--text-s:#5A5856;--text-c:#6D6A67;--text-m:#6E6B68;
+  --accent:#6B5F9E;--accent-l:#F2F0FA;--accent-d:#4A3F7A;--accent-h:#5C519A;
+  --border:rgba(27,26,24,.11);--border-a:#B0A8CC;
+  --ease:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);
+  --dur:200ms;--reveal:500ms;
+  --sidebar:238px;--topbar:64px;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
+body::before{content:'';position:fixed;inset:0;background-image:var(--grain);background-repeat:repeat;background-size:300px 300px;pointer-events:none;z-index:9998;opacity:1;mix-blend-mode:multiply}
+:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radius:4px}
+.skip{position:fixed;top:-100px;left:8px;background:var(--accent-d);color:#fff;padding:8px 16px;border-radius:0 0 8px 8px;font-size:14px;font-weight:500;text-decoration:none;z-index:9999;transition:top .2s}
+.skip:focus{top:0}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:300;background:rgba(244,241,237,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.back-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;border:1px solid var(--border);font-family:inherit;font-size:14px;font-weight:500;color:var(--text-c);cursor:pointer;background:transparent;text-decoration:none;transition:background var(--dur),color var(--dur)}
+.back-btn:hover{background:var(--bg-alt);color:var(--text)}
+
+/* LOGO */
+.logo{color:var(--text);text-decoration:none;display:flex;align-items:center;transition:opacity var(--dur)}
+.logo:hover{opacity:.6}
+.topbar-right{display:flex;align-items:center;gap:10px}
+
+/* BUTTONS — matching index */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:16px;border:1px solid;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;background:transparent;transition:background .3s var(--ease),color .2s,border-color .2s;text-decoration:none;white-space:nowrap}
+.btn-resume{color:var(--text-c);border-color:var(--border);background:#FFFFFF}
+.btn-resume:hover{color:var(--text);border-color:var(--accent);background:var(--accent-l)}
+.btn-email{color:#FFFFFF;border-color:var(--accent);background:var(--accent)}
+.btn-email:hover{background:var(--accent-h);border-color:var(--accent-h)}
+.btn-icon{flex-shrink:0;opacity:.8;transition:opacity .2s}
+.btn:hover .btn-icon{opacity:1}
+.btn-label{white-space:nowrap}
+
+/* BACK BUTTON in sidebar */
+.back-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:16px;border:1px solid var(--border);font-family:inherit;font-size:14px;font-weight:500;color:var(--text-c);cursor:pointer;background:transparent;text-decoration:none;transition:background var(--dur),color var(--dur)}
+.back-btn:hover{background:var(--bg-alt);color:var(--text)}
+
+/* A11Y BUTTON + PANEL */
+.btn-a11y{width:40px;height:40px;padding:0;justify-content:center;border-color:var(--border-a);color:var(--text-c);border-radius:14px;background:var(--bg-lifted);box-shadow:0 2px 12px rgba(27,26,24,.08),0 0 0 1px rgba(27,26,24,.04);transition:background var(--dur),color var(--dur),border-color var(--dur)}
+.btn-a11y:hover,.btn-a11y.open{border-color:var(--accent);color:var(--accent-d);background:var(--accent-l)}
+.a11y-panel{position:absolute;bottom:calc(100% + 8px);right:0;width:220px;background:#FFFFFF;border:1px solid rgba(27,26,24,.08);border-radius:12px;padding:14px;box-shadow:0 8px 28px rgba(27,26,24,.1);z-index:500;display:none}
+.a11y-panel.open{display:block;animation:panelDown .2s var(--ease) both}
+@keyframes panelDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.a11y-title{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text-c);margin-bottom:12px}
+.a11y-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.a11y-row:last-of-type{margin-bottom:0}
+.a11y-lbl{font-size:14px;color:var(--text-s)}
+.a11y-toggle{width:36px;height:20px;border-radius:10px;border:1px solid var(--border);background:var(--bg-alt);cursor:pointer;position:relative;transition:background .2s,border-color .2s}
+.a11y-toggle.on{background:var(--accent);border-color:var(--accent-h)}
+.a11y-dot{width:14px;height:14px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s var(--spring)}
+.a11y-toggle.on .a11y-dot{transform:translateX(16px)}
+.a11y-note{font-size:14px;color:var(--text-m);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);line-height:1.5}
+
+/* Hide CTAs on small mobile */
+@media(max-width:520px){.btn-resume,.btn-email{display:none}}
+
+/* LAYOUT */
+.cs-page{padding-top:var(--topbar);min-height:100vh}
+.cs-inner{display:block;padding-left:var(--sidebar);padding-right:40px;box-sizing:border-box}
+
+/* SIDEBAR — fixed to left edge of viewport */
+.cs-sidebar{position:fixed;left:0;top:var(--topbar);width:var(--sidebar);height:calc(100vh - var(--topbar));overflow-y:auto;overflow-x:hidden;padding:40px 24px 24px 32px;background:var(--bg);z-index:100;min-width:0;scrollbar-width:thin;scrollbar-color:var(--border) transparent;display:flex;flex-direction:column}
+.cs-sidebar::-webkit-scrollbar{width:3px}
+.cs-sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+/* Next case study — pushed to sidebar bottom via flex */
+.cs-next-case{margin-top:auto;text-decoration:none;display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg-lifted);transition:background var(--dur),border-color var(--dur)}
+.cs-next-case:hover{background:var(--bg-alt);border-color:var(--border-a)}
+.cs-next-case-label{font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-c)}
+.cs-next-case-title{font-size:14px;font-weight:500;color:var(--text);line-height:1.3}
+.cs-next-case-arrow{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.cs-next-case-arrow span{font-size:14px;color:var(--accent-d)}
+.cs-nav{display:flex;flex-direction:column;gap:2px}
+.cs-nav-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);margin-bottom:10px;padding-left:10px}
+.cs-nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;text-decoration:none;font-size:14px;color:var(--text-c);transition:background var(--dur),color var(--dur);position:relative}
+.cs-nav-item:hover{background:var(--bg-alt);color:var(--text)}
+.cs-nav-item.active{color:var(--accent-d);font-weight:500}
+.cs-nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:2px;height:14px;background:var(--accent-d);border-radius:2px}
+.cs-meta-block{padding-left:10px;margin-top:48px}
+.cs-meta-row{display:flex;gap:6px;margin-bottom:5px;align-items:baseline}
+.cs-meta-k{font-size:14px;color:var(--text-c);width:52px;flex-shrink:0}
+.cs-meta-v{font-size:14px;color:var(--text);font-weight:500}
+.cs-progress-bar{height:2px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:16px}
+.cs-progress-fill{height:100%;background:var(--accent-d);width:0%;transition:width .1s linear;border-radius:2px}
+/* MAIN — matches index.html .main */
+.cs-main{width:100%;max-width:800px;margin:0 auto 0 max(0px,calc((100% - 800px)/2 - 38px));padding:clamp(56px,10vh,96px) 0 120px;min-width:0;overflow-x:hidden}
+
+/* HEADER */
+.cs-eyebrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.cs-pill{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:var(--accent-l);color:var(--accent-d);border:1px solid var(--border-a)}
+.cs-pill-mvp{background:#EDF2FA;color:#3A5085;border-color:#A8BDDE}
+.cs-title{font-size:clamp(24px,3.2vw,40px);font-weight:300;line-height:1.04;letter-spacing:-.032em;color:var(--text);margin-bottom:20px}
+.cs-title em{font-style:italic}
+.cs-hook{font-size:17px;font-style:italic;color:var(--accent-d);line-height:1.7;font-family:inherit;margin-bottom:80px;padding-left:18px;border-left:2px solid var(--accent-d);max-width:540px}
+
+/* SECTIONS */
+.cs-section{padding:80px 0;border-top:1px solid var(--border);opacity:0;transform:translateY(12px);transition:opacity 440ms var(--ease),transform 440ms var(--ease);scroll-margin-top:72px}
+.cs-section:first-of-type{border-top:none;padding-top:0;padding-bottom:80px}
+.cs-section.visible{opacity:1;transform:translateY(0)}
+
+/* SECTION HEADER — the skimmable layer */
+.cs-section-top{display:block;margin-bottom:0}
+.cs-section-eyebrow{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--text-c);margin-bottom:10px;display:block;opacity:1}
+.cs-section-heading{font-size:clamp(24px,2.8vw,34px);font-weight:300;color:var(--text);line-height:1.15;letter-spacing:-.02em}
+.cs-section-heading em{font-style:italic}
+.cs-section-summary{font-size:15px;font-weight:400;color:var(--text-s);line-height:1.65;margin-top:14px;max-width:540px}
+
+/* SECTION BODY — behind the expand */
+.cs-section-body{display:block}
+.cs-section-body-inner{padding-top:56px}
+
+/* TEXT */
+.cs-body{font-size:14px;color:var(--text-s);line-height:1.8;max-width:560px}
+.cs-body p{margin-bottom:22px}
+.cs-body p:last-child{margin-bottom:0}
+
+/* ILLUSTRATIONS — SVG inline blocks */
+.cs-illus{margin:48px 0;overflow:hidden}
+.cs-illus svg{width:100%;height:auto;display:block}
+
+/* PHONE ROW (legacy — kept for fallback) */
+.cs-phone-strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;margin:48px 0;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.cs-phone-strip::-webkit-scrollbar{height:3px}
+.cs-phone-strip::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.cs-phone{flex:0 0 auto;width:130px;border-radius:10px;border:1px solid var(--border);overflow:hidden;background:#FFFFFF}
+.cs-phone img{width:100%;height:auto;display:block}
+.cs-phone-cap{font-size:14px;color:var(--text-c);padding:7px 10px;border-top:1px solid var(--border);line-height:1.4}
+
+/* CHIP VALIDATION CAROUSEL */
+.cs-carousel{margin:0 0 64px;border-radius:14px;border:1px solid var(--border);overflow:hidden}
+.cs-car-top{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--bg-alt);border-bottom:1px solid var(--border)}
+.cs-car-label{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-d)}
+.cs-car-nav{display:flex;align-items:center;gap:8px}
+.cs-car-count{font-size:12px;color:var(--text-c);font-variant-numeric:tabular-nums;min-width:36px;text-align:center}
+.cs-car-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--bg-lifted);color:var(--text-c);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s,color .15s;padding:0;flex-shrink:0}
+.cs-car-btn:hover:not(:disabled){background:#fff;border-color:var(--accent);color:var(--accent-d)}
+.cs-car-btn:disabled{opacity:.25;cursor:default;pointer-events:none}
+.cs-car-stage{position:relative;display:flex;align-items:center;justify-content:center;padding:0;background:#F8F7F5}
+.cs-car-window{overflow:hidden;flex-shrink:0;height:620px}
+.cs-car-window img{display:block;height:620px;width:auto;max-width:none;transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.cs-car-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,opacity .15s;padding:0;flex-shrink:0;box-shadow:0 2px 12px rgba(27,26,24,.18)}
+.cs-car-btn:hover:not(:disabled){background:#fff}
+.cs-car-btn:disabled{opacity:0;pointer-events:none}
+#carPrev{left:12px}
+#carNext{right:12px}
+.cs-car-bottom{padding:14px 20px 16px;background:var(--bg-alt);border-top:1px solid var(--border)}
+.cs-car-desc{font-size:13px;color:var(--text-s);line-height:1.55}
+.cs-car-dots{display:flex;gap:5px;margin-top:10px}
+.cs-car-dot{width:6px;height:6px;border-radius:50%;background:var(--border-a);border:none;padding:0;cursor:pointer;transition:background .2s,transform .2s}
+.cs-car-dot.active{background:var(--accent);transform:scale(1.4)}
+@media(max-width:640px){.cs-car-window{height:400px}.cs-car-window img{height:400px}}
+
+/* TRANSFER QUOTE — stakeholder / team feedback */
+.cs-transfer-quote{font-size:17px;font-style:italic;color:var(--text);line-height:1.7;padding:24px 24px 24px 20px;border-left:3px solid var(--accent-d);background:var(--bg-alt);border-radius:0 8px 8px 0;margin:56px 0;max-width:560px}
+.cs-transfer-quote-attr{display:block;font-size:13px;font-style:normal;color:var(--text-c);margin-top:10px;font-weight:500}
+.cs-transfer-quote--closing{font-size:24px;font-weight:300;font-style:italic;color:var(--accent-d);line-height:1.6;text-align:center;max-width:640px;margin:80px auto 64px auto;padding:48px 0 0 0;background:none;border:none;border-radius:0}
+.cs-transfer-quote--closing .cs-transfer-quote-attr{font-size:13px;font-style:normal;color:var(--text-c);font-weight:500;margin-top:16px;text-align:center;display:block}
+.cs-transfer-quote--closing + .cs-transfer-quote--closing{margin-top:0;padding-top:0}
+
+/* GEN STRIP — 3-up with caption below */
+.cs-gen-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px;margin-bottom:48px}
+.cs-gen-phone{border-radius:10px;overflow:hidden;background:transparent}
+.cs-gen-phone img{width:100%;height:auto;display:block;border-radius:10px}
+.cs-gen-cap{padding:10px 4px 0}
+.cs-gen-tag{display:inline-block;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-bottom:5px}
+.dead{background:#F5DFDF;color:#8B2020;border:1px solid #E0B8B8}
+.live{background:#EAF3DE;color:#3B6D11;border:1px solid #A8C880}
+.cs-gen-label{font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px}
+.cs-gen-note{font-size:14px;color:var(--text-c);line-height:1.5}
+
+/* ANNO PAIR */
+.cs-anno-pair{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:32px;margin-bottom:48px;align-items:start}
+.cs-anno-wrap{border-radius:10px;border:1px solid var(--border);overflow:hidden;background:#FFFFFF}
+.cs-anno-wrap img{width:100%;height:auto;display:block}
+.cs-anno-cap{padding:10px 12px;border-top:1px solid var(--border);font-size:14px;color:var(--text-c);line-height:1.5}
+.cs-anno-cap strong{display:block;font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px}
+
+/* DECISION LIST — icon + one liner */
+.cs-decisions{display:flex;flex-direction:column;gap:0;margin-top:32px;margin-bottom:48px}
+.cs-decision{display:grid;grid-template-columns:32px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);background:transparent;cursor:pointer;transition:opacity var(--dur)}
+.cs-decision:last-child{border-bottom:none}
+.cs-decision:hover{opacity:.65}
+.cs-decision-icon{width:28px;height:28px;border-radius:6px;background:var(--accent-l);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cs-decision-text{font-size:14px;color:var(--text);font-weight:500;line-height:1.3}
+.cs-decision-why{font-size:14px;color:var(--text-c);margin-top:2px;line-height:1.4}
+.cs-decision-expand{font-size:14px;color:var(--accent-d);transition:transform 300ms var(--ease);flex-shrink:0}
+.cs-decision.open .cs-decision-expand{transform:rotate(180deg)}
+.cs-decision-detail{max-height:0;overflow:hidden;transition:max-height 400ms var(--ease);background:var(--bg-alt)}
+.cs-decision-detail.open{max-height:200px}
+.cs-decision-detail-inner{padding:12px 16px 14px 62px;font-size:14px;color:var(--text-c);line-height:1.7;border-top:1px solid var(--border)}
+
+/* DEAD BOX */
+.cs-dead{border-top:1px solid var(--border);margin-top:32px;margin-bottom:48px}
+.cs-dead-head{display:grid;grid-template-columns:1fr 1fr;background:transparent;border-bottom:1px solid var(--border);padding-top:12px}
+.cs-dead-col{padding:0 0 8px;font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-c)}
+.cs-dead-col:first-child{padding-right:20px}
+.cs-dead-row{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.cs-dead-row:last-child{border-bottom:none}
+.cs-dead-cell{padding:14px 0;font-size:14px;line-height:1.6}
+.cs-dead-cell:first-child{color:var(--text);font-weight:500;padding-right:20px}
+.cs-dead-cell:last-child{color:var(--text-c)}
+.cs-dead-cell code{font-family:ui-monospace,monospace;font-size:14px;background:#F0EEE8;padding:1px 4px;border-radius:3px}
+
+/* FIGHT BLOCK */
+.cs-fight{border-left:2px solid #3B6D11;background:#EAF3DE;border-radius:0 8px 8px 0;padding:18px 22px;margin:40px 0}
+.cs-fight-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#3B6D11;margin-bottom:5px}
+.cs-fight-text{font-size:14px;color:var(--text-s);line-height:1.7}
+.cs-fight-text em{font-style:italic;color:#3B6D11}
+
+/* LENS */
+.cs-lens{border-left:2px solid var(--accent-d);background:var(--accent-l);border-radius:0 8px 8px 0;padding:18px 22px;margin:40px 0}
+.cs-lens-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-d);margin-bottom:5px}
+.cs-lens-text{font-size:14px;color:var(--text-s);line-height:1.7;font-style:italic}
+
+/* STAT ROW */
+.cs-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:24px 0}
+.cs-stat{padding:10px 0;text-align:center;border-bottom:1px solid var(--border)}
+.cs-stat-n{font-size:24px;font-weight:300;letter-spacing:-.02em;color:var(--text)}
+.cs-stat-l{font-size:14px;color:var(--text-c);margin-top:3px;line-height:1.3}
+
+/* OUTCOME 2x2 */
+.cs-outcome{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:48px 0}
+.cs-oc{border:1px solid var(--border);border-radius:10px;padding:14px 16px;background:var(--bg-lifted)}
+.cs-oc-t{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
+.cs-oc-b{font-size:14px;color:var(--text-c);line-height:1.6}
+
+/* TRANSFER */
+
+/* NEXT */
+.cs-next{margin-top:80px;padding-top:40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.cs-next-label{font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-c);margin-bottom:5px}
+.cs-next-link{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-size:14px;transition:color var(--dur)}
+.cs-next-link:hover{color:var(--accent-d)}
+.cs-next-arrow{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:background var(--dur),border-color var(--dur),color var(--dur)}
+.cs-next-link:hover .cs-next-arrow{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  :root{--sidebar:198px}
+  .cs-inner{padding-left:var(--sidebar);padding-right:24px}
+  .cs-sidebar{padding:32px 16px 32px 20px}
+  .cs-main{padding:48px 0 80px;margin:0 auto}
+}
+@media(max-width:768px){
+  :root{--sidebar:0px}
+  .cs-inner{padding:0 20px}
+  .cs-sidebar{position:static;width:100%;height:auto;padding:16px 0 12px}
+  .cs-nav{flex-direction:row;flex-wrap:wrap;gap:4px}
+  .cs-nav-label{display:none}
+  .cs-meta-block{display:none}
+  .cs-progress-bar{display:none}
+  .cs-next-case{display:none}
+  .cs-main{max-width:100%;padding:20px 0 80px}
+  .cs-gen-strip{grid-template-columns:1fr 1fr}
+  .cs-anno-pair,.cs-outcome{grid-template-columns:1fr}
+  .cs-anno-pair[style]{grid-template-columns:1fr !important}
+  .cs-dead-head,.cs-dead-row{grid-template-columns:1fr}
+  .cs-dead-col:first-child,.cs-dead-cell:first-child{border-right:none;border-bottom:1px solid var(--border)}
+  .cs-stats{grid-template-columns:1fr 1fr}
+  .cs-next{flex-direction:column;align-items:flex-start;gap:12px}
+  .topbar{padding:0 16px}
+}
+@media(max-width:480px){
+  .cs-inner{padding:0 16px}
+  .cs-gen-strip{grid-template-columns:1fr}
+  .cs-stats{grid-template-columns:1fr 1fr}
+  .cs-title{font-size:clamp(26px,8vw,36px)}
+  .cs-section-heading{font-size:clamp(20px,5.5vw,26px)}
+  .cs-phone{width:100px}
+  .cs-body,.cs-section-summary,.cs-fight-text,.cs-lens-text{word-break:break-word;overflow-wrap:break-word}
+}
+@media(prefers-reduced-motion:reduce){
+  .cs-section,.cs-section-body,.cs-decision-detail{transition:none}
+  .cs-section{opacity:1;transform:none}
+}
+
+/* ANNOTATED DECISION SCREENS */
+.cs-ann-list{margin:0}
+.cs-ann-block{display:grid;grid-template-columns:180px 1fr;gap:40px;align-items:start;padding:40px 0}
+.cs-ann-block:last-child{}
+.cs-ann-phone{border-radius:12px;border:1px solid var(--border);overflow:hidden;background:#FFFFFF;position:sticky;top:calc(var(--topbar) + 24px)}
+.cs-ann-phone img{width:100%;height:auto;display:block}
+.cs-ann-body{display:flex;flex-direction:column;gap:20px;padding-top:4px}
+.cs-ann-title{font-size:16px;font-weight:500;color:var(--text);line-height:1.35}
+.cs-ann-tag{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-d);background:var(--accent-l);border-radius:6px;padding:4px 10px;display:inline-block}
+.cs-ann-detail{font-size:14px;color:var(--text-s);line-height:1.78}
+.cs-ann-callout{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;background:var(--bg-alt);border-radius:8px;border-left:2px solid var(--accent-d)}
+.cs-ann-arrow{font-size:16px;color:var(--accent-d);flex-shrink:0;line-height:1.4}
+.cs-ann-note{font-size:13px;color:var(--text-s);line-height:1.6;font-style:italic}
+@media(max-width:640px){.cs-ann-block{grid-template-columns:1fr;gap:16px}.cs-ann-phone{position:static;max-width:160px}}
+
+/* PROCESS MAP */
+.cs-pm{margin:0}
+.cs-pm-step{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.cs-pm-cell--img{display:flex;flex-direction:column;align-items:flex-start}
+.cs-pm-chip{display:inline-flex;padding:4px 12px;border-radius:20px;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;white-space:nowrap}
+.cs-pm-chip--num{background:var(--accent-l);color:var(--accent-d);border:1px solid var(--border-a)}
+.cs-pm-chip--match{background:var(--accent-d);color:#fff}
+.cs-pm-chip--no{background:#F5DFDF;color:#8B2020;border:1px solid #E0B8B8}
+.cs-pm-phone{border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(27,26,24,.16);width:fit-content;align-self:flex-start}
+.cs-pm-phone img{width:260px;height:auto;display:block}
+.cs-pm-cell--ann{padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.cs-pm-ann-title{font-size:17px;font-weight:400;letter-spacing:-.01em;line-height:1.3;color:var(--text)}
+.cs-pm-ann-body{font-size:14px;color:var(--text-c);line-height:1.7}
+.cs-pm-ann-note{font-size:13px;color:var(--text-c);font-style:italic;border-left:2px solid var(--border-a);padding-left:10px;line-height:1.6}
+.cs-pm-ann-note--right{border-left:none;border-right:2px solid var(--border-a);padding-left:0;padding-right:10px;text-align:right}
+.cs-pm-conn{display:block;width:100%;overflow:visible}
+
+/* EDGE FLOW */
+.cs-ef-node{display:flex;flex-direction:row;gap:16px;align-items:flex-start}
+.cs-ef-node--right{flex-direction:row-reverse}
+.cs-ef-node--center{flex-direction:column;align-items:center}
+.cs-ef-img-wrap{display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.cs-ef-img{border-radius:16px;overflow:hidden;box-shadow:0 8px 28px rgba(27,26,24,.12)}
+.cs-ef-img img{width:210px;height:auto;display:block}
+.cs-ef-ann{font-size:12px;color:var(--text-c);line-height:1.6;padding-top:36px}
+.cs-pm-fork{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cs-pm-fork-side{display:flex;flex-direction:column;align-items:flex-start}
+.cs-pm-fork-side--right{align-items:flex-end;text-align:right}
+.cs-pm-fork-side--right .cs-pm-phone{align-self:flex-end}
+@media(max-width:640px){
+  .cs-pm-step,.cs-pm-fork{grid-template-columns:1fr}
+  .cs-pm-phone img{width:100%}
+}
+
+/* ── IMAGE BREATHING ROOM ─────────────────────────────────────
+   Heavy images (wireframes, architecture maps, dense diagrams)
+   need 64px below them before the next element. The brain
+   processes dense visuals slowly — crowding them kills retention.
+──────────────────────────────────────────────────────────────*/
+.cs-img-wide{margin-top:24px;margin-bottom:48px}
+.cs-img-wide + .cs-img-wide,
+.cs-img-wide + .cs-body,
+.cs-img-wide + h3,
+.cs-img-wide + .cs-lens,
+.cs-img-wide + .cs-3col,
+.cs-img-wide + .cs-dead-box,
+.cs-img-wide + .cs-genslider,
+.cs-img-wide + .cs-gen-strip{
+  margin-top:64px;
+}
+.cs-img-heavy{
+  margin-bottom:72px !important;
+  margin-top:40px !important;
+}
+/* Between two heavy images — extra generous */
+.cs-img-heavy + .cs-img-heavy{
+  margin-top:80px !important;
+}
+/* Dense wireframes + annotation pairs → needs air after */
+.cs-img-wide:has(img[src*="Sprint"]),
+.cs-img-wide:has(img[src*="happypath"]),
+.cs-img-wide:has(img[src*="Functional_Sitemap"]),
+.cs-img-wide:has(img[src*="Human-AI"]),
+.cs-img-wide:has(img[src*="App_Screen"]){
+  margin-bottom:64px;
+}
+
+
+/* ── INTERACTION GAP HTML CARDS ─────────────────────────────── */
+.cs-gap-cards{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:stretch;margin:48px 0}
+.cs-gap-card{background:#FDFCFA;border:1px solid var(--border);border-radius:10px;padding:18px 16px;display:flex;flex-direction:column;gap:10px}
+.cs-gap-title{font-size:14px;font-weight:500;color:var(--text);line-height:1.35}
+.cs-gap-desc{font-size:14px;color:var(--text-s);line-height:1.55}
+.cs-gap-pill{font-size:14px;font-weight:500;color:var(--accent-d);background:var(--accent-l);border-radius:6px;padding:6px 10px;line-height:1.35;margin-top:auto}
+.cs-gap-arrow{font-size:16px;color:var(--border);flex-shrink:0;padding:0 4px;display:flex;align-items:center;justify-content:center}
+@media(max-width:640px){
+  .cs-gap-cards{grid-template-columns:1fr;gap:4px}
+  .cs-gap-arrow{display:none}
+}
+
+/* ── MARKET VS TRIBE HTML CARDS ──────────────────────────────── */
+.cs-split-cards{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin:48px 0}
+.cs-split-card{border-radius:10px;padding:22px 20px;display:flex;flex-direction:column;gap:8px}
+.cs-split-card--bad{background:#F5DFDF}
+.cs-split-card--good{background:#EAF3DE}
+.cs-split-label{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.cs-split-card--bad .cs-split-label{color:#8B2020}
+.cs-split-card--good .cs-split-label{color:#3B6D11}
+.cs-split-heading{font-size:15px;font-weight:500;color:var(--text);line-height:1.35}
+.cs-split-body{font-size:14px;color:var(--text-s);line-height:1.55}
+.cs-split-bottom{font-size:14px;font-weight:500;line-height:1.4}
+.cs-split-card--bad .cs-split-bottom{color:#8B2020}
+.cs-split-card--good .cs-split-bottom{color:#3B6D11}
+.cs-split-vs{font-size:14px;color:var(--border);text-align:center;flex-shrink:0}
+@media(max-width:480px){
+  .cs-split-cards{grid-template-columns:1fr}
+  .cs-split-vs{display:none}
+}
+
+
+/* ── DECISION ANNOTATION CARDS ───────────────────────────────────
+   Always open. Title + annotation + detail + image as one unit.
+   No expand, no hide. The reasoning lives beside the proof.
+──────────────────────────────────────────────────────────────── */
+.cs-dc-list{
+  display:flex;
+  flex-direction:column;
+  margin:0 0 48px;
+}
+.cs-dc{
+  display:grid;
+  grid-template-columns:1fr 140px;
+  gap:32px;
+  align-items:start;
+  padding:28px 0;
+}
+.cs-dc:last-child{}
+.cs-dc-title{
+  font-size:16px;
+  font-weight:500;
+  color:var(--text);
+  line-height:1.35;
+  margin-bottom:6px;
+}
+.cs-dc-anno{
+  font-size:14px;
+  color:var(--text-c);
+  line-height:1.5;
+  font-style:italic;
+  margin-bottom:12px;
+}
+.cs-dc-detail{
+  font-size:14px;
+  color:var(--text-s);
+  line-height:1.78;
+}
+.cs-dc-img{
+  border-radius:10px;
+  border:1px solid var(--border);
+  overflow:hidden;
+  position:sticky;
+  top:calc(var(--topbar) + 24px);
+}
+.cs-dc-img img{
+  width:100%;
+  height:auto;
+  display:block;
+}
+@media(max-width:640px){
+  .cs-dc{
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+  .cs-dc-img{
+    position:static;
+    max-width:160px;
+  }
+}
+
+
+/* ── CHIP VALIDATION STRIP ─────────────────────────────────────
+   Nine frames side by side. Minimum 200px tall so frames are
+   readable. Container scrolls horizontally to show all frames.
+──────────────────────────────────────────────────────────────── */
+.cs-chip-strip{
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border) transparent;
+  border-radius:10px;
+  border:1px solid var(--border);
+  margin:24px 0 8px;
+  cursor:grab;
+}
+.cs-chip-strip:active{cursor:grabbing}
+.cs-chip-strip::-webkit-scrollbar{height:4px}
+.cs-chip-strip::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.cs-chip-strip img{
+  height:300px;
+  width:auto;
+  max-width:none;
+  display:block;
+}
+
+/* REFLECTION BLOCKS */
+.cs-reflection-block{margin-bottom:40px;padding-bottom:40px}
+.cs-reflection-block:last-child{margin-bottom:0;padding-bottom:0}
+
+/* ── Spacing system ── */
+.cs-section-body img + img,.cs-ef-img + .cs-ef-img,.cs-pm-cell--img + .cs-pm-cell--img{margin-top:48px}
+.cs-section-body-inner > * + *{margin-top:48px}
+.cs-pm-step + .cs-pm-step{margin-top:64px}
+.cs-ef-node + .cs-ef-node{margin-top:40px}
+.cs-section-body .cs-section-eyebrow{margin-top:64px;margin-bottom:16px}
+.cs-section-body-inner > .cs-section-eyebrow:first-child{margin-top:0}
+.cs-section-body p[style*="font-size:14px"]{margin-top:12px;margin-bottom:40px}
+.cs-section + .cs-section{margin-top:80px}
+/* MORE CASE STUDIES nav */
+.cs-more-row{display:flex;align-items:baseline;gap:12px;padding:14px 8px;border-bottom:1px solid var(--border);text-decoration:none;border-radius:6px;transition:background .8s ease,color .8s ease}
+.cs-more-row:last-child{border-bottom:none}
+.cs-more-row:hover{background:var(--bg-alt)}
+.cs-more-num{font-size:13px;color:var(--text-m);flex-shrink:0;width:40px}
+.cs-more-title{font-size:13px;color:var(--text-s);flex:1;transition:color .8s ease}
+.cs-more-arrow{font-size:13px;color:var(--text-m);flex-shrink:0;transition:color .8s ease}
+.cs-more-row:hover .cs-more-title{color:var(--text)}
+.cs-more-row:hover .cs-more-arrow{color:var(--accent-d)}
+/* SITE FOOTER */
+.cs-site-footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);width:100%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;box-sizing:border-box;position:relative;z-index:150}
+/* ── Solution group separation ── */
+.cs-solution-group{margin-bottom:96px;padding-bottom:96px}
+.cs-solution-group:last-child{margin-bottom:0;padding-bottom:0}
+/* ── Solution group internal spacing ── */
+.cs-solution-group .cs-section-eyebrow{margin-top:64px;margin-bottom:16px}
+.cs-solution-group .cs-section-eyebrow:first-child{margin-top:0}
+.cs-solution-group .cs-gen-strip{margin-top:32px;margin-bottom:0}
+.cs-solution-group .cs-dead{margin-top:56px}
+.cs-solution-group .cs-fight{margin-top:32px}
+.cs-solution-group .cs-carousel{margin-top:40px}
+
+</style>
+</head>
+<body>
+<a href="#cs-content" class="skip">Skip to case study</a>
+
+<header class="topbar" id="topbar">
+  <a href="../index.html" class="logo" aria-label="Orsolya G. — home">
+    <svg height="20" viewBox="0 0 1000 168.7" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="width:auto;display:block">
+      <g>
+        <path d="M145.6,64.9c-3.1-7.3-7.4-13.7-12.8-19c-5.5-5.3-11.9-9.5-19.2-12.4c-7.3-3-15.2-4.4-23.6-4.4c-8.3,0-16.1,1.5-23.4,4.4c-7.3,3-13.7,7.1-19.2,12.4c-5.5,5.3-9.8,11.6-12.9,19c-3.1,7.3-4.7,15.4-4.7,24.3c0,8.7,1.6,16.8,4.7,24.1c3.1,7.3,7.4,13.7,12.9,19.1c5.5,5.4,11.9,9.5,19.2,12.5c7.3,3,15.1,4.4,23.4,4.4c8.4,0,16.2-1.5,23.5-4.4c7.3-3,13.7-7.1,19.2-12.5c5.5-5.4,9.8-11.7,12.9-19.1c3.1-7.3,4.6-15.4,4.6-24.1C150.2,80.3,148.7,72.2,145.6,64.9z M112.9,114c-5.8,6.3-13.4,9.4-22.9,9.4c-9.5,0-17.1-3.1-22.8-9.4c-5.7-6.3-8.6-14.5-8.6-24.8c0-10.5,2.9-18.9,8.6-25c5.7-6.2,13.3-9.2,22.8-9.2c9.5,0,17.1,3.1,22.9,9.2c5.8,6.2,8.6,14.5,8.6,25C121.5,99.4,118.6,107.7,112.9,114z"/>
+        <path d="M335,88.8c-3.5-2.5-7.4-4.5-11.7-6.2c-4.3-1.7-8.5-3.2-12.7-4.4c-4.2-1.3-8.1-2.6-11.7-4c-3.6-1.4-6.4-3-8.6-5c-2.1-1.9-3.2-4.3-3.2-7.2c0-3.5,1.3-6.1,3.9-8c2.6-1.8,5.7-2.8,9.4-2.8c4,0,7.4,1.3,10.2,3.8c1.7,1.5,3.1,3.5,4.1,5.8c1.3,2.9,4.4,4.5,7.4,3.7l15.6-4.1c3.6-1,5.7-4.9,4.3-8.4c-2.3-6.1-6.4-11.3-12.1-15.4c-7.7-5.6-17.3-8.4-28.9-8.4c-8.5,0-15.9,1.4-22.3,4.1c-6.4,2.7-11.4,6.7-15,12c-3.6,5.3-5.5,11.6-5.5,19c0,5.6,1.1,10.3,3.2,14.1c2.1,3.8,5,7,8.5,9.5c3.5,2.5,7.4,4.6,11.6,6.3c4.2,1.7,8.4,3.2,12.6,4.5c4.2,1.3,8,2.7,11.5,4c3.5,1.3,6.3,3,8.4,5c2.1,2,3.2,4.4,3.2,7.5c0,3.4-1.3,6-3.9,8.1c-2.6,2-6.4,3-11.2,3c-4.6,0-8.5-1.6-11.8-4.7c-2.2-2.1-3.9-4.7-5.1-7.8c-1.2-2.9-4.1-4.5-7.1-3.8l-15.6,3.5c-3.7,0.8-5.9,4.8-4.6,8.4c2.7,7.4,7.3,13.4,13.9,18.3c8.5,6.3,19,9.4,31.6,9.4c8.4,0,15.9-1.7,22.4-5c6.5-3.3,11.7-7.7,15.4-13.1c3.7-5.4,5.6-11.4,5.6-18c0-5.6-1.1-10.3-3.3-14.1C341.4,94.4,338.5,91.2,335,88.8z"/>
+        <path d="M462.8,45c-5.5-5.3-11.9-9.5-19.2-12.4c-7.3-3-15.2-4.4-23.6-4.4c-8.3,0-16.1,1.5-23.4,4.4c-7.3,3-13.7,7.1-19.2,12.4c-5.5,5.3-9.8,11.6-12.9,19c-3.1,7.3-4.7,15.4-4.7,24.3c0,8.7,1.6,16.8,4.7,24.1c3.1,7.3,7.4,13.7,12.9,19.1c5.5,5.4,11.9,9.5,19.2,12.5c7.3,3,15.1,4.4,23.4,4.4c8.4,0,16.2-1.5,23.5-4.4c7.3-3,13.7-7.1,19.2-12.5c5.5-5.4,9.8-11.7,12.9-19.1c3.1-7.3,4.6-15.4,4.6-24.1c0-8.8-1.5-16.9-4.6-24.3C472.6,56.7,468.3,50.4,462.8,45z M442.9,113.1c-5.8,6.3-13.4,9.4-22.9,9.4c-9.5,0-17.1-3.1-22.8-9.4c-5.7-6.3-8.6-14.5-8.6-24.8c0-10.5,2.9-18.9,8.6-25c5.7-6.2,13.3-9.2,22.8-9.2c9.5,0,17.1,3.1,22.9,9.2c5.8,6.2,8.6,14.5,8.6,25C451.6,98.6,448.7,106.9,442.9,113.1z"/>
+        <path d="M628.8,27.5h-17.3c-2.5,0-4.7,1.4-5.8,3.7l-15.4,33.5c-2.3,4.9-9.2,4.9-11.5,0l-15.5-33.5c-1-2.2-3.3-3.7-5.8-3.7H540c-4.8,0-7.8,5-5.6,9.3l35.1,68.1c0.5,0.9,0.7,1.9,0.7,2.9V139c0,3.5,2.8,6.3,6.3,6.3h15.7c3.5,0,6.3-2.8,6.3-6.3v-31.2c0-1,0.2-2,0.7-2.9l35.1-68.1C636.6,32.6,633.5,27.5,628.8,27.5z"/>
+        <path d="M698.5,31.7c-0.9-2.5-3.3-4.2-6-4.2h-23.8c-2.7,0-5.1,1.7-6,4.2l-38,105.2c-1.5,4.1,1.6,8.5,6,8.5h16.1c2.7,0,5.1-1.7,6-4.3l4.1-12.2c0.9-2.6,3.3-4.3,6-4.3h35.2c2.7,0,5.2,1.8,6,4.4l4,12.1c0.9,2.6,3.3,4.4,6,4.4h16.3c4.4,0,7.5-4.4,6-8.5L698.5,31.7z M686.3,102.6h-11.7c-4.3,0-7.4-4.3-6-8.4l5.9-17.4c1.9-5.8,10.1-5.7,12,0l5.8,17.4C693.7,98.3,690.6,102.6,686.3,102.6z"/>
+        <path d="M240.3,113.6c-4.2-6.1-9.1-10.8-14.7-14.1c-2.7-1.6-2.4-5.2,0.4-6.5c4.4-2,8.1-4.8,11.1-8.3c4.8-5.6,7.2-12,7.2-19.3c0-10.9-4-19.6-12-26.2c-8-6.6-19.4-9.9-34.2-9.9h-46c-3.2,0-4.8,3.2-3.5,5.5l.1.2.1.2c.1.1.1.1.2.2c8.6,10.5,38.5,50.7,1.1,106.5c-1.3,1.9.1,4.4,2.4,4.4h28.2c1.1,0,2.1-.6,2.5-1.6c2.3-4.6,8.9-18.8,11.6-37.3c3.2,1.2,6,2.7,8.6,4.5c5.1,3.7,9,8.6,11.6,14.6c2.2,5.2,3.7,10.9,4.4,17.3c.2,1.9,1.9,3.3,3.9,3.3h24.4c2.4,0,4.3-2,3.9-4.3C249.5,131.4,245.8,121.6,240.3,113.6z M209.1,77.5c-2.9,2.8-7.2,4.2-12.8,4.2h-1c-1-9.6-3.6-19.5-8.4-29.4h9.4c5.5,0,9.7,1.3,12.7,3.9c3,2.6,4.5,6.1,4.5,10.3C213.5,71.1,212,74.7,209.1,77.5z"/>
+        <path d="M541,123.4h-20.2c5.6-23.6,8.8-62.8-14.3-94.5c-.3-.3,0-.8-.4-.8l-6.5.1H483c-3.2,0-4.8,3.2-3.5,5.5l.1.2.1.2c.1.1.1.1.2.2c8.3,10.2,36.6,48.2,4.4,101.3c-2.6,4.2.5,9.6,5.4,9.6H511c.3,0,.6,0,.9-.1c.4.3.9.4,1.4.4H541c3.5,0,6.3-2.8,6.3-6.3v-9.3C547.3,126.2,544.5,123.4,541,123.4z"/>
+        <path d="M912.7,78.3h-54.3c-2.1,0-3.8,1.7-3.8,3.8v14.4c0,2.1,1.7,3.8,3.8,3.8h25.2c2.9,0,4.8,3.2,3.3,5.7c-.9,1.5-1.9,3-3.1,4.5c-2.6,3.2-5.7,5.8-9.5,7.8c-3.8,2-7.9,2.9-12.5,2.9c-6.5,0-12.2-1.4-17.2-4.2c-5-2.8-8.9-6.8-11.8-12c-2.9-5.2-4.3-11.5-4.3-18.9c0-10.3,2.8-18.6,8.4-24.8c5.6-6.2,13.1-9.3,22.5-9.3c6.4,0,11.7,1.6,16,4.7c3.4,2.5,6.1,5.7,8,9.7c.9,1.8,2.9,2.7,4.8,2l20.4-7.5c2.1-.8,3.1-3.1,2.2-5.1c-4-9.2-10.3-16.3-18.6-21.2c-9.5-5.6-20.4-8.4-32.7-8.4c-11.4,0-21.6,2.5-30.6,7.6c-9,5-16.1,12.1-21.3,21.1c-5.2,9-7.8,19.4-7.8,31.3c0,9,1.5,17.1,4.4,24.4c3,7.3,7.1,13.7,12.3,19.1c5.2,5.4,11.2,9.5,18,12.4c6.8,2.9,14,4.4,21.5,4.4c6.8,0,12.7-1.2,17.6-3.7c4.9-2.5,9-5.5,12.1-9.1l.1-.1c2.3-2.6,6.6-1.1,6.6,2.4v5.4c0,2.1,1.7,3.8,3.8,3.8h16.5c2.1,0,3.8-1.7,3.8-3.8V82.1C916.6,80,914.9,78.3,912.7,78.3z"/>
+        <circle cx="956.9" cy="129" r="18.9"/>
+      </g>
+    </svg>
+  </a>
+  <div class="topbar-right">
+    <a class="btn btn-resume" href="resume.pdf" target="_blank">
+      <span class="btn-label">Resume</span>
+      <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13V19C18 19.53 17.79 20.04 17.41 20.41C17.04 20.79 16.53 21 16 21H5C4.47 21 3.96 20.79 3.59 20.41C3.21 20.04 3 19.53 3 19V8C3 7.47 3.21 6.96 3.59 6.59C3.96 6.21 4.47 6 5 6H11M21 9V3H15M21 3L10 14"/></svg>
+    </a>
+    <button class="btn btn-email" id="btnEmail" onclick="doEmail()">
+      <span class="btn-label">Email me</span>
+      <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="cs-page">
+  <div class="cs-inner">
+
+    <!-- SIDEBAR — generic labels, same across all 4 case studies -->
+    <aside class="cs-sidebar">
+      <a href="../index.html" class="back-btn" aria-label="Back to all work">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        All work
+      </a>
+      <div class="cs-nav-label" style="margin-top:16px">In this study</div>
+      <nav class="cs-nav">
+        <a href="#s-overview"  class="cs-nav-item active" data-s="s-overview">Overview</a>
+        <a href="#s-problem"   class="cs-nav-item" data-s="s-problem">Problem Framing</a>
+        <a href="#s-research"  class="cs-nav-item" data-s="s-research">Research</a>
+        <a href="#s-decisions" class="cs-nav-item" data-s="s-decisions">System Logic</a>
+        <a href="#s-solution"  class="cs-nav-item" data-s="s-solution">Solutions</a>
+        <a href="#s-reflection"class="cs-nav-item" data-s="s-reflection">Reflection</a>
+      </nav>
+      <div class="cs-meta-block">
+        <div class="cs-meta-row"><span class="cs-meta-k">Role</span><span class="cs-meta-v">Lead designer</span></div>
+        <div class="cs-meta-row"><span class="cs-meta-k">Type</span><span class="cs-meta-v">AI · MVP</span></div>
+        <div class="cs-meta-row"><span class="cs-meta-k">Status</span><span class="cs-meta-v">Pre-launch</span></div>
+      </div>
+      <div class="cs-progress-bar"><div class="cs-progress-fill" id="pf"></div></div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="cs-main" id="cs-content">
+
+      <!-- TITLE BLOCK -->
+      <div class="cs-eyebrow">
+        <span class="cs-pill">AI Product</span>
+        <span class="cs-pill">Human-AI Interaction</span>
+        <span class="cs-pill">Intent Search</span>
+        <span class="cs-pill cs-pill-mvp">MVP</span>
+      </div>
+      <h1 class="cs-title">Tribe — <em>Intent-Based Human Search</em></h1>
+      <p class="cs-hook">"The design problem wasn't matching. It was building enough safety for someone to type the thing they actually want."</p>
+
+      <!-- Schematic -->
+      <div style="margin-bottom:48px;padding:32px 16px 28px;background:var(--bg-alt);border-radius:14px;border:1px solid var(--border)">
+        <svg width="100%" height="132" viewBox="0 0 580 132" fill="none" aria-hidden="true">
+
+          <!-- ── Node 1: User Intent ── -->
+          <circle cx="50" cy="66" r="30" stroke="#6B5F9E" stroke-width="1.5"/>
+          <text x="50" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="600">user</text>
+          <text x="50" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="600">intent</text>
+
+          <!-- 1 → 2 -->
+          <line x1="80" y1="66" x2="108" y2="66" stroke="#9E9AAA" stroke-width="1.2"/>
+
+          <!-- ── Node 2: Validation Gap ── -->
+          <rect x="108" y="52" width="118" height="28" rx="5" stroke="#6B5F9E" stroke-width="2" fill="#F0ECF4"/>
+          <text x="167" y="69" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A2E6A" text-anchor="middle" font-weight="700">validation gap</text>
+
+          <!-- 2 → 3 connector + label below -->
+          <line x1="226" y1="66" x2="290" y2="66" stroke="#9E9AAA" stroke-width="1.2"/>
+          <text x="258" y="80" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#5A5268" text-anchor="middle">NLP engine</text>
+
+          <!-- ── Node 3: Semantic Match ── -->
+          <circle cx="320" cy="66" r="30" stroke="#8C7E96" stroke-width="1.5"/>
+          <text x="320" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="500">semantic</text>
+          <text x="320" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="500">match</text>
+
+          <!-- 3 → 4 connector + label below -->
+          <line x1="350" y1="66" x2="412" y2="66" stroke="#9E9AAA" stroke-width="1.2"/>
+          <text x="381" y="80" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#5A5268" text-anchor="middle">prog. disclosure</text>
+
+          <!-- ── Node 4: Anon. Reveal (dashed) ── -->
+          <circle cx="440" cy="66" r="28" stroke="#9E9AAA" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="440" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#6B6070" text-anchor="middle" font-weight="500">anon.</text>
+          <text x="440" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#6B6070" text-anchor="middle" font-weight="500">reveal</text>
+
+          <!-- 4 → 5 -->
+          <line x1="468" y1="66" x2="506" y2="66" stroke="#9E9AAA" stroke-width="1.2"/>
+
+          <!-- ── Node 5: Meetup ── -->
+          <circle cx="530" cy="66" r="24" stroke="#8C7E96" stroke-width="1.5"/>
+          <text x="530" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="500">meet</text>
+          <text x="530" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="500">up</text>
+
+          <!-- ── UPPER: Evaluation Apprehension arc
+               Starts: top of N1 circle (cx=50, top=36)
+               Ends:   top-centre of validation gap rect (cx=167, top=52)
+               Control point centred on x-midpoint (108) at y=6 → symmetric arch
+          ── -->
+          <path d="M50,36 Q108,6 167,52" stroke="#6B5F9E" stroke-width="1" stroke-dasharray="3 2" fill="none"/>
+          <text x="108" y="14" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#4A3F7A" text-anchor="middle" font-weight="500">evaluation apprehension</text>
+
+          <!-- ── LOWER: No-match branch ── -->
+          <line x1="320" y1="96" x2="320" y2="108" stroke="#9E9AAA" stroke-width="1" stroke-dasharray="3 2"/>
+          <text x="320" y="121" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#5A5268" text-anchor="middle">no match</text>
+
+          <!-- ── LOWER: Safety exit branch ── -->
+          <line x1="440" y1="94" x2="440" y2="108" stroke="#9E9AAA" stroke-width="1" stroke-dasharray="3 2"/>
+          <text x="440" y="121" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#5A5268" text-anchor="middle">safety exit</text>
+
+        </svg>
+      </div>
+
+      <!-- System Delivery highlight card -->
+      <div style="border:1px solid var(--border-a);background:var(--accent-l);border-radius:12px;padding:20px 24px;margin:0 0 48px;position:relative">
+        <svg style="position:absolute;top:16px;right:16px;color:var(--accent-d);opacity:.55" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>
+        <div style="font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-d);margin-bottom:10px">System Delivery</div>
+        <p style="font-size:14px;color:var(--text-s);line-height:1.75;margin:0">This case study documents the complete MVP architecture and human-AI interaction systems designed for handoff. The focus remains on <strong style="color:var(--text);font-weight:500">advanced technical systems design, human-AI latency mitigation, and the established validation frameworks</strong> required for future deployment phases.</p>
+      </div>
+
+      <!-- ── OVERVIEW ── -->
+      <section class="cs-section" id="s-overview">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">Overview</div>
+            <h2 class="cs-section-heading">Connect strangers through intent,<br><em>not profiles.</em></h2>
+            <p class="cs-section-summary">A social app where one prompt replaces the profile. The whole product rests on a single text field — and the trust required to use it honestly.</p>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+            <!-- Interaction gap illustration -->
+            <div class="cs-gap-cards" role="group" aria-label="Three human states and their design responses">
+              <div class="cs-gap-card">
+                <div class="cs-gap-title">Intent + vulnerability</div>
+                <div class="cs-gap-desc">Fear of sharing before trust is established</div>
+                <div class="cs-gap-pill">→ Smart Echo Input</div>
+              </div>
+              <div class="cs-gap-arrow" aria-hidden="true">→</div>
+              <div class="cs-gap-card">
+                <div class="cs-gap-title">Black box anxiety</div>
+                <div class="cs-gap-desc">Stress during AI processing</div>
+                <div class="cs-gap-pill">→ XAI teachable wait</div>
+              </div>
+              <div class="cs-gap-arrow" aria-hidden="true">→</div>
+              <div class="cs-gap-card">
+                <div class="cs-gap-title">Decision fatigue</div>
+                <div class="cs-gap-desc">Skepticism of match results</div>
+                <div class="cs-gap-pill">→ XAI confidence badges</div>
+              </div>
+            </div>
+            <div class="cs-body">
+              <p>Tribe connects people through a single prompt — not a profile, not a browse interface. The user types what they want to do, the AI matches them with people looking for the same thing, and connection happens before either party knows who the other is.</p>
+              <p>The entire product hangs on one text field. Making someone feel safe enough to be honest in it was the design problem — not the matching algorithm.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ── PROBLEM ── -->
+      <section class="cs-section" id="s-problem">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">Problem Framing</div>
+            <h2 class="cs-section-heading">Current platforms prioritise short-term attention.<br><em>The gap: long-term trust.</em></h2>
+            <p class="cs-section-summary">The market is saturated with engagement-first products. The unmet need was safer connection — intent-based, not identity-first.</p>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+                        <!-- Problem: market vs tribe -->
+            <div class="cs-split-cards" role="group" aria-label="Market approach versus Tribe approach">
+              <div class="cs-split-card cs-split-card--bad">
+                <div class="cs-split-label">The Market</div>
+                <div class="cs-split-heading">Engagement-First</div>
+                <div class="cs-split-body" style="display:flex;flex-direction:column;gap:7px">
+                  <span><strong style="font-weight:500;color:inherit">Primary KPI:</strong> Time-on-app / Ad impressions</span>
+                  <span><strong style="font-weight:500;color:inherit">Architecture:</strong> Visual Profiles → Asynchronous Browse → Swipe</span>
+                </div>
+                <div class="cs-split-bottom">Friction — Low barrier to contact, high volume, deferred privacy layers</div>
+              </div>
+              <div class="cs-split-vs" aria-hidden="true">vs.</div>
+              <div class="cs-split-card cs-split-card--good">
+                <div class="cs-split-label">Tribe's Bet</div>
+                <div class="cs-split-heading">Intent-First</div>
+                <div class="cs-split-body" style="display:flex;flex-direction:column;gap:7px">
+                  <span><strong style="font-weight:500;color:inherit">Primary KPI:</strong> High-intent connection efficiency</span>
+                  <span><strong style="font-weight:500;color:inherit">Architecture:</strong> Real-time Intent → Semantic NLP Matching → Anonymity → Safety Layer</span>
+                </div>
+                <div class="cs-split-bottom">Friction — Managed friction, progressive disclosure, structural privacy</div>
+              </div>
+            </div>
+            <div class="cs-body">
+              <p>The brief was an intent-based social network for Budapest. The real brief, once I'd mapped the competitive landscape, was: how do you get someone to type what they actually want — not a curated version of it — into a field connected to a stranger-matching algorithm?</p>
+              <p>That's a trust problem before it's a product problem. It shaped every design decision that followed.</p>
+            </div>
+            <!-- Trust framework SVG -->
+            <div role="img" aria-label="Tribe Trust Framework — five friction points and five design responses">
+              <svg width="100%" viewBox="0 0 680 860" xmlns="http://www.w3.org/2000/svg">
+                <title>Tribe Trust Framework — uniform card grid</title>
+                <desc>Three stacked sections: the core problem, five psychological friction points, and five system design responses, all in uniform cards.</desc>
+                <defs>
+                  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M2 1L8 5L2 9" fill="none" stroke="#1F1E1D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </marker>
+                </defs>
+                <!-- LAYER 1: THE PROBLEM -->
+                <rect x="40" y="24" width="600" height="72" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+                <text x="340" y="52" text-anchor="middle" dominant-baseline="central" fill="#444441" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">The problem</text>
+                <text x="340" y="74" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">People don't type what they actually need. The barrier is psychological, not linguistic.</text>
+                <line x1="340" y1="96" x2="340" y2="128" stroke="rgba(31,30,29,0.3)" stroke-width="0.5" marker-end="url(#arrow)" opacity="0.4"/>
+                <!-- SECTION LABEL -->
+                <text x="40" y="148" opacity="0.45" fill="#3D3D3A" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">5 friction points — what the person feels before typing</text>
+                <!-- F1 -->
+                <rect x="52" y="160" width="184" height="64" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+                <text x="144" y="183" text-anchor="middle" dominant-baseline="central" fill="#711213" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">Social judgement</text>
+                <text x="144" y="205" text-anchor="middle" dominant-baseline="central" fill="#993C1D" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">What will it think of me?</text>
+                <!-- F2 -->
+                <rect x="248" y="160" width="184" height="64" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+                <text x="340" y="183" text-anchor="middle" dominant-baseline="central" fill="#711213" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">Language failure</text>
+                <text x="340" y="205" text-anchor="middle" dominant-baseline="central" fill="#993C1D" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">No words for this</text>
+                <!-- F3 — core, purple -->
+                <rect x="444" y="160" width="184" height="64" rx="8" fill="#EEEEFD" stroke="#534AB7" stroke-width="1"/>
+                <text x="536" y="183" text-anchor="middle" dominant-baseline="central" fill="#3C3489" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">Trust deficit — core</text>
+                <text x="536" y="205" text-anchor="middle" dominant-baseline="central" fill="#534AB7" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">Will it use this against me?</text>
+                <!-- F4 -->
+                <rect x="150" y="240" width="184" height="64" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+                <text x="242" y="263" text-anchor="middle" dominant-baseline="central" fill="#711213" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">Vulnerability</text>
+                <text x="242" y="285" text-anchor="middle" dominant-baseline="central" fill="#993C1D" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">Admitting I don't know</text>
+                <!-- F5 -->
+                <rect x="346" y="240" width="184" height="64" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+                <text x="438" y="263" text-anchor="middle" dominant-baseline="central" fill="#711213" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">App parasitism</text>
+                <text x="438" y="285" text-anchor="middle" dominant-baseline="central" fill="#993C1D" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">Will it exploit my need?</text>
+                <line x1="340" y1="320" x2="340" y2="352" stroke="rgba(31,30,29,0.3)" stroke-width="0.5" marker-end="url(#arrow)" opacity="0.4"/>
+                <!-- SECTION LABEL -->
+                <text x="40" y="372" opacity="0.45" fill="#3D3D3A" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">5 design responses — how the system earns trust</text>
+                <!-- R1 -->
+                <rect x="52" y="384" width="184" height="64" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+                <text x="144" y="407" text-anchor="middle" dominant-baseline="central" fill="#085041" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">Non-evaluative framing</text>
+                <text x="144" y="429" text-anchor="middle" dominant-baseline="central" fill="#0F6E56" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">No implicit scoring</text>
+                <!-- R2 -->
+                <rect x="248" y="384" width="184" height="64" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+                <text x="340" y="407" text-anchor="middle" dominant-baseline="central" fill="#085041" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">Intent inference layer</text>
+                <text x="340" y="429" text-anchor="middle" dominant-baseline="central" fill="#0F6E56" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">NLP bridges the gap</text>
+                <!-- R3 — core, purple -->
+                <rect x="444" y="384" width="184" height="64" rx="8" fill="#EEEEFD" stroke="#534AB7" stroke-width="1"/>
+                <text x="536" y="407" text-anchor="middle" dominant-baseline="central" fill="#3C3489" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">Transparency by design</text>
+                <text x="536" y="429" text-anchor="middle" dominant-baseline="central" fill="#534AB7" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">Visible logic, no black box</text>
+                <!-- R4 -->
+                <rect x="150" y="464" width="184" height="64" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+                <text x="242" y="487" text-anchor="middle" dominant-baseline="central" fill="#085041" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">Curiosity-safe scaffolding</text>
+                <text x="242" y="509" text-anchor="middle" dominant-baseline="central" fill="#0F6E56" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">Not knowing = valid entry</text>
+                <!-- R5 -->
+                <rect x="346" y="464" width="184" height="64" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+                <text x="438" y="487" text-anchor="middle" dominant-baseline="central" fill="#085041" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">Minimal footprint</text>
+                <text x="438" y="509" text-anchor="middle" dominant-baseline="central" fill="#0F6E56" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">Tool exits once done</text>
+                <line x1="340" y1="544" x2="340" y2="576" stroke="rgba(31,30,29,0.3)" stroke-width="0.5" marker-end="url(#arrow)" opacity="0.4"/>
+                <!-- OUTCOME -->
+                <rect x="40" y="588" width="600" height="72" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+                <text x="340" y="612" text-anchor="middle" dominant-baseline="central" fill="#444441" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="14" font-weight="500">Outcome</text>
+                <text x="340" y="636" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">Honest intent typed → NLP reads context → person finds what they actually needed</text>
+                <!-- LEGEND -->
+                <line x1="40" y1="684" x2="640" y2="684" stroke="rgba(31,30,29,0.3)" stroke-width="0.5" opacity="0.2"/>
+                <rect x="40" y="700" width="12" height="12" rx="2" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+                <text x="58" y="707" dominant-baseline="central" opacity="0.6" fill="#3D3D3A" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">friction — what blocks honest intent</text>
+                <rect x="40" y="722" width="12" height="12" rx="2" fill="#EEEEFD" stroke="#534AB7" stroke-width="1"/>
+                <text x="58" y="729" dominant-baseline="central" opacity="0.6" fill="#3D3D3A" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">core — the central design problem and its response</text>
+                <rect x="40" y="744" width="12" height="12" rx="2" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+                <text x="58" y="751" dominant-baseline="central" opacity="0.6" fill="#3D3D3A" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">response — system architecture decisions</text>
+                <line x1="40" y1="776" x2="640" y2="776" stroke="rgba(31,30,29,0.3)" stroke-width="0.5" opacity="0.2"/>
+                <text x="340" y="800" text-anchor="middle" opacity="0.35" fill="#3D3D3A" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">the search box is not a language problem — it is a psychological safety problem</text>
+                <text x="340" y="820" text-anchor="middle" opacity="0.35" fill="#3D3D3A" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12">tribe is designed for the moment before the query, not the moment it arrives</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── RESEARCH ── -->
+      <section class="cs-section" id="s-research">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">Research</div>
+            <h2 class="cs-section-heading">Map the vulnerability states<br><em>before opening a design tool.</em></h2>
+            <p class="cs-section-summary">Human factors gave me the frame. Three distinct states between intent and connection — each one a specific design problem.</p>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+            <!-- Human-AI interaction gap diagram -->
+            <div style="border-radius:10px;border:1px solid var(--border);overflow:hidden">
+              <img src="Human-AI_Interaction_gap_design_solutions.png" alt="Human-AI interaction gap — three vulnerability states mapped to design responses: Smart Echo Input, XAI teachable wait, XAI confidence badges" loading="lazy" style="width:100%;height:auto;display:block">
+            </div>
+            <div class="cs-lens">
+              <div class="cs-lens-label">The reframe</div>
+              <div class="cs-lens-text">"The product's job isn't matching people. It's building enough psychological safety that someone types the thing they actually want."</div>
+            </div>
+            <div class="cs-body">
+              <p>The interaction gap diagram above was the first deliverable — before any screens. Three human states in the critical path from intent to connection. Each one mapped to a specific design response. This became the brief for every decision that followed.</p>
+            </div>
+
+            <!-- Research Resources -->
+            <details>
+              <summary style="list-style:none;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;padding-bottom:20px">
+                <span style="font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c)">Research Resources That Shaped Design Decisions</span>
+                <svg id="rrd-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-c);flex-shrink:0;transition:transform .2s" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </summary>
+
+              <div style="display:grid;grid-template-columns:28px 1fr;gap:16px;padding:20px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+                <div style="font-size:11px;font-weight:600;color:var(--accent-d);font-family:ui-monospace,monospace;padding-top:3px">01</div>
+                <div>
+                  <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:5px;line-height:1.35">Evaluation Apprehension &amp; Common Ground</div>
+                  <div style="font-size:14px;color:var(--text-s);line-height:1.65;margin-bottom:8px">Defensive user input and semantic alignment paradigms in human-to-system interactions.</div>
+                  <div style="font-size:12px;color:var(--text-c);font-style:italic;display:flex;gap:10px;flex-wrap:wrap">
+                    <a href="https://doi.org/10.1037/h0021647" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;text-underline-offset:2px">Rosenberg (1965)</a>
+                    <span style="opacity:.4">/</span>
+                    <a href="https://www.cambridge.org/core/books/using-language/4A7B4DA2A9B2BCCA78DD9B2DABD0A14B" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;text-underline-offset:2px">Clark (1996)</a>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:28px 1fr;gap:16px;padding:20px 0;border-bottom:1px solid var(--border)">
+                <div style="font-size:11px;font-weight:600;color:var(--accent-d);font-family:ui-monospace,monospace;padding-top:3px">02</div>
+                <div>
+                  <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:5px;line-height:1.35">Operational Transparency &amp; The Labor Illusion</div>
+                  <div style="font-size:14px;color:var(--text-s);line-height:1.65;margin-bottom:8px">How exposing step-by-step backend processing metrics mitigates algorithmic latency anxiety.</div>
+                  <div style="font-size:12px;color:var(--text-c);font-style:italic;display:flex;gap:10px;flex-wrap:wrap">
+                    <a href="https://doi.org/10.1287/mnsc.1110.1376" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;text-underline-offset:2px">Buell &amp; Norton (2011)</a>
+                    <span style="opacity:.4">/</span>
+                    <a href="https://www.hbs.edu/faculty/Pages/item.aspx?num=57420" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;text-underline-offset:2px">Buell et al. (2020)</a>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:28px 1fr;gap:16px;padding:20px 0">
+                <div style="font-size:11px;font-weight:600;color:var(--accent-d);font-family:ui-monospace,monospace;padding-top:3px">03</div>
+                <div>
+                  <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:5px;line-height:1.35">Explainable AI (XAI) &amp; Choice Overload</div>
+                  <div style="font-size:14px;color:var(--text-s);line-height:1.65;margin-bottom:8px">Utilizing human-centric, contrastive explanations to reduce automation paralyzation.</div>
+                  <div style="font-size:12px;color:var(--text-c);font-style:italic;display:flex;gap:10px;flex-wrap:wrap">
+                    <a href="https://doi.org/10.1016/j.artint.2018.07.007" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;text-underline-offset:2px">Miller (2019)</a>
+                    <span style="opacity:.4">/</span>
+                    <a href="https://doi.org/10.1145/358916.358995" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;text-underline-offset:2px">Herlocker et al. (2000)</a>
+                  </div>
+                </div>
+              </div>
+
+            </details>
+            <script>
+              (function(){
+                var d = document.currentScript.previousElementSibling;
+                var c = d.querySelector('#rrd-chev');
+                d.addEventListener('toggle', function(){ c.style.transform = d.open ? 'rotate(180deg)' : ''; });
+              })();
+            </script>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ── DECISIONS ── -->
+      <section class="cs-section" id="s-decisions">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">System Logic</div>
+            <h2 class="cs-section-heading">Five moments of vulnerability. <em>Five design responses.</em></h2>
+            <p class="cs-section-summary">Not aesthetic choices. Each decision addresses a specific moment where trust could break — before it is established.</p>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+
+            <!-- ── ARCHITECTURE: HAPPY PATH + FALLBACK ── -->
+            <div class="cs-section-eyebrow">Architecture — before any screen was drawn</div>
+            <p style="font-size:17px;font-weight:300;color:var(--text);line-height:1.4;letter-spacing:-.01em;max-width:560px">Happy path. Fallback logic. <em style="font-style:italic">The full product — mapped in structure before it existed in pixels.</em></p>
+            <div class="cs-body">
+              <p>Edge cases carried the most design weight: the no-match screen, the breathe chat, the safety exit. These were where the product's character was decided — not in the happy path.</p>
+            </div>
+
+            <!-- Functional Sitemap -->
+            <div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:8px">
+              <img src="Functional_Sitemap___User_Flow_Hybrid_method.png" alt="Functional sitemap and user flow hybrid — full IA, screen states, decision points, and safety exit branches" loading="lazy" style="width:100%;height:auto;display:block">
+            </div>
+            <p style="font-size:14px;color:var(--text-c);font-style:italic">Functional sitemap + user flow hybrid. Every screen state, every decision point, every safety exit branch — mapped before any visual design.</p>
+
+            <!-- Core Happy Path + Fallback -->
+            <div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:8px">
+              <img src="happypath-fallback.png" alt="Core happy path — 10 screens from home to post-meet feedback, plus three fallback states: no match, match declined, all matches exhausted" loading="lazy" style="width:100%;height:auto;display:block">
+            </div>
+            <p style="font-size:14px;color:var(--text-c);font-style:italic">Core happy path (Screens 1–10) + three fallback states with key states documented per screen. The fallbacks were designed before the happy path UI was finalised.</p>
+
+            <div class="cs-transfer-quote">
+              "The way you picked everything apart and mapped it out is extraordinary. It's astonishing how well you understand the product system — hats off."
+              <span class="cs-transfer-quote-attr">— Founder, Tribe</span>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SOLUTION ── -->
+      <section class="cs-section" id="s-solution">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">Solutions</div>
+            <h2 class="cs-section-heading">Full IA. <em>Not everything survived the dev sync.</em></h2>
+            <p class="cs-section-summary">Three generations of input validation designed — two cut after synching with developers on latency, token cost, and structural reliability. What shipped earned it. The rest of the architecture: match logic, processing states, and safety exits, was built around the system that survived.</p>
+            <p class="cs-section-summary" style="margin-top:10px;font-style:italic;color:var(--accent-d)">How might we teach users what's needed for prompting that leads to better match quality?</p>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+
+            <div class="cs-solution-group">
+            <!-- ── 1A: INPUT VALIDATION — THREE GENERATIONS ── -->
+            <div class="cs-section-eyebrow" style="margin-bottom:24px">Input validation — three generations</div>
+            <div class="cs-gen-strip">
+              <div class="cs-gen-phone">
+                <img src="Gen1-%20manual%20tags%20added%20by%20the%20user.png" alt="Gen 1 — manual tags added by user" loading="lazy">
+                <div class="cs-gen-cap">
+                  <span class="cs-gen-tag dead">Gen 1 — Cut</span>
+                  <div class="cs-gen-label">Manual tags</div>
+                  <div class="cs-gen-note">Freeform. No structure. System can't match on noise.</div>
+                </div>
+              </div>
+              <div class="cs-gen-phone">
+                <img src="Gen2-AI-generated%20metadata.png" alt="Gen 2 — AI-generated metadata tags from prompt" loading="lazy">
+                <div class="cs-gen-cap">
+                  <span class="cs-gen-tag dead">Gen 2 — Cut</span>
+                  <div class="cs-gen-label">AI metadata extraction</div>
+                  <div class="cs-gen-note">Smarter — but unreliable JSON, 1.4s latency, 25× token cost.</div>
+                </div>
+              </div>
+              <div class="cs-gen-phone">
+                <img src="Gen3-%20NLP%20chip%20validation.png" alt="Gen 3 — NLP chip validation, Well done badge, CTA unlocked" loading="lazy">
+                <div class="cs-gen-cap">
+                  <span class="cs-gen-tag live">Gen 3 — Shipped</span>
+                  <div class="cs-gen-label">Chip validation</div>
+                  <div class="cs-gen-note">NLP parses What / When / Where in real time. Hard to build. Worth the fight.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cs-dead">
+              <div class="cs-dead-head">
+                <div class="cs-dead-col">Why gen 2 died</div>
+                <div class="cs-dead-col">After synching with devs</div>
+              </div>
+              <div class="cs-dead-row">
+                <div class="cs-dead-cell">Structural unreliability</div>
+                <div class="cs-dead-cell">System expects <code>{"tags":["x","y"]}</code>. LLM returns conversational text. Fatal parse error. Every call needs a retry wrapper — just to extract two words.</div>
+              </div>
+              <div class="cs-dead-row">
+                <div class="cs-dead-cell">Latency</div>
+                <div class="cs-dead-cell">800ms standard + 600ms metadata extraction = 1.4s wait before anything useful happens.</div>
+              </div>
+              <div class="cs-dead-row">
+                <div class="cs-dead-cell">Token cost</div>
+                <div class="cs-dead-cell">15-word prompt + 400-token system prompt to classify it. 25× more to categorise than to process. Not viable for an MVP budget.</div>
+              </div>
+            </div>
+
+            <div class="cs-fight">
+              <div class="cs-fight-label">Why I pushed for gen 3</div>
+              <div class="cs-fight-text">Chips are harder to build. I pushed for them because <em>match quality is the entire product bet.</em> Vague input → bad matches → no Tribe. The chips are the quality gate that makes everything downstream worth building.</div>
+            </div>
+
+            <!-- ── 1B: ACCEPTED VERSION + FULL FLOW ── -->
+            <div class="cs-section-eyebrow" style="margin-top:64px;margin-bottom:24px">Accepted version — chip validation in action</div>
+            <div class="cs-carousel" role="region" aria-label="Chip validation — 9 states">
+              <div class="cs-car-top">
+                <span class="cs-car-label">Chip validation — 9 states</span>
+                <span class="cs-car-count" id="carCount">1 / 9</span>
+              </div>
+              <div class="cs-car-stage">
+                <button class="cs-car-btn" id="carPrev" aria-label="Previous state" disabled>
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="cs-car-window" id="carWindow">
+                  <img src="App_Screen.png" id="carImg" alt="Chip validation states" loading="lazy">
+                </div>
+                <button class="cs-car-btn" id="carNext" aria-label="Next state">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M4 2L8 6L4 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+              <div class="cs-car-bottom">
+                <div class="cs-car-desc" id="carDesc">Empty state — placeholder: "What do you want to do today?"</div>
+                <div class="cs-car-dots" id="carDots"></div>
+              </div>
+            </div>
+            <script>
+            (function(){
+              var descs = [
+                'Empty state — placeholder: "What do you want to do today?"',
+                'Cursor active — input focused, chips waiting.',
+                '"ba" typed — partial input, chips not yet triggered.',
+                '"basketball" — What chip fires, highlighted in purple.',
+                'Full sentence typed — When chip activates.',
+                'Budapest added — Where chip activates. All three chips present.',
+                'All chips green — NLP confident. Smiley face appears.',
+                'FIND THEM unlocks — CTA active, user can submit.',
+                'Error state — special characters rejected with inline message.'
+              ];
+              var total = descs.length;
+              var cur = 0;
+              var img     = document.getElementById('carImg');
+              var win     = document.getElementById('carWindow');
+              var desc    = document.getElementById('carDesc');
+              var countEl = document.getElementById('carCount');
+              var prevBtn = document.getElementById('carPrev');
+              var nextBtn = document.getElementById('carNext');
+              var dotsEl  = document.getElementById('carDots');
+              var frameW  = 0;
+
+              // Build dots
+              for(var i=0;i<total;i++){
+                (function(idx){
+                  var d = document.createElement('button');
+                  d.className = 'cs-car-dot' + (idx===0?' active':'');
+                  d.setAttribute('aria-label','State '+(idx+1));
+                  d.addEventListener('click',function(){go(idx);});
+                  dotsEl.appendChild(d);
+                })(i);
+              }
+
+              function go(n){
+                cur = n;
+                img.style.transform = 'translateX(-' + (cur * frameW) + 'px)';
+                desc.textContent    = descs[cur];
+                countEl.textContent = (cur+1) + ' / ' + total;
+                prevBtn.disabled    = cur === 0;
+                nextBtn.disabled    = cur === total - visible;
+                dotsEl.querySelectorAll('.cs-car-dot').forEach(function(d,i){
+                  d.classList.toggle('active', i===cur);
+                });
+              }
+
+              var visible = 3; // frames shown at once
+
+              function init(){
+                var scale = win.offsetHeight / img.naturalHeight;
+                frameW = (img.naturalWidth / total) * scale;
+                win.style.width = Math.round(frameW * visible) + 'px';
+                go(0);
+              }
+
+              if(img.complete && img.naturalWidth){ init(); }
+              else { img.addEventListener('load', init); }
+
+              prevBtn.addEventListener('click',function(){if(cur>0)go(cur-1);});
+              nextBtn.addEventListener('click',function(){if(cur<total-visible)go(cur+1);});
+            })();
+            </script>
+
+            </div><!-- /cs-solution-group 1 -->
+
+            <div class="cs-solution-group">
+            <!-- ── 2: PROCESS MAP ── -->
+            <div class="cs-section-eyebrow" style="margin-bottom:40px">Processing → match — decision flow</div>
+
+            <div class="cs-pm">
+
+              <!-- STEP 1: Processing (image LEFT, annotation bottom-right) -->
+              <div class="cs-pm-step" style="grid-template-columns:auto 1fr;align-items:end;gap:20px">
+                <div class="cs-pm-cell--img">
+                  <span class="cs-pm-chip cs-pm-chip--num">01 · Processing</span>
+                  <div class="cs-pm-phone"><img src="Processing_%20Teachable%20wait.png" alt="Processing — teachable wait, 3-stage ascending stack" loading="lazy"></div>
+                </div>
+                <div class="cs-pm-cell--ann" style="padding-top:0;max-width:220px">
+                  <div class="cs-pm-ann-title">Teachable wait</div>
+                  <p class="cs-pm-ann-body">A teachable wait makes AI reasoning visible — transparent processing builds trust. The user always knows exactly what's happening.</p>
+                </div>
+              </div>
+
+              <!-- Connector 1 → 2: cornered L-path, left → right -->
+              <svg class="cs-pm-conn" height="96" viewBox="0 0 800 96" fill="none" aria-hidden="true" style="margin:0">
+                <path d="M 130 0 L 130 48 L 670 48 L 670 96" stroke="var(--border-a)" stroke-width="1.2" stroke-dasharray="5 4" stroke-linejoin="miter"/>
+                <circle cx="130" cy="0" r="2.5" fill="var(--border-a)"/>
+                <circle cx="130" cy="48" r="2.5" fill="var(--border-a)"/>
+                <circle cx="670" cy="48" r="2.5" fill="var(--border-a)"/>
+                <circle cx="670" cy="96" r="2.5" fill="var(--border-a)"/>
+              </svg>
+
+              <!-- STEP 2: Location access (image RIGHT, annotation bottom-left) -->
+              <div class="cs-pm-step" style="grid-template-columns:1fr auto;align-items:end;gap:20px">
+                <div class="cs-pm-cell--ann" style="text-align:right;padding-top:0;max-width:220px;justify-self:end">
+                  <div class="cs-pm-ann-title">Used once, then gone</div>
+                  <p class="cs-pm-ann-body">GPS ask arrives mid-processing — the only moment it reads as practical, not invasive. My call: delete location post-match and use aggregated data for analytics — to increase user safety and trust.</p>
+                </div>
+                <div class="cs-pm-cell--img" style="align-items:flex-end">
+                  <span class="cs-pm-chip cs-pm-chip--num">02 · Location access</span>
+                  <div class="cs-pm-phone"><img src="Processing_Location%20access.png" alt="Processing — location access permission" loading="lazy"></div>
+                </div>
+              </div>
+
+              <!-- Fork connector: right image → cornered Y-split to 3A (left) + 3B (right) -->
+              <svg class="cs-pm-conn" height="100" viewBox="0 0 800 100" fill="none" aria-hidden="true" style="margin:0">
+                <path d="M 670 0 L 670 50" stroke="var(--border-a)" stroke-width="1.2" stroke-dasharray="5 4"/>
+                <path d="M 130 50 L 670 50" stroke="var(--border-a)" stroke-width="1.2" stroke-dasharray="5 4"/>
+                <path d="M 130 50 L 130 100" stroke="var(--border-a)" stroke-width="1.2" stroke-dasharray="5 4"/>
+                <path d="M 670 50 L 670 100" stroke="var(--border-a)" stroke-width="1.2" stroke-dasharray="5 4"/>
+                <circle cx="670" cy="0"   r="2.5" fill="var(--border-a)"/>
+                <circle cx="130" cy="50"  r="2.5" fill="var(--border-a)"/>
+                <circle cx="670" cy="50"  r="2.5" fill="var(--border-a)"/>
+                <circle cx="130" cy="100" r="2.5" fill="var(--border-a)"/>
+                <circle cx="670" cy="100" r="2.5" fill="var(--border-a)"/>
+                <text x="130" y="44" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="9" font-weight="500" fill="var(--text-c)">match found</text>
+                <text x="670" y="44" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="9" font-weight="500" fill="var(--text-c)">no match</text>
+              </svg>
+
+              <!-- STEP 3: Fork row -->
+              <div class="cs-pm-fork">
+                <div class="cs-pm-fork-side">
+                  <span class="cs-pm-chip cs-pm-chip--match">3A · Match</span>
+                  <div class="cs-pm-phone"><img src="Match.png" alt="Match results — anonymous until mutual yes" loading="lazy"></div>
+                  <div class="cs-pm-ann-title" style="margin-top:16px;max-width:220px">Anonymous until mutual yes</div>
+                  <p class="cs-pm-ann-body" style="margin-top:6px;max-width:220px">Initials and match score — no photos. Identity reveals only after both say yes, removing the power imbalance by design.</p>
+                </div>
+                <div class="cs-pm-fork-side cs-pm-fork-side--right">
+                  <span class="cs-pm-chip cs-pm-chip--no">3B · No match</span>
+                  <div class="cs-pm-phone"><img src="NO%20MATCH%20FOUND.png" alt="No match — Luck is around the corner" loading="lazy"></div>
+                  <div class="cs-pm-ann-title" style="margin-top:16px;width:260px;text-align:left">"Luck is around the corner"</div>
+                  <p class="cs-pm-ann-body" style="margin-top:6px;width:260px;text-align:left">Warm orange, not red. Nearby intents surface below — real options, no manufactured optimism.</p>
+                </div>
+              </div>
+
+            </div>
+            </div><!-- /cs-solution-group 2 -->
+
+            <div class="cs-solution-group">
+            <!-- ── 3: EDGE CASE FLOWS ── -->
+            <div style="margin-bottom:40px">
+              <h3 class="cs-section-heading">One chat at a time —<br><em style="font-size:.72em">but what happens when the user wants to leave?</em></h3>
+              <p class="cs-section-summary">No chat search, one active conversation. The constraint is intentional: users in one chat take it more seriously. When choices are limited, people value what they have. The Breathe Chat (24h pause) and Safety Exit are the pressure valves — without them, a single-chat system becomes a trap. The constraint only works because the exits are designed in. A deliberate bet against dopamine loops — no infinite scroll, no variable reward. One thing to care about, not a feed to scroll.</p>
+            </div>
+
+            <div class="cs-ef">
+
+              <!-- ROOT: More menu opened -->
+              <div style="display:flex;justify-content:center">
+                <div class="cs-ef-node cs-ef-node--center">
+                  <span class="cs-pm-chip cs-pm-chip--num">More menu</span>
+                  <div class="cs-ef-img"><img src="chat_3dots_opened.png" alt="More menu opened in chat" loading="lazy"></div>
+                </div>
+              </div>
+
+              <!-- FORK: centre=400 → left image centre≈105, right image centre≈695 -->
+              <svg class="cs-pm-conn" height="56" viewBox="0 0 800 56" fill="none" aria-hidden="true">
+                <path d="M 400 0 L 400 28 L 105 28 L 105 56" stroke="var(--border-a)" stroke-width="1.2" stroke-dasharray="5 4"/>
+                <path d="M 400 28 L 695 28 L 695 56" stroke="var(--border-a)" stroke-width="1.2" stroke-dasharray="5 4"/>
+                <circle cx="400" cy="0"  r="2.5" fill="var(--border-a)"/>
+                <circle cx="400" cy="28" r="2.5" fill="var(--border-a)"/>
+                <circle cx="105" cy="28" r="2.5" fill="var(--border-a)"/>
+                <circle cx="695" cy="28" r="2.5" fill="var(--border-a)"/>
+                <circle cx="105" cy="56" r="2.5" fill="var(--border-a)"/>
+                <circle cx="695" cy="56" r="2.5" fill="var(--border-a)"/>
+              </svg>
+
+              <!-- BRANCH ROW: Group 683 (left, Breathe chat) + Group 689 (right, Leave chat) -->
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <!-- left: image left, text right -->
+                <div class="cs-ef-node">
+                  <div class="cs-ef-img-wrap">
+                    <span class="cs-pm-chip cs-pm-chip--num" style="align-self:flex-start">Breathe chat</span>
+                    <div class="cs-ef-img"><img src="Group 683.png" alt="Breathe chat — 24h pause" loading="lazy"></div>
+                  </div>
+                  <p class="cs-ef-ann">A 24h pause on the chat — reframes stepping away as temporary, not an exit. The user keeps the connection without the pressure.</p>
+                </div>
+                <!-- right: text left, image right -->
+                <div class="cs-ef-node cs-ef-node--right">
+                  <div class="cs-ef-img-wrap">
+                    <span class="cs-pm-chip cs-pm-chip--num" style="align-self:flex-end">Leave chat</span>
+                    <div class="cs-ef-img"><img src="Group 689.png" alt="Leave chat — 5 exit reasons" loading="lazy"></div>
+                  </div>
+                  <p class="cs-ef-ann" style="text-align:right">Five exit reasons — "I'm feeling unsafe" separated in red at the bottom. Casual exit stays easy; the safety path stays findable without scanning.</p>
+                </div>
+              </div>
+
+              <!-- DOWN: L-shaped connector Group 689 → Group 690 (down from x=695, corner left to x=415) -->
+              <svg class="cs-pm-conn" height="72" viewBox="0 0 800 72" fill="none" aria-hidden="true">
+                <path d="M 695 0 L 695 36 L 415 36 L 415 72" stroke="var(--border-a)" stroke-width="1.2" stroke-dasharray="5 4" stroke-linejoin="miter"/>
+                <circle cx="695" cy="0"  r="2.5" fill="var(--border-a)"/>
+                <circle cx="695" cy="36" r="2.5" fill="var(--border-a)"/>
+                <circle cx="415" cy="36" r="2.5" fill="var(--border-a)"/>
+                <circle cx="415" cy="72" r="2.5" fill="var(--border-a)"/>
+              </svg>
+
+              <!-- BOTTOM ROW: Group 690 left-under 689, Group 691 to its right, text below each -->
+              <div style="display:flex;align-items:flex-start;gap:0;margin-left:calc(51.875% - 105px)">
+
+                <!-- Group 690: column layout, text below -->
+                <div style="display:flex;flex-direction:column;align-items:flex-start;width:210px;flex-shrink:0">
+                  <span class="cs-pm-chip cs-pm-chip--no">I feel unsafe</span>
+                  <div class="cs-ef-img"><img src="Group 690.png" alt="I'm feeling unsafe — selected state" loading="lazy"></div>
+                  <p class="cs-ef-ann" style="padding-top:8px;max-width:210px">Tapping opens a report inline — no new screen. Zero friction at the highest-stress moment.</p>
+                </div>
+
+                <!-- horizontal connector from Group 690 right → Group 691 left -->
+                <svg width="48" height="360" viewBox="0 0 48 360" fill="none" aria-hidden="true" style="flex-shrink:0">
+                  <path d="M 0 190 L 48 190" stroke="var(--border-a)" stroke-width="1.2" stroke-dasharray="5 4"/>
+                  <circle cx="0"  cy="190" r="2.5" fill="var(--border-a)"/>
+                  <circle cx="48" cy="190" r="2.5" fill="var(--border-a)"/>
+                </svg>
+
+                <!-- Group 691: column layout, text below -->
+                <div style="display:flex;flex-direction:column;align-items:flex-start;width:210px;flex-shrink:0">
+                  <span class="cs-pm-chip cs-pm-chip--no">Report inline</span>
+                  <div class="cs-ef-img"><img src="Group 691.png" alt="Report user — inline, zero nav cost" loading="lazy"></div>
+                  <p class="cs-ef-ann" style="padding-top:8px;max-width:210px">Report appears in the same row — no navigation away. The action completes exactly where the user already is.</p>
+                </div>
+
+              </div>
+
+            </div>
+
+            </div><!-- /cs-solution-group 3 -->
+
+          </div><!-- /cs-section-body-inner -->
+        </div><!-- /cs-section-body -->
+      </section><!-- /s-solution -->
+
+      <!-- ── REFLECTION ── -->
+      <section class="cs-section" id="s-reflection">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">Reflection &amp; Next Steps</div>
+            <h2 class="cs-section-heading">What I'd do differently. <em>What I'd do the same.</em></h2>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+            <div class="cs-reflection-block">
+              <div class="cs-section-eyebrow">What I'd do differently</div>
+              <p class="cs-body">Send a questionnaire before any screen was drawn. Real user intent data would have sharpened the input validation from day one.</p>
+            </div>
+
+            <div class="cs-reflection-block">
+              <div class="cs-section-eyebrow">What I'd do the same</div>
+              <p class="cs-body">Push back on anything that doesn't serve the user. Every constraint that survived the dev sync survived because it had a human reason behind it.</p>
+            </div>
+
+            <div class="cs-reflection-block">
+              <div class="cs-section-eyebrow">If this shipped tomorrow</div>
+              <p class="cs-body">One metric: prompt quality in correlation to match quality. That correlation — or the absence of it — would tell me whether the core thesis holds.</p>
+            </div>
+
+            <!-- Alpha Validation Blueprint -->
+            <div style="margin-top:40px;padding-top:0">
+              <div style="font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);margin-bottom:10px">Proposed Testing Plans · Alpha Phase</div>
+              <h3 style="font-size:17px;font-weight:500;color:var(--text);margin:0 0 20px;line-height:1.3;letter-spacing:-.018em">Alpha Validation Blueprint</h3>
+
+              <style>
+                .avb-phase{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px}
+                .avb-phase summary{list-style:none;background:var(--bg-alt);padding:14px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+                .avb-phase summary::-webkit-details-marker{display:none}
+                .avb-phase[open]>summary{border-bottom:1px solid var(--border)}
+                .avb-chev{margin-left:auto;color:var(--text-c);transition:transform .2s;flex-shrink:0}
+                .avb-phase[open] .avb-chev{transform:rotate(180deg)}
+                .avb-body{padding:0 20px}
+                .avb-row{display:grid;grid-template-columns:130px 1fr;gap:0;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--border)}
+                .avb-row:last-child{border-bottom:none}
+                .avb-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-c)}
+                .avb-val{font-size:14px;color:var(--text-s);line-height:1.65}
+              </style>
+
+              <!-- Phase 1 -->
+              <details class="avb-phase">
+                <summary>
+                  <span style="font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-d);background:var(--accent-l);border-radius:4px;padding:3px 7px;flex-shrink:0">Phase 1</span>
+                  <span style="font-size:14px;font-weight:500;color:var(--text)">Pre-Launch Lab Testing</span>
+                  <span style="font-size:12px;color:var(--text-c)">— Usability</span>
+                  <svg class="avb-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                </summary>
+                <div class="avb-body">
+                  <div class="avb-row"><div class="avb-label">Objective</div><div class="avb-val">Verify if real-time keyword highlighting reduces input anxiety and ensures semantic accuracy.</div></div>
+                  <div class="avb-row"><div class="avb-label">Methodology</div><div class="avb-val">Moderated testing (8–10 participants) using low-fidelity click-dummies.</div></div>
+                  <div class="avb-row"><div class="avb-label">Signals</div><div class="avb-val">Time-on-task, token correction frequency, and subjective workload (SEQ score).</div></div>
+                </div>
+              </details>
+
+              <!-- Phase 2 -->
+              <details class="avb-phase">
+                <summary>
+                  <span style="font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-d);background:var(--accent-l);border-radius:4px;padding:3px 7px;flex-shrink:0">Phase 2</span>
+                  <span style="font-size:14px;font-weight:500;color:var(--text)">Alpha Field Testing</span>
+                  <span style="font-size:12px;color:var(--text-c)">— Telemetry</span>
+                  <svg class="avb-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                </summary>
+                <div class="avb-body">
+                  <div class="avb-row"><div class="avb-label">Objective</div><div class="avb-val">Validate the NLP matching engine and progressive disclosure mechanics under live infrastructure load.</div></div>
+                  <div class="avb-row"><div class="avb-label">Methodology</div><div class="avb-val">14-day unmoderated field test deployed to a high-density cohort of 500–1,000 target users in Budapest.</div></div>
+                  <div class="avb-row"><div class="avb-label">Signals</div><div class="avb-val">Progress toward the target ≥40% match-to-meetup conversion milestone, live data logging against the &lt;40% engine failure threshold, and exact drop-off points within the unmasking sequence.</div></div>
+                </div>
+              </details>
+
+            </div>
+            <!-- /Alpha Validation Blueprint -->
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ── CODA ── -->
+      <div style="padding:80px 0 64px 0;display:flex;flex-direction:column;align-items:center;text-align:center">
+
+        <!-- Purple rule -->
+        <div style="width:48px;height:2px;background:var(--accent-d);border-radius:2px;margin-bottom:64px"></div>
+
+        <!-- CTO quote -->
+        <div class="cs-transfer-quote cs-transfer-quote--closing" style="margin:0 auto 48px auto;padding:0">
+          "This is very, very high level. I like it a lot."
+          <span class="cs-transfer-quote-attr">— CTO, Tribe</span>
+        </div>
+
+        <!-- AI Engineer quote -->
+        <div class="cs-transfer-quote cs-transfer-quote--closing" style="margin:0 auto;padding:0">
+          "This is an app I'd actually want to see built."
+          <span class="cs-transfer-quote-attr">— AI Engineer &amp; Neuroscientist, Tribe. <em>The CTO nodded.</em></span>
+        </div>
+
+      </div>
+
+      <!-- ── MORE CASE STUDIES ── -->
+      <div style="padding:80px 0 64px 0;margin-top:80px">
+        <div style="font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-m);margin-bottom:20px">More case studies</div>
+
+        <div style="display:flex;flex-direction:column;border-top:1px solid var(--border);padding-top:14px">
+          <div class="cs-more-row" style="cursor:default;pointer-events:none">
+            <span class="cs-more-num" style="color:var(--accent-d)">01</span>
+            <span class="cs-more-title" style="color:var(--text)">What do you want to do today?</span>
+            <span class="cs-more-arrow" style="opacity:0">↗</span>
+          </div>
+          <a href="../case-study-guardrail.html" class="cs-more-row">
+            <span class="cs-more-num">02</span>
+            <span class="cs-more-title">When AI is most uncertain, humans are least equipped to notice</span>
+            <span class="cs-more-arrow">↗</span>
+          </a>
+          <a href="../case-study-mindure-v2.html" class="cs-more-row">
+            <span class="cs-more-num">03</span>
+            <span class="cs-more-title">Built to calm the fear. Found out why that was the wrong goal.</span>
+            <span class="cs-more-arrow">↗</span>
+          </a>
+          <a href="../case-study-therapy.html" class="cs-more-row">
+            <span class="cs-more-num">04</span>
+            <span class="cs-more-title">Because not every emotion fits into words</span>
+            <span class="cs-more-arrow">↗</span>
+          </a>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+// Sections animate in
+const sections = document.querySelectorAll('.cs-section');
+const io = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible') }), {threshold:0.06});
+sections.forEach(s => io.observe(s));
+
+// Progress bar + scrollspy
+const pf = document.getElementById('pf');
+const navItems = document.querySelectorAll('.cs-nav-item');
+function updateScroll() {
+  // Progress bar
+  const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+  if(pf) pf.style.width = pct + '%';
+  // Active nav — use getBoundingClientRect so nesting/padding never skews the result
+  const threshold = 120; // px from top of viewport (below topbar)
+  let cur = sections[0].id;
+  sections.forEach(s => {
+    if(s.getBoundingClientRect().top <= threshold) cur = s.id;
+  });
+  navItems.forEach(n => n.classList.toggle('active', n.dataset.s === cur));
+  // Footer dodge — push float buttons above footer when it scrolls into view
+  const _footer = document.querySelector('footer');
+  const _btns = document.getElementById('floatBtns');
+  if(_footer && _btns){
+    const overlap = window.innerHeight - _footer.getBoundingClientRect().top;
+    _btns.style.bottom = (overlap > 0 ? overlap + 24 : 24) + 'px';
+  }
+}
+window.addEventListener('scroll', updateScroll, {passive:true});
+updateScroll(); // run once on load so initial state is correct
+
+
+// Decision row expand
+function toggleDecision(row) {
+  const detail = row.nextElementSibling;
+  const open = row.classList.contains('open');
+  row.classList.toggle('open', !open);
+  detail.classList.toggle('open', !open);
+}
+
+// ── A11Y PANEL ──
+let a11yOpen = false;
+function toggleA11y(){
+  a11yOpen = !a11yOpen;
+  const p = document.getElementById('a11yPanel');
+  const b = document.getElementById('btnA11y');
+  if(p) p.classList.toggle('open', a11yOpen);
+  if(b) b.classList.toggle('open', a11yOpen);
+}
+document.addEventListener('click', e => {
+  if(a11yOpen && !e.target.closest('.a11y-fixed')){
+    a11yOpen = false;
+    const p = document.getElementById('a11yPanel');
+    const b = document.getElementById('btnA11y');
+    if(p) p.classList.remove('open');
+    if(b) b.classList.remove('open');
+  }
+});
+function fs(v){
+  const s = {'-2':.82,'-1':.91,'0':1,'1':1.1,'2':1.2};
+  document.body.style.fontSize = (s[String(v)] * 100) + '%';
+}
+function toggleCT(){
+  const t = document.getElementById('ctToggle');
+  const on = t.classList.toggle('on');
+  document.documentElement.style.setProperty('--text', on ? '#000' : '#1B1A18');
+  document.documentElement.style.setProperty('--bg', on ? '#FFF' : '#F4F1ED');
+}
+function toggleRM(){
+  const t = document.getElementById('rmToggle');
+  t.classList.toggle('on');
+  document.documentElement.style.setProperty('--dur', t.classList.contains('on') ? '0ms' : '200ms');
+}
+function doEmail(){
+  window.open('mailto:hello@orsolyag.com','_blank');
+}
+</script>
+<!-- ── BOTTOM-RIGHT CORNER: noise + a11y ── -->
+<div id="floatBtns" style="position:fixed;bottom:24px;right:24px;z-index:500;display:flex;flex-direction:row;gap:8px;align-items:center;transition:bottom .15s var(--ease)">
+
+  <!-- Focus / brown noise toggle -->
+  <button class="btn btn-a11y" id="btnFocus" onclick="toggleFocus()" aria-label="Toggle focus noise" title="Noise for focus — brown noise" style="width:auto;padding:6px 10px;gap:6px;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase">
+    <span class="focus-icon-off" style="display:flex;align-items:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 9L17 15M17 9L23 15M11 5L6 9H2V15H6L11 19V5Z"/>
+      </svg>
+    </span>
+    <span class="focus-icon-on" style="display:none;align-items:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19.07 4.93C20.94 6.8 22 9.35 22 12C22 14.65 20.94 17.2 19.07 19.07M15.54 8.46C16.48 9.4 17 10.67 17 12C17 13.32 16.48 14.59 15.54 15.54M11 5L6 9H2V15H6L11 19V5Z"/>
+      </svg>
+    </span>
+    NOISE FOR FOCUS
+  </button>
+
+  <!-- A11y trigger -->
+  <div class="a11y-fixed" id="a11yFixed" style="position:static">
+    <button class="btn btn-a11y" id="btnA11y" onclick="toggleA11y()" aria-label="Accessibility settings">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="12" cy="4" r="2"/>
+        <path d="M9 22V9H3V7h18v2h-6v13h-2v-6h-2v6H9z"/>
+      </svg>
+    </button>
+    <div class="a11y-panel" id="a11yPanel">
+      <div class="a11y-title">Accessibility</div>
+      <div class="a11y-row" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <span class="a11y-lbl">Text size</span>
+        <div style="display:flex;align-items:center;gap:8px;width:100%">
+          <span style="font-size:14px;color:var(--text-m)">A</span>
+          <input type="range" id="fsSlider" min="-2" max="2" step="1" value="0"
+            style="flex:1;height:3px;accent-color:var(--accent);cursor:pointer"
+            oninput="fs(parseInt(this.value))">
+          <span style="font-size:14px;color:var(--text-m)">A</span>
+        </div>
+      </div>
+      <div class="a11y-row">
+        <span class="a11y-lbl">High contrast</span>
+        <div class="a11y-toggle" id="ctToggle" onclick="toggleCT()"><div class="a11y-dot"></div></div>
+      </div>
+      <div class="a11y-row">
+        <span class="a11y-lbl">Reduce motion</span>
+        <div class="a11y-toggle" id="rmToggle" onclick="toggleRM()"><div class="a11y-dot"></div></div>
+      </div>
+      <div class="a11y-note">Respects your system preferences by default.</div>
+    </div>
+  </div>
+
+</div><!-- end corner buttons -->
+
+<style>
+#btnFocus.active{
+  border-color:var(--accent);
+  color:var(--accent);
+  background:var(--accent-l);
+  box-shadow:0 4px 16px rgba(140,126,150,.18),0 0 0 1px var(--accent);
+}
+#btnFocus.active .focus-icon-off{display:none!important}
+#btnFocus.active .focus-icon-on{display:flex!important}
+</style>
+<script>
+(function(){
+  let ctx, source, gainNode, active = false;
+
+  function brownNoise(ctx){
+    const bufSize = ctx.sampleRate * 4;
+    const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    let lastOut = 0;
+    for(let i = 0; i < bufSize; i++){
+      const white = Math.random() * 2 - 1;
+      data[i] = (lastOut + (0.02 * white)) / 1.02;
+      lastOut = data[i];
+      data[i] *= 3.5;
+    }
+    return buf;
+  }
+
+  window.toggleFocus = function(){
+    const btn = document.getElementById('btnFocus');
+    if(!active){
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const buf = brownNoise(ctx);
+      source = ctx.createBufferSource();
+      source.buffer = buf;
+      source.loop = true;
+      gainNode = ctx.createGain();
+      gainNode.gain.setValueAtTime(0, ctx.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 1.2);
+      source.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      source.start();
+      btn.classList.add('active');
+      btn.setAttribute('aria-label','Stop focus noise');
+      active = true;
+    } else {
+      gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.8);
+      setTimeout(function(){ source.stop(); ctx.close(); }, 900);
+      btn.classList.remove('active');
+      btn.setAttribute('aria-label','Toggle focus noise');
+      active = false;
+    }
+  };
+})();
+</script>
+<footer class="cs-site-footer">
+  <a href="../index.html" style="color:var(--text);text-decoration:none;opacity:.7;transition:opacity .2s" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.7'" aria-label="Orsolya G. — home">
+    <svg height="16" viewBox="0 0 1000 168.7" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="width:auto;display:block">
+      <g>
+        <path d="M145.6,64.9c-3.1-7.3-7.4-13.7-12.8-19c-5.5-5.3-11.9-9.5-19.2-12.4c-7.3-3-15.2-4.4-23.6-4.4c-8.3,0-16.1,1.5-23.4,4.4c-7.3,3-13.7,7.1-19.2,12.4c-5.5,5.3-9.8,11.6-12.9,19c-3.1,7.3-4.7,15.4-4.7,24.3c0,8.7,1.6,16.8,4.7,24.1c3.1,7.3,7.4,13.7,12.9,19.1c5.5,5.4,11.9,9.5,19.2,12.5c7.3,3,15.1,4.4,23.4,4.4c8.4,0,16.2-1.5,23.5-4.4c7.3-3,13.7-7.1,19.2-12.5c5.5-5.4,9.8-11.7,12.9-19.1c3.1-7.3,4.6-15.4,4.6-24.1C150.2,80.3,148.7,72.2,145.6,64.9z M112.9,114c-5.8,6.3-13.4,9.4-22.9,9.4c-9.5,0-17.1-3.1-22.8-9.4c-5.7-6.3-8.6-14.5-8.6-24.8c0-10.5,2.9-18.9,8.6-25c5.7-6.2,13.3-9.2,22.8-9.2c9.5,0,17.1,3.1,22.9,9.2c5.8,6.2,8.6,14.5,8.6,25C121.5,99.4,118.6,107.7,112.9,114z"/>
+        <path d="M335,88.8c-3.5-2.5-7.4-4.5-11.7-6.2c-4.3-1.7-8.5-3.2-12.7-4.4c-4.2-1.3-8.1-2.6-11.7-4c-3.6-1.4-6.4-3-8.6-5c-2.1-1.9-3.2-4.3-3.2-7.2c0-3.5,1.3-6.1,3.9-8c2.6-1.8,5.7-2.8,9.4-2.8c4,0,7.4,1.3,10.2,3.8c1.7,1.5,3.1,3.5,4.1,5.8c1.3,2.9,4.4,4.5,7.4,3.7l15.6-4.1c3.6-1,5.7-4.9,4.3-8.4c-2.3-6.1-6.4-11.3-12.1-15.4c-7.7-5.6-17.3-8.4-28.9-8.4c-8.5,0-15.9,1.4-22.3,4.1c-6.4,2.7-11.4,6.7-15,12c-3.6,5.3-5.5,11.6-5.5,19c0,5.6,1.1,10.3,3.2,14.1c2.1,3.8,5,7,8.5,9.5c3.5,2.5,7.4,4.6,11.6,6.3c4.2,1.7,8.4,3.2,12.6,4.5c4.2,1.3,8,2.7,11.5,4c3.5,1.3,6.3,3,8.4,5c2.1,2,3.2,4.4,3.2,7.5c0,3.4-1.3,6-3.9,8.1c-2.6,2-6.4,3-11.2,3c-4.6,0-8.5-1.6-11.8-4.7c-2.2-2.1-3.9-4.7-5.1-7.8c-1.2-2.9-4.1-4.5-7.1-3.8l-15.6,3.5c-3.7,0.8-5.9,4.8-4.6,8.4c2.7,7.4,7.3,13.4,13.9,18.3c8.5,6.3,19,9.4,31.6,9.4c8.4,0,15.9-1.7,22.4-5c6.5-3.3,11.7-7.7,15.4-13.1c3.7-5.4,5.6-11.4,5.6-18c0-5.6-1.1-10.3-3.3-14.1C341.4,94.4,338.5,91.2,335,88.8z"/>
+        <path d="M462.8,45c-5.5-5.3-11.9-9.5-19.2-12.4c-7.3-3-15.2-4.4-23.6-4.4c-8.3,0-16.1,1.5-23.4,4.4c-7.3,3-13.7,7.1-19.2,12.4c-5.5,5.3-9.8,11.6-12.9,19c-3.1,7.3-4.7,15.4-4.7,24.3c0,8.7,1.6,16.8,4.7,24.1c3.1,7.3,7.4,13.7,12.9,19.1c5.5,5.4,11.9,9.5,19.2,12.5c7.3,3,15.1,4.4,23.4,4.4c8.4,0,16.2-1.5,23.5-4.4c7.3-3,13.7-7.1,19.2-12.5c5.5-5.4,9.8-11.7,12.9-19.1c3.1-7.3,4.6-15.4,4.6-24.1c0-8.8-1.5-16.9-4.6-24.3C472.6,56.7,468.3,50.4,462.8,45z M442.9,113.1c-5.8,6.3-13.4,9.4-22.9,9.4c-9.5,0-17.1-3.1-22.8-9.4c-5.7-6.3-8.6-14.5-8.6-24.8c0-10.5,2.9-18.9,8.6-25c5.7-6.2,13.3-9.2,22.8-9.2c9.5,0,17.1,3.1,22.9,9.2c5.8,6.2,8.6,14.5,8.6,25C451.6,98.6,448.7,106.9,442.9,113.1z"/>
+        <path d="M628.8,27.5h-17.3c-2.5,0-4.7,1.4-5.8,3.7l-15.4,33.5c-2.3,4.9-9.2,4.9-11.5,0l-15.5-33.5c-1-2.2-3.3-3.7-5.8-3.7H540c-4.8,0-7.8,5-5.6,9.3l35.1,68.1c0.5,0.9,0.7,1.9,0.7,2.9V139c0,3.5,2.8,6.3,6.3,6.3h15.7c3.5,0,6.3-2.8,6.3-6.3v-31.2c0-1,0.2-2,0.7-2.9l35.1-68.1C636.6,32.6,633.5,27.5,628.8,27.5z"/>
+        <path d="M698.5,31.7c-0.9-2.5-3.3-4.2-6-4.2h-23.8c-2.7,0-5.1,1.7-6,4.2l-38,105.2c-1.5,4.1,1.6,8.5,6,8.5h16.1c2.7,0,5.1-1.7,6-4.3l4.1-12.2c0.9-2.6,3.3-4.3,6-4.3h35.2c2.7,0,5.2,1.8,6,4.4l4,12.1c0.9,2.6,3.3,4.4,6,4.4h16.3c4.4,0,7.5-4.4,6-8.5L698.5,31.7z M686.3,102.6h-11.7c-4.3,0-7.4-4.3-6-8.4l5.9-17.4c1.9-5.8,10.1-5.7,12,0l5.8,17.4C693.7,98.3,690.6,102.6,686.3,102.6z"/>
+        <path d="M240.3,113.6c-4.2-6.1-9.1-10.8-14.7-14.1c-2.7-1.6-2.4-5.2,0.4-6.5c4.4-2,8.1-4.8,11.1-8.3c4.8-5.6,7.2-12,7.2-19.3c0-10.9-4-19.6-12-26.2c-8-6.6-19.4-9.9-34.2-9.9h-46c-3.2,0-4.8,3.2-3.5,5.5c0,0.1,0.1,0.1,0.1,0.2c0,0,0.1,0.1,0.1,0.2c0.1,0.1,0.1,0.1,0.2,0.2c8.6,10.5,38.5,50.7,1.1,106.5c-1.3,1.9,0.1,4.4,2.4,4.4h28.2c1.1,0,2.1-0.6,2.5-1.6c2.3-4.6,8.9-18.8,11.6-37.3c3.2,1.2,6,2.7,8.6,4.5c5.1,3.7,9,8.6,11.6,14.6c2.2,5.2,3.7,10.9,4.4,17.3c0.2,1.9,1.9,3.3,3.9,3.3h24.4c2.4,0,4.3-2,3.9-4.3C249.5,131.4,245.8,121.6,240.3,113.6z M209.1,77.5c-2.9,2.8-7.2,4.2-12.8,4.2h-1c-1-9.6-3.6-19.5-8.4-29.4h9.4c5.5,0,9.7,1.3,12.7,3.9c3,2.6,4.5,6.1,4.5,10.3C213.5,71.1,212,74.7,209.1,77.5z"/>
+        <path d="M541,123.4h-20.2c5.6-23.6,8.8-62.8-14.3-94.5c-0.3-0.3,0-0.8-0.4-0.8l-6.5,0.1H483c-3.2,0-4.8,3.2-3.5,5.5c0,0.1,0.1,0.1,0.1,0.2c0,0,0.1,0.1,0.1,0.2c0.1,0.1,0.1,0.1,0.2,0.2c8.3,10.2,36.6,48.2,4.4,101.3c-2.6,4.2,0.5,9.6,5.4,9.6H511c0.3,0,0.6,0,0.9-0.1c0.4,0.3,0.9,0.4,1.4,0.4H541c3.5,0,6.3-2.8,6.3-6.3v-9.3C547.3,126.2,544.5,123.4,541,123.4z"/>
+        <path d="M912.7,78.3h-54.3c-2.1,0-3.8,1.7-3.8,3.8v14.4c0,2.1,1.7,3.8,3.8,3.8h25.2c2.9,0,4.8,3.2,3.3,5.7c-0.9,1.5-1.9,3-3.1,4.5c-2.6,3.2-5.7,5.8-9.5,7.8c-3.8,2-7.9,2.9-12.5,2.9c-6.5,0-12.2-1.4-17.2-4.2c-5-2.8-8.9-6.8-11.8-12c-2.9-5.2-4.3-11.5-4.3-18.9c0-10.3,2.8-18.6,8.4-24.8c5.6-6.2,13.1-9.3,22.5-9.3c6.4,0,11.7,1.6,16,4.7c3.4,2.5,6.1,5.7,8,9.7c0.9,1.8,2.9,2.7,4.8,2l20.4-7.5c2.1-0.8,3.1-3.1,2.2-5.1c-4-9.2-10.3-16.3-18.6-21.2c-9.5-5.6-20.4-8.4-32.7-8.4c-11.4,0-21.6,2.5-30.6,7.6c-9,5-16.1,12.1-21.3,21.1c-5.2,9-7.8,19.4-7.8,31.3c0,9,1.5,17.1,4.4,24.4c3,7.3,7.1,13.7,12.3,19.1c5.2,5.4,11.2,9.5,18,12.4c6.8,2.9,14,4.4,21.5,4.4c6.8,0,12.7-1.2,17.6-3.7c4.9-2.5,9-5.5,12.1-9.1c0,0,0.1-0.1,0.1-0.1c2.3-2.6,6.6-1.1,6.6,2.4v5.4c0,2.1,1.7,3.8,3.8,3.8h16.5c2.1,0,3.8-1.7,3.8-3.8V82.1C916.6,80,914.9,78.3,912.7,78.3z"/>
+        <circle cx="956.9" cy="129" r="18.9"/>
+      </g>
+    </svg>
+  </a>
+  <div style="display:flex;align-items:center;gap:20px">
+    <a href="mailto:hello@orsolyag.com" style="font-size:13px;color:var(--text-s);text-decoration:none;transition:color .2s" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text-s)'">hello@orsolyag.com</a>
+    <a href="https://linkedin.com/in/orsolyagorcz" target="_blank" style="font-size:13px;color:var(--text-s);text-decoration:none;transition:color .2s" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text-s)'">LinkedIn</a>
+    <a href="resume.pdf" target="_blank" style="font-size:13px;color:var(--text-s);text-decoration:none;transition:color .2s" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text-s)'">Resume</a>
+    <span style="font-size:13px;color:var(--text-m)">© 2026</span>
+  </div>
+</footer>
+</body>
+</html>
