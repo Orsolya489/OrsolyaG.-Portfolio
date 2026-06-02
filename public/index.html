@@ -565,12 +565,19 @@ body::before{
   .about-outside-thumbs{flex-wrap:nowrap;overflow:hidden}
   /* case study overview strip */
   div[style*="justify-content:space-between"]{flex-wrap:wrap;gap:8px}
-  /* about photo full width, taller */
-  .about-photo-fixed{width:100%!important;flex-shrink:0}
-  .about-photo-fixed img{width:100%;height:auto;min-height:min(60vw,320px);aspect-ratio:1/1;object-fit:cover;object-position:center top}
-  /* email CTA: show full label on mobile */
+  /* about main photo — full width, portrait crop */
+  .about-photo-fixed{width:100%!important;flex-shrink:0;border-radius:16px;overflow:hidden}
+  .about-photo-fixed img{
+    width:100%;
+    height:auto;
+    aspect-ratio:3/4;
+    object-fit:cover;
+    object-position:center top;
+    display:block;
+  }
+  /* email CTA: full rounded rectangle, generous padding */
   .btn-email span{display:inline!important}
-  .btn-email{padding:14px 24px;font-size:14px;gap:8px}
+  .btn-email{padding:16px 32px;font-size:15px;gap:10px;border-radius:20px}
   /* footer: clear the bottom nav */
   footer{padding-bottom:calc(72px + max(8px,env(safe-area-inset-bottom)))}
   /* bottom nav: hug screen edge, safe area */
@@ -592,8 +599,18 @@ body::before{
   .cs-card{margin:0 8px 8px}
   /* floatBtns above bottom tab bar */
   #floatBtns{bottom:calc(56px + max(8px,env(safe-area-inset-bottom)) + 16px) !important}
-  /* a11y panel */
-  .a11y-panel{right:0;left:auto;width:200px}
+  /* a11y panel — same as desktop, no squeeze */
+  .a11y-panel{
+    width:218px!important;
+    min-width:218px;
+    left:auto!important;
+    right:0!important;
+    padding:14px!important;
+    font-size:13px;
+  }
+  .a11y-lbl{font-size:13px;white-space:nowrap}
+  .a11y-title{font-size:13px}
+  .a11y-note{font-size:13px}
   /* nav labels */
   .nav-label{font-size:10px;overflow:hidden;text-overflow:ellipsis;max-width:56px}
   /* section cards */
