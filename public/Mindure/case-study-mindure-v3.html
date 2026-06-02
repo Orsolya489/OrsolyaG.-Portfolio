@@ -212,6 +212,24 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
   .cs-3col{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){.cs-section{transition:none;opacity:1;transform:none}}
+/* ── IMAGE LIGHTBOX ── */
+.img-z{position:relative;display:inline-block;cursor:zoom-in;overflow:hidden;border-radius:inherit}
+.img-z img{display:block;width:100%;height:auto;transition:transform .3s var(--ease)}
+.img-z::after{
+  content:'';
+  position:absolute;top:8px;right:8px;
+  width:28px;height:28px;border-radius:6px;
+  background:rgba(27,26,24,.52) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3'/%3E%3C/svg%3E") center/14px no-repeat;
+  opacity:0;transition:opacity .2s var(--ease);
+  pointer-events:none;
+}
+.img-z:hover::after{opacity:1}
+.img-z:hover img{transform:scale(1.015)}
+.cs-lb{position:fixed;inset:0;background:rgba(27,26,24,.88);backdrop-filter:blur(8px);z-index:9100;display:none;align-items:center;justify-content:center;padding:24px}
+.cs-lb.open{display:flex}
+.cs-lb-img{max-width:100%;max-height:88vh;border-radius:10px;object-fit:contain;display:block;box-shadow:0 24px 64px rgba(0,0,0,.4)}
+.cs-lb-close{position:fixed;top:18px;right:22px;background:none;border:none;cursor:pointer;color:rgba(246,244,241,.75);font-size:28px;line-height:1;padding:6px;z-index:9101;transition:color .2s}
+.cs-lb-close:hover{color:#fff}
 </style>
 </head>
 <body>
@@ -757,6 +775,37 @@ function toggleRM(){
   document.documentElement.style.setProperty('--dur', t.classList.contains('on') ? '0ms' : '200ms');
 }
 function doEmail(){ window.open('mailto:hello@orsolyag.com','_blank'); }
+</script>
+
+<!-- ── LIGHTBOX ── -->
+<div class="cs-lb" id="csLb" onclick="if(event.target===this)csLbClose()">
+  <button class="cs-lb-close" onclick="csLbClose()" aria-label="Close">✕</button>
+  <img class="cs-lb-img" id="csLbImg" src="" alt="">
+</div>
+<script>
+function csLbOpen(src){
+  document.getElementById('csLbImg').src=src;
+  document.getElementById('csLb').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function csLbClose(){
+  document.getElementById('csLb').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')csLbClose();});
+document.querySelectorAll('.cs-main img, .cs-inner img').forEach(function(img){
+  if(img.id==='csLbImg') return;
+  var p=img.parentElement;
+  if(!p.classList.contains('img-z')){
+    var wrap=document.createElement('div');
+    wrap.className='img-z';
+    p.insertBefore(wrap,img);
+    wrap.appendChild(img);
+    p=wrap;
+  }
+  p.style.cursor='zoom-in';
+  p.addEventListener('click',function(){csLbOpen(img.src);});
+});
 </script>
 </body>
 </html>
