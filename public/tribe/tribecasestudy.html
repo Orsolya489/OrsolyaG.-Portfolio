@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Tribe — Intent-Based Human Search · Orsolya G.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAF9F5;--text:#1E1C1A;--text-s:#6B6862;--text-c:#9A9690;
+  --accent:#5B5E8A;--accent-l:#EEEDF4;
+  --border:#E2DFD8;--surface:#F2EFE8;
+  --topbar:64px;--sidebar:200px;
+  --radius-card:16px;--radius-inner:10px;
+  --ease:cubic-bezier(.4,0,.2,1);--dur:200ms;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+.skip{position:fixed;top:-100px;left:8px;background:var(--accent);color:#fff;padding:8px 16px;border-radius:0 0 8px 8px;font-size:13px;font-weight:500;text-decoration:none;z-index:9999;transition:top .2s}
+.skip:focus{top:0}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:300;background:rgba(250,249,245,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.topbar-left{display:flex;align-items:center;gap:20px}
+.back-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;border:1px solid var(--border);font-size:11px;font-weight:500;color:var(--text-s);text-decoration:none;background:transparent;transition:background var(--dur),color var(--dur)}
+.back-btn:hover{background:var(--surface);color:var(--text)}
+.logo-text{font-size:13px;color:var(--text-c);text-decoration:none}
+.case-num{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text-c)}
+
+/* LAYOUT */
+.cs-page{padding-top:var(--topbar);min-height:100vh}
+.cs-inner{display:grid;grid-template-columns:var(--sidebar) 1fr;max-width:1120px;margin:0 auto;padding:0 40px;align-items:start}
+
+/* SIDEBAR */
+.cs-sidebar{position:sticky;top:calc(var(--topbar) + 40px);padding:40px 32px 40px 0;max-height:calc(100vh - var(--topbar) - 80px);overflow-y:auto}
+.cs-nav-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);margin-bottom:10px;padding-left:10px}
+.cs-nav{display:flex;flex-direction:column;gap:2px}
+.cs-nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;text-decoration:none;font-size:12px;color:var(--text-s);transition:background var(--dur),color var(--dur);position:relative;min-height:36px}
+.cs-nav-item:hover{background:var(--surface);color:var(--text)}
+.cs-nav-item.active{color:var(--accent);font-weight:500}
+.cs-nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:2px;height:14px;background:var(--accent);border-radius:2px}
+.cs-sidebar-divider{height:1px;background:var(--border);margin:16px 0}
+.cs-meta-block{padding-left:10px}
+.cs-meta-row{display:flex;gap:6px;margin-bottom:5px;align-items:baseline}
+.cs-meta-k{font-size:10px;color:var(--text-c);width:52px;flex-shrink:0}
+.cs-meta-v{font-size:10px;color:var(--text);font-weight:500}
+.cs-progress-bar{height:2px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:16px}
+.cs-progress-fill{height:100%;background:var(--accent);width:0%;transition:width .1s linear;border-radius:2px}
+
+/* MAIN */
+.cs-main{padding:48px 0 120px 48px;border-left:1px solid var(--border);min-height:100vh}
+
+/* TITLE */
+.cs-eyebrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.cs-pill{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:var(--accent-l);color:var(--accent);border:1px solid rgba(91,94,138,.2)}
+.cs-pill-mvp{background:#EDF2FA;color:#3A5085;border-color:#A8BDDE}
+.cs-title{font-size:38px;font-weight:300;line-height:1.08;letter-spacing:-.025em;color:var(--text);margin-bottom:18px}
+.cs-title em{font-style:italic}
+.cs-hook{font-size:15px;font-style:italic;color:var(--accent);line-height:1.65;margin-bottom:40px;padding-left:16px;border-left:2px solid var(--accent)}
+
+/* SECTIONS */
+.cs-section{padding:40px 0;border-top:1px solid var(--border);opacity:0;transform:translateY(12px);transition:opacity 400ms var(--ease),transform 400ms var(--ease)}
+.cs-section:first-of-type{border-top:none;padding-top:0}
+.cs-section.visible{opacity:1;transform:none}
+.cs-section-top{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;cursor:pointer;user-select:none}
+.cs-section-top:hover .cs-toggle-icon{opacity:.7}
+.cs-section-eyebrow{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);margin-bottom:6px}
+.cs-section-heading{font-size:20px;font-weight:400;color:var(--text);line-height:1.25;letter-spacing:-.01em}
+.cs-section-heading em{font-style:italic}
+.cs-section-summary{font-size:13px;color:var(--text-s);line-height:1.65;margin-top:8px;max-width:520px}
+.cs-toggle-icon{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:4px;transition:background var(--dur),border-color var(--dur),opacity var(--dur)}
+.cs-toggle-icon svg{transition:transform 300ms var(--ease)}
+.cs-section-top.open .cs-toggle-icon svg{transform:rotate(180deg)}
+.cs-section-top.open .cs-toggle-icon{background:var(--accent-l);border-color:rgba(91,94,138,.3)}
+.cs-section-body{overflow:hidden;max-height:0;transition:max-height 500ms var(--ease)}
+.cs-section-body.open{max-height:9999px}
+.cs-section-body-inner{padding-top:24px}
+
+/* TEXT */
+.cs-body{font-size:14px;color:var(--text-s);line-height:1.82;max-width:560px}
+.cs-body p{margin-bottom:14px}
+.cs-body p:last-child{margin-bottom:0}
+.cs-body-lead{font-size:15px;font-weight:400;color:var(--text);line-height:1.7;margin-bottom:16px;max-width:560px}
+.cs-eyebrow-sm{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);margin-bottom:8px}
+.cs-eyebrow-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);display:block;margin-bottom:10px}
+
+/* 2-COL */
+.cs-2col{display:grid;grid-template-columns:1fr 160px;gap:40px;align-items:start;margin-top:24px}
+
+/* STAT STRIP — vertical */
+.cs-stat-v{display:flex;flex-direction:column;gap:1px;border:1px solid var(--border);border-radius:var(--radius-inner);overflow:hidden}
+.cs-stat-item{background:var(--bg);padding:14px 16px;border-bottom:1px solid var(--border);text-align:center}
+.cs-stat-item:last-child{border-bottom:none}
+.cs-stat-n{font-size:28px;font-weight:300;letter-spacing:-.02em;color:var(--text);line-height:1}
+.cs-stat-l{font-size:10px;color:var(--text-c);margin-top:4px;line-height:1.3}
+
+/* ARTIFACT */
+.cs-artifact-wide{margin:24px 0;border-radius:var(--radius-inner);border:1px solid var(--border);overflow:hidden}
+.cs-artifact-wide img{width:100%;height:auto;display:block}
+.cs-img-caption{font-size:11px;color:var(--text-c);font-style:italic;padding:10px 16px;border-top:1px solid var(--border);background:var(--surface);margin:0}
+.cs-artifact-scrollable{overflow:hidden}
+.cs-artifact-scrollable .cs-artifact-inner{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cs-artifact-scrollable img{height:280px;width:auto;max-width:none;display:block}
+
+/* PROBLEM SPLIT */
+.cs-problem-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0 24px;align-items:start}
+.cs-problem-col{padding:18px 20px;border-radius:var(--radius-inner);border:1px solid var(--border)}
+.cs-problem-col--bad{background:#FDF5F5;border-color:#F0C4C2}
+.cs-problem-col--good{background:#F0F7F0;border-color:#A8C880}
+.cs-problem-col p{font-size:13px;color:var(--text-s);line-height:1.7;margin:0}
+
+/* LENS */
+.cs-lens{border-left:2px solid var(--accent);background:var(--accent-l);border-radius:0 8px 8px 0;padding:14px 18px;margin:20px 0}
+.cs-lens-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.cs-lens-text{font-size:14px;color:var(--text-s);line-height:1.7;font-style:italic}
+
+/* STEPPER */
+.cs-stepper{border:1px solid var(--border);border-radius:var(--radius-card);overflow:hidden;margin:24px 0}
+.cs-stepper-slides{position:relative}
+.cs-stepper-slide{display:none;grid-template-columns:180px 1fr;gap:28px;padding:24px;align-items:start}
+.cs-stepper-slide.active{display:grid}
+.cs-stepper-phone{border-radius:var(--radius-inner);border:1px solid var(--border);overflow:hidden}
+.cs-stepper-phone img{width:100%;height:auto;display:block}
+.cs-stepper-info{padding-top:4px}
+.cs-stepper-count{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);display:block;margin-bottom:10px}
+.cs-stepper-title{font-size:16px;font-weight:400;color:var(--text);margin-bottom:12px;line-height:1.25}
+.cs-stepper-desc{font-size:13px;color:var(--text-s);line-height:1.75;margin:0}
+.cs-stepper-controls{display:flex;align-items:center;justify-content:center;gap:16px;padding:14px;border-top:1px solid var(--border);background:var(--surface)}
+.cs-stepper-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--text-s);transition:background var(--dur),color var(--dur),border-color var(--dur)}
+.cs-stepper-btn:hover:not([disabled]){background:var(--accent-l);color:var(--accent);border-color:var(--accent)}
+.cs-stepper-btn[disabled]{opacity:.3;cursor:not-allowed}
+.cs-stepper-dots{display:flex;gap:8px}
+.cs-stepper-dot{width:8px;height:8px;border-radius:50%;border:none;background:var(--border);cursor:pointer;padding:0;transition:background var(--dur),transform var(--dur)}
+.cs-stepper-dot.active{background:var(--accent);transform:scale(1.2)}
+
+/* GEN SLIDER */
+.cs-genslider{margin:24px 0}
+.cs-genslider-track{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.cs-gen-card{border:1px solid var(--border);border-radius:var(--radius-inner);overflow:hidden;background:var(--bg);transition:transform 300ms var(--ease),box-shadow 300ms var(--ease),border-color 300ms var(--ease)}
+.cs-gen-card.featured{border-color:var(--accent)}
+.cs-gen-card.lifted{transform:translateY(-6px);box-shadow:0 8px 24px rgba(91,94,138,.14)}
+.cs-gen-phone img{width:100%;height:auto;display:block}
+.cs-gen-info{padding:10px 14px 14px;border-top:1px solid var(--border)}
+.cs-gen-tag{display:inline-block;font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:7px}
+.cs-gen-tag.dead{background:#FBE9E8;color:#8B2020;border:1px solid #F0C4C2}
+.cs-gen-tag.live{background:#EAF3DE;color:#3B6D11;border:1px solid #A8C880}
+.cs-gen-name{font-size:12px;font-weight:500;color:var(--text);margin-bottom:4px}
+.cs-gen-why{font-size:11px;color:var(--text-s);line-height:1.55}
+.cs-genslider-bar{height:4px;background:var(--border);border-radius:2px;position:relative;cursor:ew-resize;margin:0 4px 8px}
+.cs-genslider-handle{width:40px;height:22px;background:var(--bg);border:1px solid var(--border);border-radius:11px;position:absolute;top:50%;left:16.6%;transform:translate(-50%,-50%);cursor:ew-resize;display:flex;align-items:center;justify-content:center;transition:border-color var(--dur)}
+.cs-genslider-handle::after{content:'⋮⋮';font-size:10px;color:var(--text-c);letter-spacing:-2px}
+.cs-genslider-handle:hover,.cs-genslider-handle:focus{border-color:var(--accent);outline:none}
+.cs-genslider-legend{display:flex;justify-content:space-between;font-size:10px;color:var(--text-c);font-style:italic;padding:0 4px}
+
+/* TECHNICAL AUTOPSY */
+.cs-dead{border:1px solid var(--border);border-radius:var(--radius-inner);overflow:hidden;margin:24px 0}
+.cs-dead-head{display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border-bottom:1px solid var(--border)}
+.cs-dead-col{padding:8px 14px;font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-c)}
+.cs-dead-col:first-child{border-right:1px solid var(--border)}
+.cs-dead-row{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.cs-dead-row:last-child{border-bottom:none}
+.cs-dead-cell{padding:11px 14px;font-size:12px;line-height:1.6}
+.cs-dead-cell:first-child{color:var(--text);font-weight:500;border-right:1px solid var(--border)}
+.cs-dead-cell:last-child{color:var(--text-s)}
+.cs-dead-cell code{font-family:ui-monospace,monospace;font-size:10px;background:var(--surface);padding:1px 4px;border-radius:3px}
+
+/* FIGHT */
+.cs-fight{border-left:2px solid #3B6D11;background:#EAF3DE;border-radius:0 8px 8px 0;padding:14px 18px;margin:20px 0}
+.cs-fight-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#3B6D11;margin-bottom:5px}
+.cs-fight-text{font-size:13px;color:var(--text-s);line-height:1.7}
+.cs-fight-text em{font-style:italic;color:#3B6D11}
+
+/* FRAME STEPPER */
+.cs-framestep{margin:28px 0;border:1px solid var(--border);border-radius:var(--radius-inner);overflow:hidden}
+.cs-framestep-viewport{position:relative;overflow:hidden;background:#1A1A1A;height:260px;cursor:ew-resize}
+.cs-framestep-viewport img{position:absolute;top:0;left:0;height:100%;width:auto;max-width:none;transform:translateX(0);transition:transform 320ms var(--ease);will-change:transform;display:block}
+.cs-framestep-arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;z-index:2;transition:background var(--dur),border-color var(--dur)}
+.cs-framestep-arrow:hover:not([disabled]){background:rgba(91,94,138,.6);border-color:rgba(91,94,138,.8)}
+.cs-framestep-arrow[disabled]{opacity:.25;cursor:not-allowed}
+.cs-framestep-arrow.left{left:12px}
+.cs-framestep-arrow.right{right:12px}
+.cs-framestep-steps{display:flex;overflow-x:auto;border-top:1px solid var(--border);scrollbar-width:none;background:var(--surface)}
+.cs-framestep-steps::-webkit-scrollbar{display:none}
+.cs-framestep-step{flex:0 0 auto;padding:10px 14px;font-size:11px;font-weight:400;color:var(--text-c);background:none;border:none;border-right:1px solid var(--border);cursor:pointer;font-family:inherit;white-space:nowrap;transition:background var(--dur),color var(--dur);min-height:40px}
+.cs-framestep-step:last-child{border-right:none}
+.cs-framestep-step:hover{background:var(--accent-l);color:var(--accent)}
+.cs-framestep-step.active{background:var(--accent-l);color:var(--accent);font-weight:500}
+.cs-framestep-step.success{color:#3B6D11}
+.cs-framestep-step.success.active{background:#EAF3DE}
+.cs-framestep-step.error{color:#8B2020}
+.cs-framestep-step.error.active{background:#FBE9E8}
+.cs-framestep-label{font-size:12px;color:var(--text-s);line-height:1.65;padding:12px 16px;border-top:1px solid var(--border);background:var(--bg);min-height:48px}
+
+/* DECISIONS */
+.cs-decisions{display:flex;flex-direction:column;margin:24px 0;border:1px solid var(--border);border-radius:var(--radius-inner);overflow:hidden}
+.cs-decision{display:grid;grid-template-columns:32px 1fr auto;gap:14px;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);background:var(--bg);cursor:pointer;transition:background var(--dur);min-height:44px}
+.cs-decision:last-of-type{border-bottom:none}
+.cs-decision:hover{background:var(--surface)}
+.cs-decision-icon{width:28px;height:28px;border-radius:6px;background:var(--accent-l);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cs-decision-text{font-size:13px;color:var(--text);font-weight:500;line-height:1.3}
+.cs-decision-why{font-size:11px;color:var(--text-s);margin-top:2px;line-height:1.4}
+.cs-decision-expand{color:var(--accent);transition:transform 300ms var(--ease);flex-shrink:0}
+.cs-decision.open .cs-decision-expand{transform:rotate(180deg)}
+.cs-decision-detail{max-height:0;overflow:hidden;transition:max-height 400ms var(--ease);background:var(--surface)}
+.cs-decision-detail.open{max-height:200px}
+.cs-decision-detail-inner{padding:12px 16px 14px 62px;font-size:12px;color:var(--text-s);line-height:1.7;border-top:1px solid var(--border)}
+
+/* DEVICE MOMENT */
+.cs-device-moment{display:grid;grid-template-columns:1fr 220px;gap:48px;align-items:center;margin:40px 0;padding:32px;background:var(--surface);border-radius:var(--radius-card);border:1px solid var(--border)}
+.cs-device-moment-text{font-size:14px;color:var(--text-s);line-height:1.8;margin:0}
+.cs-device-wrap{position:relative;width:220px;flex-shrink:0}
+.cs-device-svg{width:100%;display:block;position:relative;z-index:2;pointer-events:none}
+.cs-device-screen{position:absolute;top:2.2%;left:3.8%;width:92.4%;height:95.6%;border-radius:24px;overflow:hidden;z-index:1}
+.cs-device-screen img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* FLOW STRIP */
+.cs-flowstrip-wrap{margin:28px 0}
+.cs-flowstrip{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.cs-flowstrip::-webkit-scrollbar{height:3px}
+.cs-flowstrip::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.cs-flow-item{flex:0 0 auto;width:120px;scroll-snap-align:start}
+.cs-flow-phone{border-radius:var(--radius-inner);border:1px solid var(--border);overflow:hidden;background:var(--surface)}
+.cs-flow-phone img{width:100%;height:auto;display:block}
+.cs-flow-label{font-size:10px;color:var(--text-c);text-align:center;padding:6px 0 0}
+.cs-flowstrip-hint{font-size:10px;color:var(--text-c);font-style:italic;text-align:center;margin-top:8px}
+
+/* EXPAND */
+.cs-expand-trigger{display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:13px;font-weight:400;color:var(--text-s);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-inner);cursor:pointer;margin:20px 0 0;width:100%;text-align:left;transition:background var(--dur),color var(--dur),border-color var(--dur);min-height:44px}
+.cs-expand-trigger:hover{background:var(--accent-l);color:var(--accent);border-color:var(--accent)}
+.cs-expand-trigger svg{transition:transform 300ms var(--ease);flex-shrink:0}
+.cs-expand-trigger.open svg{transform:rotate(180deg)}
+.cs-expand-body{max-height:0;overflow:hidden;transition:max-height 500ms var(--ease)}
+.cs-expand-body.open{max-height:9999px}
+.cs-expand-inner{padding-top:12px}
+
+/* OUTCOME */
+.cs-outcome{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0}
+.cs-oc{border:1px solid var(--border);border-radius:var(--radius-inner);padding:14px 16px;background:var(--bg)}
+.cs-oc-t{font-size:12px;font-weight:500;color:var(--text);margin-bottom:4px}
+.cs-oc-b{font-size:11px;color:var(--text-s);line-height:1.6}
+
+/* COMPARE */
+.cs-compare{margin:24px 0;border:1px solid var(--border);border-radius:var(--radius-inner);overflow:hidden}
+.cs-compare-toggle{display:flex;border-bottom:1px solid var(--border)}
+.cs-compare-btn{flex:1;padding:10px;font-size:12px;color:var(--text-s);background:var(--surface);border:none;cursor:pointer;font-family:inherit;transition:background var(--dur),color var(--dur);min-height:44px}
+.cs-compare-btn.active{color:var(--accent);font-weight:500;background:var(--accent-l)}
+.cs-compare-panels{padding:20px}
+.cs-compare-panel{display:none}
+.cs-compare-panel.active{display:block}
+.cs-compare-phone{position:relative;max-width:200px;margin:0 auto 14px}
+.cs-compare-phone img{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--border)}
+.cs-compare-phone--flagged img{opacity:.8}
+.cs-compare-flag{position:absolute;right:calc(100% + 10px);width:130px;font-size:10px;color:#8B2020;background:#FBE9E8;border:1px solid #F0C4C2;padding:5px 8px;border-radius:6px;line-height:1.4;transform:translateY(-50%)}
+.cs-compare-flag::after{content:'';position:absolute;left:100%;top:50%;transform:translateY(-50%);border:5px solid transparent;border-left-color:#F0C4C2}
+.cs-compare-note{font-size:12px;color:var(--text-s);text-align:center;max-width:240px;margin:0 auto;line-height:1.65}
+.cs-compare-note--bad{color:#8B2020}
+
+/* TRANSFER */
+.cs-transfer{margin-top:80px;padding:60px 0 40px;border-top:1px solid var(--border);text-align:center}
+.cs-transfer-eyebrow{font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-c);margin-bottom:24px}
+.cs-transfer-quote{font-size:clamp(22px,2.8vw,36px);font-weight:300;color:var(--text);line-height:1.3;letter-spacing:-.02em;font-style:italic;max-width:560px;margin:0 auto}
+
+/* NEXT */
+.cs-next{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+.cs-next-label{font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-c);margin-bottom:8px}
+.cs-next-link{display:inline-flex;align-items:center;gap:12px;text-decoration:none;font-size:14px;color:var(--text);transition:color var(--dur);max-width:460px;line-height:1.5}
+.cs-next-link:hover{color:var(--accent)}
+.cs-next-arrow{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text-s);transition:background var(--dur),border-color var(--dur),color var(--dur)}
+.cs-next-link:hover .cs-next-arrow{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* FOOTER */
+.cs-footer{border-top:1px solid var(--border);padding:40px 0 0;margin-top:80px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.cs-footer-inner{display:flex;align-items:center;gap:10px}
+.cs-footer-name{font-size:13px;font-weight:500;color:var(--text)}
+.cs-footer-sep{color:var(--border);font-size:13px}
+.cs-footer-role{font-size:12px;color:var(--text-c)}
+.cs-footer-links{display:flex;gap:20px}
+.cs-footer-links a{font-size:12px;color:var(--text-c);text-decoration:none;transition:color var(--dur)}
+.cs-footer-links a:hover{color:var(--accent)}
+
+/* RESPONSIVE */
+@media(min-width:768px){
+  .cs-artifact-scrollable .cs-artifact-inner{overflow:visible}
+  .cs-artifact-scrollable img{width:100%;height:auto;max-width:100%}
+  .cs-compare-toggle{display:none}
+  .cs-compare-panels{display:grid!important;grid-template-columns:1fr 1fr;gap:24px;padding:24px}
+  .cs-compare-panel{display:block!important}
+  .cs-compare-flag{right:auto;left:calc(100% + 10px);width:140px}
+  .cs-compare-flag::after{left:auto;right:100%;border-left-color:transparent;border-right-color:#F0C4C2}
+}
+@media(max-width:900px){
+  .cs-inner{grid-template-columns:160px 1fr;padding:0 24px}
+  .cs-main{padding:40px 0 80px 32px}
+}
+@media(max-width:768px){
+  .cs-inner{grid-template-columns:1fr;padding:0 20px}
+  .cs-sidebar{position:static;padding:16px 0 12px;border-bottom:1px solid var(--border);max-height:none;overflow:visible}
+  .cs-nav{flex-direction:row;flex-wrap:wrap;gap:4px}
+  .cs-nav-label,.cs-meta-block,.cs-progress-bar{display:none}
+  .cs-main{padding:28px 0 80px;border-left:none}
+  .cs-device-moment{grid-template-columns:1fr;text-align:center;padding:24px}
+  .cs-device-wrap{width:180px;margin:0 auto}
+  .cs-2col{grid-template-columns:1fr}
+  .cs-problem-split{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .cs-genslider-track{grid-template-columns:1fr}
+  .cs-genslider-bar,.cs-genslider-legend{display:none}
+  .cs-outcome{grid-template-columns:1fr}
+  .cs-dead-head,.cs-dead-row{grid-template-columns:1fr}
+  .cs-dead-col:first-child,.cs-dead-cell:first-child{border-right:none;border-bottom:1px solid var(--border)}
+  .cs-stepper-slide.active{grid-template-columns:1fr}
+  .cs-stepper-phone{max-width:160px;margin:0 auto}
+  .cs-next{flex-direction:column;align-items:flex-start;gap:12px}
+}
+@media(max-width:480px){.cs-flow-item{width:100px}}
+@media(max-width:400px){
+  .cs-compare-flag{position:static;transform:none;width:auto;margin-top:6px;border-left:2px solid #F0C4C2;border-radius:0 6px 6px 0}
+  .cs-compare-flag::after{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .cs-section,.cs-section-body,.cs-decision-detail{transition:none}
+  .cs-section{opacity:1;transform:none}
+}
+.cs-nav-item,.cs-stepper-btn,.cs-toggle-icon,.cs-expand-trigger,.cs-decision,.cs-framestep-arrow,.cs-compare-btn{min-height:44px}
+.cs-toggle-icon{min-height:28px}
+</style>
+</head>
+<body>
+<a href="#cs-content" class="skip">Skip to case study</a>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <a href="index.html" class="back-btn">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      All work
+    </a>
+    <a href="index.html" class="logo-text">Orsolya G.</a>
+  </div>
+  <span class="case-num">05 / 05</span>
+</header>
+
+<div class="cs-page">
+  <div class="cs-inner">
+
+    <aside class="cs-sidebar">
+      <div class="cs-nav-label">In this study</div>
+      <nav class="cs-nav">
+        <a href="#s-overview"  class="cs-nav-item active" data-s="s-overview">Overview</a>
+        <a href="#s-problem"   class="cs-nav-item" data-s="s-problem">Problem</a>
+        <a href="#s-research"  class="cs-nav-item" data-s="s-research">Research</a>
+        <a href="#s-decisions" class="cs-nav-item" data-s="s-decisions">Decisions</a>
+        <a href="#s-solution"  class="cs-nav-item" data-s="s-solution">Solution</a>
+        <a href="#s-reflection"class="cs-nav-item" data-s="s-reflection">Reflection</a>
+      </nav>
+      <div class="cs-sidebar-divider"></div>
+      <div class="cs-meta-block">
+        <div class="cs-meta-row"><span class="cs-meta-k">Role</span><span class="cs-meta-v">Founding designer</span></div>
+        <div class="cs-meta-row"><span class="cs-meta-k">Type</span><span class="cs-meta-v">Human-AI search · social</span></div>
+        <div class="cs-meta-row"><span class="cs-meta-k">Scope</span><span class="cs-meta-v">Full product · 10 sprints</span></div>
+        <div class="cs-meta-row"><span class="cs-meta-k">Covers</span><span class="cs-meta-v">IA · UX · UI · design system · NLP interaction</span></div>
+        <div class="cs-meta-row"><span class="cs-meta-k">Status</span><span class="cs-meta-v">Alpha — Budapest 2025</span></div>
+      </div>
+      <div class="cs-progress-bar"><div class="cs-progress-fill" id="pf"></div></div>
+    </aside>
+
+    <main class="cs-main" id="cs-content">
+
+      <div class="cs-eyebrow">
+        <span class="cs-pill">AI Product</span>
+        <span class="cs-pill">Human-AI Interaction</span>
+        <span class="cs-pill">Intent Search</span>
+        <span class="cs-pill cs-pill-mvp">MVP</span>
+      </div>
+      <h1 class="cs-title">Tribe — <em>Intent-Based Human Search</em></h1>
+      <p class="cs-hook">"The design problem wasn't matching. It was building enough safety for someone to type the thing they actually want."</p>
+
+      <!-- ── OVERVIEW ── opens by default -->
+      <section class="cs-section" id="s-overview">
+        <div class="cs-section-top open" onclick="toggleSection(this)" aria-expanded="true">
+          <div>
+            <div class="cs-section-eyebrow">Overview</div>
+            <h2 class="cs-section-heading">Connect strangers through intent, <em>not profiles.</em></h2>
+            <p class="cs-section-summary">A social app where one prompt replaces the profile. The whole product rests on a single text field — and the trust required to use it honestly.</p>
+          </div>
+          <div class="cs-toggle-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="cs-section-body open">
+          <div class="cs-section-body-inner">
+            <div class="cs-2col">
+              <div>
+                <p class="cs-body-lead">I was the only designer on this project — no brief, no design team, no existing system. I defined the product logic, built the design system, mapped the information architecture, and designed every interaction state across 10 sprints.</p>
+                <div class="cs-body">
+                  <p>Tribe connects people through a single prompt — not a profile, not a browse interface. The user types what they want to do, the AI matches them with people looking for the same thing, and connection happens before either party knows who the other is.</p>
+                  <p>The entire product hangs on one text field. Making someone feel safe enough to be honest in it was the design problem — not the matching algorithm.</p>
+                </div>
+              </div>
+              <div class="cs-stat-v">
+                <div class="cs-stat-item"><div class="cs-stat-n">10</div><div class="cs-stat-l">sprints</div></div>
+                <div class="cs-stat-item"><div class="cs-stat-n">7</div><div class="cs-stat-l">user flows</div></div>
+                <div class="cs-stat-item"><div class="cs-stat-n">0</div><div class="cs-stat-l">templates</div></div>
+                <div class="cs-stat-item"><div class="cs-stat-n">1</div><div class="cs-stat-l">designer</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── PROBLEM ── -->
+      <section class="cs-section" id="s-problem">
+        <div class="cs-section-top" onclick="toggleSection(this)" aria-expanded="false">
+          <div>
+            <div class="cs-section-eyebrow">Problem</div>
+            <h2 class="cs-section-heading">Every social app optimises for attention. <em>Nobody designed for trust.</em></h2>
+            <p class="cs-section-summary">The market is saturated with engagement-first products. The unmet need was safer connection — intent-based, not identity-first.</p>
+          </div>
+          <div class="cs-toggle-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+            <div class="cs-artifact-wide">
+              <img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%201600%20900%22%3E%3Crect%20width=%221600%22%20height=%22900%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%221598%22%20height=%22898%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22800%22%20y=%22450%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%22100%22%20fill=%22%239A9690%22%3ESprint_1%3C/text%3E%3C/svg%3E" alt="Sprint 1 wireframe sheet — landing states, input validation, processing, GPS permission, error categories, spacing specs" loading="lazy">
+              <p class="cs-img-caption">Sprint 1 wireframes. Error handling, processing logic, GPS permission timing, input states — thinking before the visual layer.</p>
+            </div>
+            <div class="cs-problem-split">
+              <div class="cs-problem-col cs-problem-col--bad">
+                <div class="cs-eyebrow-sm">The market</div>
+                <p>Every social platform optimises for time-on-app. Engagement is the primary KPI. Profiles are built for browsing. No safety layer before first contact.</p>
+              </div>
+              <div class="cs-problem-col cs-problem-col--good">
+                <div class="cs-eyebrow-sm">Tribe's bet</div>
+                <p>Quality of connection as KPI. Intent over identity. Anonymous by default. Safety designed in from the first word typed.</p>
+              </div>
+            </div>
+            <div class="cs-body">
+              <p>The brief was an intent-based social network for Budapest. The real brief, once I'd mapped the competitive landscape, was: how do you get someone to type what they actually want — not a curated version of it — into a field connected to a stranger-matching algorithm?</p>
+              <p>That's a trust problem before it's a product problem. It shaped every design decision from the first sprint.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── RESEARCH ── -->
+      <section class="cs-section" id="s-research">
+        <div class="cs-section-top" onclick="toggleSection(this)" aria-expanded="false">
+          <div>
+            <div class="cs-section-eyebrow">Research</div>
+            <h2 class="cs-section-heading">Map the vulnerability states <em>before opening a design tool.</em></h2>
+            <p class="cs-section-summary">Human factors gave me the frame. Three distinct states between intent and connection — each one a specific design problem.</p>
+          </div>
+          <div class="cs-toggle-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+            <div class="cs-artifact-wide">
+              <img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20500%20400%22%3E%3Crect%20width=%22500%22%20height=%22400%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22498%22%20height=%22398%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22250%22%20y=%22200%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2231%22%20fill=%22%239A9690%22%3Einteraction-gap-matrix%3C/text%3E%3C/svg%3E" alt="Interaction gap framework — three rows: Intent and Vulnerability mapped to Smart Echo Input and Intent Parsing NLU; Anxiety and Uncertainty mapped to Teachable Wait and Processing and Filtering; Decision Fatigue mapped to Confidence Score and Explanation and Logic" loading="lazy">
+              <p class="cs-img-caption">The interaction gap matrix — drawn before any screen was opened. Three human states, three design responses, three AI layers. This became the brief for every sprint.</p>
+            </div>
+            <div class="cs-lens">
+              <div class="cs-lens-label">The reframe</div>
+              <div class="cs-lens-text">"The product's job isn't matching people. It's building enough psychological safety that someone types the thing they actually want."</div>
+            </div>
+            <div class="cs-body">
+              <p>The interaction gap diagram was the first deliverable — before any screens. Three human states in the critical path from intent to connection. Each one mapped to a specific design response. This became the brief for every sprint that followed.</p>
+              <p>Edge cases carried the most design weight: the no-match screen, the breathe chat, the safety exit. These were where the product's character was decided — not in the happy path.</p>
+            </div>
+            <div class="cs-stepper" aria-label="Safety system — three states">
+              <div class="cs-stepper-slides">
+                <div class="cs-stepper-slide active">
+                  <div class="cs-stepper-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3ELeave_chat%3C/text%3E%3C/svg%3E" alt="Leave chat modal — five neutral exit reasons, I'm feeling unsafe in red separated at bottom"></div>
+                  <div class="cs-stepper-info">
+                    <span class="cs-stepper-count">01 / 03</span>
+                    <h3 class="cs-stepper-title">Closing a connection</h3>
+                    <p class="cs-stepper-desc">Five neutral reasons at equal visual weight. "I'm feeling unsafe" sits below a visible gap — red, separated, findable without scanning. The visual distance is a design decision.</p>
+                  </div>
+                </div>
+                <div class="cs-stepper-slide">
+                  <div class="cs-stepper-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3Ebreathe%3C/text%3E%3C/svg%3E" alt="Breathe chat — Got stuck in the conversation? 24h pause, acknowledge rules toggle, notify me when Anna is back"></div>
+                  <div class="cs-stepper-info">
+                    <span class="cs-stepper-count">02 / 03</span>
+                    <h3 class="cs-stepper-title">Breathe chat</h3>
+                    <p class="cs-stepper-desc">24h cooling window. No pressure. "I acknowledged the rules" requires an active gesture — passive scroll-past doesn't count. Reframes absence as temporary, not abandonment.</p>
+                  </div>
+                </div>
+                <div class="cs-stepper-slide">
+                  <div class="cs-stepper-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3Ereport_user_focus%3C/text%3E%3C/svg%3E" alt="I'm feeling unsafe selected — REPORT USER button appears inline in the same row"></div>
+                  <div class="cs-stepper-info">
+                    <span class="cs-stepper-count">03 / 03</span>
+                    <h3 class="cs-stepper-title">Report inline</h3>
+                    <p class="cs-stepper-desc">REPORT USER appears in the same row when "I'm feeling unsafe" is selected — zero navigation cost at the highest-stress moment. The user never leaves the flow to escalate.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="cs-stepper-controls">
+                <button class="cs-stepper-btn prev" onclick="stepPrev(this)" disabled aria-label="Previous">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="cs-stepper-dots" role="tablist">
+                  <button class="cs-stepper-dot active" onclick="stepGo(this.closest('.cs-stepper'),0)" aria-label="Screen 1" role="tab" aria-selected="true"></button>
+                  <button class="cs-stepper-dot" onclick="stepGo(this.closest('.cs-stepper'),1)" aria-label="Screen 2" role="tab" aria-selected="false"></button>
+                  <button class="cs-stepper-dot" onclick="stepGo(this.closest('.cs-stepper'),2)" aria-label="Screen 3" role="tab" aria-selected="false"></button>
+                </div>
+                <button class="cs-stepper-btn next" onclick="stepNext(this)" aria-label="Next">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2L8 6L4 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── DECISIONS ── -->
+      <section class="cs-section" id="s-decisions">
+        <div class="cs-section-top" onclick="toggleSection(this)" aria-expanded="false">
+          <div>
+            <div class="cs-section-eyebrow">Decisions</div>
+            <h2 class="cs-section-heading">Three generations of input validation. <em>Two of them died.</em></h2>
+            <p class="cs-section-summary">The prompt input is the product. Getting it right required understanding why the smart approach failed — technically, financially, structurally.</p>
+          </div>
+          <div class="cs-toggle-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+
+            <div class="cs-genslider">
+              <div class="cs-genslider-track" id="gentrack">
+                <div class="cs-gen-card" data-gen="0">
+                  <div class="cs-gen-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3ELanding-Signed_In_empty_state_collapsed%3C/text%3E%3C/svg%3E" alt="Generation 1 — manual tag input. User adds freeform tags beneath the prompt field."></div>
+                  <div class="cs-gen-info">
+                    <span class="cs-gen-tag dead">Gen 1 — Cut</span>
+                    <div class="cs-gen-name">Manual tags</div>
+                    <div class="cs-gen-why">User adds their own. No structure, no consistency. The system can't match on freeform noise.</div>
+                  </div>
+                </div>
+                <div class="cs-gen-card" data-gen="1">
+                  <div class="cs-gen-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3ELanding-Signed_In_empty_state%3C/text%3E%3C/svg%3E" alt="Generation 2 — AI-generated metadata tags extracted automatically from the prompt text."></div>
+                  <div class="cs-gen-info">
+                    <span class="cs-gen-tag dead">Gen 2 — Cut</span>
+                    <div class="cs-gen-name">AI metadata extraction</div>
+                    <div class="cs-gen-why">LLM extracts tags automatically. Unreliable JSON. 1.4s latency. 25× token cost. Not viable.</div>
+                  </div>
+                </div>
+                <div class="cs-gen-card featured" data-gen="2">
+                  <div class="cs-gen-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3ELanding-Signed_In_filled_state_correct%3C/text%3E%3C/svg%3E" alt="Generation 3 — NLP chip validation. What/When/Where chips fire as user types. Well done badge confirms intent. CTA unlocks."></div>
+                  <div class="cs-gen-info">
+                    <span class="cs-gen-tag live">Gen 3 — Shipped</span>
+                    <div class="cs-gen-name">Chip validation (NLP)</div>
+                    <div class="cs-gen-why">Real-time parsing of What / When / Where. Hard to build. The quality gate the product needed.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="cs-genslider-bar" id="genbar" aria-label="Drag to explore generations">
+                <div class="cs-genslider-handle" id="genhandle" tabindex="0" aria-label="Generation selector"></div>
+              </div>
+              <div class="cs-genslider-legend"><span>← earlier attempts</span><span>what shipped →</span></div>
+            </div>
+
+            <div class="cs-dead">
+              <div class="cs-dead-head">
+                <div class="cs-dead-col">Why gen 2 died</div>
+                <div class="cs-dead-col">The numbers</div>
+              </div>
+              <div class="cs-dead-row">
+                <div class="cs-dead-cell">Structural unreliability</div>
+                <div class="cs-dead-cell">System expects <code>{"tags":["x","y"]}</code>. LLM returns conversational text. Fatal parse error. Every call needs a retry wrapper — just to extract two words.</div>
+              </div>
+              <div class="cs-dead-row">
+                <div class="cs-dead-cell">Latency</div>
+                <div class="cs-dead-cell">800ms standard + 600ms metadata extraction = 1.4s wait before anything useful happens.</div>
+              </div>
+              <div class="cs-dead-row">
+                <div class="cs-dead-cell">Token cost</div>
+                <div class="cs-dead-cell">15-word prompt + 400-token system prompt to classify it. 25× more to categorise than to process. Not viable for an MVP budget.</div>
+              </div>
+            </div>
+
+            <div class="cs-fight">
+              <div class="cs-fight-label">Why I pushed for gen 3</div>
+              <div class="cs-fight-text">Chips are harder to build. I pushed for them because <em>match quality is the entire product bet.</em> Vague input → bad matches → no Tribe. The chips are the quality gate that makes everything downstream worth building.</div>
+            </div>
+
+            <div class="cs-framestep" aria-label="Chip validation — 9 frames from empty input to error state">
+              <div class="cs-framestep-viewport" id="fsvp">
+                <img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3EApp_Screen%3C/text%3E%3C/svg%3E" id="fsimg" alt="Nine frames: empty prompt, cursor, ba typed, basketball triggers What chip, when chip fires, where chip fires, all three green face smiles CTA activates, error state with special characters">
+                <button class="cs-framestep-arrow left" onclick="fsStep(-1)" disabled aria-label="Previous frame">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="cs-framestep-arrow right" onclick="fsStep(1)" aria-label="Next frame">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3L9 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+              <div class="cs-framestep-steps" role="tablist">
+                <button class="cs-framestep-step active" onclick="fsGo(0)" role="tab" aria-selected="true">Empty</button>
+                <button class="cs-framestep-step" onclick="fsGo(1)" role="tab" aria-selected="false">Cursor</button>
+                <button class="cs-framestep-step" onclick="fsGo(2)" role="tab" aria-selected="false">"ba"</button>
+                <button class="cs-framestep-step success" onclick="fsGo(3)" role="tab" aria-selected="false">What ✓</button>
+                <button class="cs-framestep-step success" onclick="fsGo(4)" role="tab" aria-selected="false">+When ✓</button>
+                <button class="cs-framestep-step success" onclick="fsGo(5)" role="tab" aria-selected="false">+Where ✓</button>
+                <button class="cs-framestep-step success" onclick="fsGo(6)" role="tab" aria-selected="false">All green</button>
+                <button class="cs-framestep-step success" onclick="fsGo(7)" role="tab" aria-selected="false">CTA active</button>
+                <button class="cs-framestep-step error" onclick="fsGo(8)" role="tab" aria-selected="false">Error ✕</button>
+              </div>
+              <div class="cs-framestep-label" id="fslabel" aria-live="polite">Empty state. The input field is the entire screen. FIND THEM is disabled — nothing can be submitted until intent is parseable.</div>
+            </div>
+
+            <div class="cs-section-eyebrow" style="margin-bottom:8px;margin-top:32px">Other design decisions</div>
+            <div class="cs-decisions">
+
+              <div class="cs-decision" onclick="toggleDecision(this)" aria-expanded="false">
+                <div class="cs-decision-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#5B5E8A" stroke-width="1.2"/><circle cx="7" cy="7" r="2" fill="#5B5E8A"/></svg></div>
+                <div><div class="cs-decision-text">Nobody knows who the other is until you both agree</div><div class="cs-decision-why">Trust is bilateral — removes vulnerability of the initiating user</div></div>
+                <svg class="cs-decision-expand" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="cs-decision-detail"><div class="cs-decision-detail-inner">Profiles reveal gradually: initials only → mutual yes → images revealed. The asymmetry of "one person knows who the other is" creates a structural power imbalance. Removing it at the design level was more reliable than hoping users would feel safe.</div></div>
+
+              <div class="cs-decision" onclick="toggleDecision(this)" aria-expanded="false">
+                <div class="cs-decision-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" stroke="#5B5E8A" stroke-width="1.2"/><path d="M5 7h4M7 5v4" stroke="#5B5E8A" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+                <div><div class="cs-decision-text">The atmosphere lives where the user isn't deciding anything</div><div class="cs-decision-why">Attention split on mobile kills both brand and task</div></div>
+                <svg class="cs-decision-expand" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="cs-decision-detail"><div class="cs-decision-detail-inner">Founder wanted galactic background everywhere. I pushed back: rich backgrounds compete with tasks on small screens. Resolution: atmosphere on passive screens (processing, waiting), clean surface on decision screens (prompt, results, accept/decline). The argument was grounded in cognitive load, not preference.</div></div>
+
+              <div class="cs-decision" onclick="toggleDecision(this)" aria-expanded="false">
+                <div class="cs-decision-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2v10" stroke="#5B5E8A" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+                <div><div class="cs-decision-text">One conversation at a time — focus as a design constraint</div><div class="cs-decision-why">Focus drives commitment — multitasking kills intent</div></div>
+                <svg class="cs-decision-expand" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="cs-decision-detail"><div class="cs-decision-detail-inner">No chat search, one active conversation. The constraint is intentional: users who can only be in one chat take it more seriously. Motivation stays high. Tribe Suggests (AI conversation starter) supports the user without removing the constraint.</div></div>
+
+              <div class="cs-decision" onclick="toggleDecision(this)" aria-expanded="false">
+                <div class="cs-decision-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v6M4 10l3 2 3-2" stroke="#5B5E8A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <div><div class="cs-decision-text">Your location disappears once a match is found — my proposal, not the brief</div><div class="cs-decision-why">My proposal — not in the brief. Location used only until match is found, then deleted.</div></div>
+                <svg class="cs-decision-expand" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="cs-decision-detail"><div class="cs-decision-detail-inner">GPS appears mid-processing, used only until match is found, then deleted. Aggregated location for statistics only. This was a trust signal I designed into the product spec — not a legal compliance item. The copy explicitly names it on the permission modal.</div></div>
+
+              <div class="cs-decision" onclick="toggleDecision(this)" aria-expanded="false">
+                <div class="cs-decision-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 10l4-8 4 8" stroke="#5B5E8A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 7h6" stroke="#5B5E8A" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+                <div><div class="cs-decision-text">A failed search still ends on hope, not on nothing</div><div class="cs-decision-why">Prevents abandonment without overselling the product</div></div>
+                <svg class="cs-decision-expand" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="cs-decision-detail"><div class="cs-decision-detail-inner">No match found: positive eyebrow + invite-friends module (closable) + 3 nearby intents the user can connect with (not matches — no compatibility score). Gives the user something real to do without pretending the product succeeded.</div></div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SOLUTION ── -->
+      <section class="cs-section" id="s-solution">
+        <div class="cs-section-top" onclick="toggleSection(this)" aria-expanded="false">
+          <div>
+            <div class="cs-section-eyebrow">Solution</div>
+            <h2 class="cs-section-heading">10 sprints. Full IA. <em>A trust model built from first principles.</em></h2>
+            <p class="cs-section-summary">Complete design system, all interaction states, safety flows, and a documented trust model. The full flow from empty prompt to real-world meeting.</p>
+          </div>
+          <div class="cs-toggle-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+
+            <div class="cs-artifact-wide cs-artifact-scrollable">
+              <div class="cs-artifact-inner">
+                <img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%201600%20900%22%3E%3Crect%20width=%221600%22%20height=%22900%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%221598%22%20height=%22898%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22800%22%20y=%22450%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%22100%22%20fill=%22%239A9690%22%3Ecore-happy-path%3C/text%3E%3C/svg%3E" alt="Core happy path — 10 screens from Home to Post-Meet Feedback, colour-coded by system layer. Three edge case fallback scenarios: No Match Found, Match Declined, All Matches Exhausted." loading="lazy">
+              </div>
+              <p class="cs-img-caption">Core happy path, key states per screen, and edge case fallback logic. Colour-coded by system layer — the architecture the screens below are built on.</p>
+            </div>
+
+            <div class="cs-device-moment">
+              <div>
+                <span class="cs-eyebrow-label">The payoff</span>
+                <p class="cs-device-moment-text">"Here are your people." After a text field, a processing wait, and an anonymous handshake — this is the first moment of arrival. The compatibility score is visible. The identities are not.</p>
+              </div>
+              <div class="cs-device-wrap">
+                <svg class="cs-device-svg" viewBox="0 0 220 440" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect x="4" y="4" width="212" height="432" rx="30" fill="#1A1918" stroke="#2E2D2B" stroke-width="1.5"/>
+                  <rect x="8" y="8" width="204" height="424" rx="26" fill="#111110"/>
+                  <rect x="76" y="14" width="68" height="16" rx="8" fill="#1A1918"/>
+                  <rect x="0" y="100" width="4" height="28" rx="2" fill="#2E2D2B"/>
+                  <rect x="0" y="136" width="4" height="28" rx="2" fill="#2E2D2B"/>
+                  <rect x="216" y="120" width="4" height="40" rx="2" fill="#2E2D2B"/>
+                </svg>
+                <div class="cs-device-screen">
+                  <img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3EMatch%3C/text%3E%3C/svg%3E" alt="Match results screen — Here are your people — 84% closest match, 68% good match, Anonymous until you both say yes">
+                </div>
+              </div>
+            </div>
+
+            <div class="cs-flowstrip-wrap">
+              <div class="cs-flowstrip" role="region" aria-label="Complete Tribe flow — 10 screens">
+                <div class="cs-flow-item"><div class="cs-flow-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3ELanding-Signed%3C/text%3E%3C/svg%3E" alt="Onboarding" loading="lazy"></div><div class="cs-flow-label">Onboarding</div></div>
+                <div class="cs-flow-item"><div class="cs-flow-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3ELanding-Signed_In_empty_state_collapseds%3C/text%3E%3C/svg%3E" alt="Empty state" loading="lazy"></div><div class="cs-flow-label">Empty state</div></div>
+                <div class="cs-flow-item"><div class="cs-flow-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3ELanding-Signed_In_filled_state_correct%3C/text%3E%3C/svg%3E" alt="Validated intent" loading="lazy"></div><div class="cs-flow-label">Validated</div></div>
+                <div class="cs-flow-item"><div class="cs-flow-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3ELanding-processing1%3C/text%3E%3C/svg%3E" alt="Processing — galactic background, XAI steps" loading="lazy"></div><div class="cs-flow-label">Processing</div></div>
+                <div class="cs-flow-item"><div class="cs-flow-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3Eprocessing_2%3C/text%3E%3C/svg%3E" alt="Processing plus GPS permission modal" loading="lazy"></div><div class="cs-flow-label">GPS ask</div></div>
+                <div class="cs-flow-item"><div class="cs-flow-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3EMatch%3C/text%3E%3C/svg%3E" alt="Match results — 84% and 68% compatibility" loading="lazy"></div><div class="cs-flow-label">Matches</div></div>
+                <div class="cs-flow-item"><div class="cs-flow-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3EMessaging-Mobile%3C/text%3E%3C/svg%3E" alt="Chat with Anna K." loading="lazy"></div><div class="cs-flow-label">Chat</div></div>
+                <div class="cs-flow-item"><div class="cs-flow-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3EMessaging-Mobile-1%3C/text%3E%3C/svg%3E" alt="Tribe Suggests AI conversation starter" loading="lazy"></div><div class="cs-flow-label">AI suggest</div></div>
+                <div class="cs-flow-item"><div class="cs-flow-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3Emeethub%3C/text%3E%3C/svg%3E" alt="Meet hub" loading="lazy"></div><div class="cs-flow-label">Meet hub</div></div>
+                <div class="cs-flow-item"><div class="cs-flow-phone"><img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3ENO_MATCH_FOUND%3C/text%3E%3C/svg%3E" alt="No match — Luck is around the corner" loading="lazy"></div><div class="cs-flow-label">No match</div></div>
+              </div>
+              <div class="cs-flowstrip-hint">← scroll to see the full journey →</div>
+            </div>
+
+            <button class="cs-expand-trigger" onclick="toggleExpand(this)" aria-expanded="false" aria-controls="expand-sitemap">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Full information architecture — two user journeys
+            </button>
+            <div class="cs-expand-body" id="expand-sitemap">
+              <div class="cs-expand-inner">
+                <div class="cs-artifact-wide cs-artifact-scrollable">
+                  <div class="cs-artifact-inner">
+                    <img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%201600%20900%22%3E%3Crect%20width=%221600%22%20height=%22900%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%221598%22%20height=%22898%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22800%22%20y=%22450%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%22100%22%20fill=%22%239A9690%22%3Efunctional-sitemap%3C/text%3E%3C/svg%3E" alt="Functional sitemap — User Journey 1 (no account, guest zone, registration gate) and User Journey 2 (signed in, member engine, activity feed). Full system architecture including Meet Hub, Share Experience, Chat, Profile, Settings." loading="lazy">
+                  </div>
+                  <p class="cs-img-caption">Full functional sitemap. Two parallel journeys — guest and signed-in — the registration gate as a soft wall, and every feature connected.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="cs-outcome">
+              <div class="cs-oc"><div class="cs-oc-t">What the product gained</div><div class="cs-oc-b">A cognitive and ethical design layer that wasn't in the brief. Trust model structured and documentable, not assumed.</div></div>
+              <div class="cs-oc"><div class="cs-oc-t">What remains unproven</div><div class="cs-oc-b">Cold-start behaviour — the first time a real user types a real intent into the real system — is untested.</div></div>
+              <div class="cs-oc"><div class="cs-oc-t">What surprised</div><div class="cs-oc-b">The edge cases carried the most weight. No-match, breathe chat, safety exit — these decided the product's character.</div></div>
+              <div class="cs-oc"><div class="cs-oc-t">What transfers</div><div class="cs-oc-b">Map vulnerability states first. The happy path is not the frame. The human state at each step is.</div></div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ── REFLECTION ── -->
+      <section class="cs-section" id="s-reflection">
+        <div class="cs-section-top" onclick="toggleSection(this)" aria-expanded="false">
+          <div>
+            <div class="cs-section-eyebrow">Reflection</div>
+            <h2 class="cs-section-heading">The processing copy needed more honesty.</h2>
+            <p class="cs-section-summary">"Analysing Social Energy" sat in the file for three sprints. It's atmospheric. It tells the user nothing about what is happening to their data.</p>
+          </div>
+          <div class="cs-toggle-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+            <div class="cs-compare" aria-label="Processing copy — what shipped vs the problem it caused">
+              <div class="cs-compare-toggle">
+                <button class="cs-compare-btn active" onclick="compareSwitch(this,0)">What shipped</button>
+                <button class="cs-compare-btn" onclick="compareSwitch(this,1)">The problem</button>
+              </div>
+              <div class="cs-compare-panels">
+                <div class="cs-compare-panel active">
+                  <div class="cs-compare-phone">
+                    <img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3ELanding-processing1%3C/text%3E%3C/svg%3E" alt="Processing screen — Analyzing Social Energy, Mapping your vibe to the right people">
+                  </div>
+                  <p class="cs-compare-note">Atmospheric copy. "Analyzing Social Energy" — three sprints before I questioned it.</p>
+                </div>
+                <div class="cs-compare-panel">
+                  <div class="cs-compare-phone cs-compare-phone--flagged">
+                    <img src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20390%20844%22%3E%3Crect%20width=%22390%22%20height=%22844%22%20fill=%22%23E8E4DE%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%22388%22%20height=%22842%22%20fill=%22none%22%20stroke=%22%23D4D0C8%22%20stroke-width=%222%22%20stroke-dasharray=%228%206%22/%3E%3Ctext%20x=%22195%22%20y=%22422%22%20text-anchor=%22middle%22%20dominant-baseline=%22middle%22%20font-family=%22system-ui%2Csans-serif%22%20font-size=%2224%22%20fill=%22%239A9690%22%3Eprocessing_2%3C/text%3E%3C/svg%3E" alt="GPS permission modal arriving while atmospheric copy still runs — two simultaneous trust asks">
+                    <div class="cs-compare-flag" style="top:73%">Atmospheric copy at peak anxiety</div>
+                    <div class="cs-compare-flag" style="top:86%">GPS trust ask on top of vague copy</div>
+                  </div>
+                  <p class="cs-compare-note cs-compare-note--bad">Two simultaneous trust asks. The user's data just left their control. The copy needed to earn this moment — not decorate it.</p>
+                </div>
+              </div>
+            </div>
+            <div class="cs-body" style="margin-top:20px">
+              <p>In a product built on trust and data minimisation, the highest-anxiety moment deserved honesty, not atmosphere. The lesson: hold copy to the same standard as interaction design. They're describing the same human moment.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="cs-transfer">
+        <div class="cs-transfer-eyebrow">The insight that transfers</div>
+        <blockquote class="cs-transfer-quote">"The best interface doesn't ask you what you mean. It makes you feel safe enough to say it."</blockquote>
+      </div>
+
+      <nav class="cs-next" aria-label="Next case study">
+        <div>
+          <div class="cs-next-label">Next in the series</div>
+          <a href="case-study-guardrail.html" class="cs-next-link">
+            Ethical Guardrail Plugin — When AI is most confident is when humans are most unready
+            <span class="cs-next-arrow" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 1.5l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </div>
+      </nav>
+
+      <footer class="cs-footer">
+        <div class="cs-footer-inner">
+          <span class="cs-footer-name">Orsolya Gorcz</span>
+          <span class="cs-footer-sep">—</span>
+          <span class="cs-footer-role">Product Designer · Human-AI Interaction</span>
+        </div>
+        <div class="cs-footer-links">
+          <a href="index.html">All work</a>
+          <a href="mailto:hello@orsolyagorcz.com">Get in touch</a>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script>
+// ── SECTION TOGGLE ──
+function toggleSection(top) {
+  var body = top.closest('.cs-section').querySelector('.cs-section-body');
+  var open = top.classList.contains('open');
+  top.classList.toggle('open', !open);
+  top.setAttribute('aria-expanded', !open);
+  body.classList.toggle('open', !open);
+}
+
+// ── EXPAND (sitemap etc) ──
+function toggleExpand(btn) {
+  var id = btn.getAttribute('aria-controls');
+  var body = document.getElementById(id);
+  var open = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', !open);
+  btn.classList.toggle('open', !open);
+  body.classList.toggle('open', !open);
+}
+
+// ── DECISION ROW ──
+function toggleDecision(row) {
+  var detail = row.nextElementSibling;
+  var open = row.classList.contains('open');
+  row.classList.toggle('open', !open);
+  row.setAttribute('aria-expanded', !open);
+  detail.classList.toggle('open', !open);
+}
+
+// ── STEPPER ──
+function stepGo(stepper, idx) {
+  var slides = stepper.querySelectorAll('.cs-stepper-slide');
+  var dots = stepper.querySelectorAll('.cs-stepper-dot');
+  slides.forEach(function(s, i) { s.classList.toggle('active', i === idx); });
+  dots.forEach(function(d, i) {
+    d.classList.toggle('active', i === idx);
+    d.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+  });
+  stepper.querySelector('.cs-stepper-btn.prev').disabled = idx === 0;
+  stepper.querySelector('.cs-stepper-btn.next').disabled = idx === slides.length - 1;
+}
+function stepNext(btn) {
+  var st = btn.closest('.cs-stepper');
+  var slides = st.querySelectorAll('.cs-stepper-slide');
+  var cur = Array.from(slides).findIndex(function(s) { return s.classList.contains('active'); });
+  if (cur < slides.length - 1) stepGo(st, cur + 1);
+}
+function stepPrev(btn) {
+  var st = btn.closest('.cs-stepper');
+  var slides = st.querySelectorAll('.cs-stepper-slide');
+  var cur = Array.from(slides).findIndex(function(s) { return s.classList.contains('active'); });
+  if (cur > 0) stepGo(st, cur - 1);
+}
+
+// ── FRAME STEPPER ──
+var FS_LABELS = [
+  "Empty state. The input field is the entire screen. FIND THEM is disabled — nothing can be submitted until intent is parseable.",
+  "Cursor appears. User starts typing. All three chips remain grey — no entity recognised yet.",
+  '"ba" — partial word. No chip fires. The system waits for a recognisable intent before signalling anything.',
+  '"Basketball" — the What chip fires green. One of three signals confirmed. CTA still locked.',
+  'Sentence grows: "this afternoon" triggers the When chip. Two of three. Red face still — Where missing.',
+  '"In Budapest" — the Where chip fires. All three confirmed. The face is about to turn green.',
+  'All three chips green. Face green. The system has what it needs.',
+  'FIND THEM activates. The CTA is the reward for specificity — not a default next step, but an earned unlock.',
+  'Special characters entered. Specific error message explains what happened. The user stays in the flow.'
+];
+var fsIdx = 0;
+function fsGo(idx) {
+  fsIdx = Math.max(0, Math.min(8, idx));
+  var img = document.getElementById('fsimg');
+  var steps = document.querySelectorAll('.cs-framestep-step');
+  var label = document.getElementById('fslabel');
+  var vp = document.getElementById('fsvp');
+  if (!img) return;
+  img.style.transform = 'translateX(-' + (fsIdx / 9 * 100) + '%)';
+  steps.forEach(function(s, i) {
+    s.classList.toggle('active', i === fsIdx);
+    s.setAttribute('aria-selected', i === fsIdx ? 'true' : 'false');
+  });
+  if (label) label.textContent = FS_LABELS[fsIdx];
+  vp.querySelector('.cs-framestep-arrow.left').disabled = fsIdx === 0;
+  vp.querySelector('.cs-framestep-arrow.right').disabled = fsIdx === 8;
+  if (steps[fsIdx]) steps[fsIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+}
+function fsStep(d) { fsGo(fsIdx + d); }
+(function() {
+  var vp = document.getElementById('fsvp');
+  if (!vp) return;
+  var sx = 0;
+  vp.addEventListener('touchstart', function(e) { sx = e.touches[0].clientX; }, { passive: true });
+  vp.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) > 40) fsStep(dx < 0 ? 1 : -1);
+  });
+})();
+
+// ── GEN SLIDER ──
+(function() {
+  var bar = document.getElementById('genbar');
+  var handle = document.getElementById('genhandle');
+  var cards = document.querySelectorAll('.cs-gen-card');
+  if (!bar || !handle) return;
+  var dragging = false;
+  function setPos(clientX) {
+    var rect = bar.getBoundingClientRect();
+    var pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    handle.style.left = (pct * 100) + '%';
+    var idx = pct < 0.33 ? 0 : pct < 0.67 ? 1 : 2;
+    cards.forEach(function(c, i) { c.classList.toggle('lifted', i === idx); });
+  }
+  bar.addEventListener('mousedown', function(e) { dragging = true; setPos(e.clientX); });
+  window.addEventListener('mousemove', function(e) { if (dragging) setPos(e.clientX); });
+  window.addEventListener('mouseup', function() { dragging = false; });
+  bar.addEventListener('touchstart', function(e) { dragging = true; setPos(e.touches[0].clientX); }, { passive: true });
+  window.addEventListener('touchmove', function(e) { if (dragging) setPos(e.touches[0].clientX); }, { passive: true });
+  window.addEventListener('touchend', function() { dragging = false; });
+  handle.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') setPos(bar.getBoundingClientRect().left);
+    if (e.key === 'ArrowRight') setPos(bar.getBoundingClientRect().right);
+  });
+})();
+
+// ── COMPARE TOGGLE ──
+function compareSwitch(btn, idx) {
+  var comp = btn.closest('.cs-compare');
+  comp.querySelectorAll('.cs-compare-btn').forEach(function(b, i) { b.classList.toggle('active', i === idx); });
+  comp.querySelectorAll('.cs-compare-panel').forEach(function(p, i) { p.classList.toggle('active', i === idx); });
+}
+
+// ── SCROLL: reveal + nav + progress ──
+var allSections = document.querySelectorAll('.cs-section');
+var navItems = document.querySelectorAll('.cs-nav-item');
+var progressFill = document.querySelector('.cs-progress-fill');
+var io = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.06 });
+allSections.forEach(function(s) { io.observe(s); });
+window.addEventListener('scroll', function() {
+  var scrolled = window.scrollY;
+  var total = document.body.scrollHeight - window.innerHeight;
+  if (progressFill) progressFill.style.width = Math.round((scrolled / total) * 100) + '%';
+  var current = '';
+  allSections.forEach(function(s) { if (scrolled >= s.offsetTop - 120) current = s.id; });
+  navItems.forEach(function(n) { n.classList.toggle('active', n.dataset.s === current); });
+}, { passive: true });
+</script>
+</body>
+</html>

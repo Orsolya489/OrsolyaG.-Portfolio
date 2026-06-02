@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tribe — Intent-Based Human Search · Orsolya G.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F1ED;--bg-alt:#EBE7E1;--bg-deep:#E2DDD6;
+  --bg-white:#FFFFFF;--bg-lifted:#FDFCFA;
+  --text:#1B1A18;--text-s:#5A5856;--text-c:#6D6A67;--text-m:#6E6B68;
+  --accent:#6B5F9E;--accent-l:#F2F0FA;--accent-d:#4A3F7A;--accent-h:#5C519A;
+  --border:rgba(27,26,24,.11);--border-a:#B0A8CC;
+  --ease:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);
+  --dur:200ms;--reveal:500ms;
+  --sidebar:200px;--topbar:64px;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:var(--grain);background-repeat:repeat;background-size:300px 300px;pointer-events:none;z-index:9998;opacity:1;mix-blend-mode:multiply}
+:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radius:4px}
+.skip{position:fixed;top:-100px;left:8px;background:var(--accent-d);color:#fff;padding:8px 16px;border-radius:0 0 8px 8px;font-size:13px;font-weight:500;text-decoration:none;z-index:9999;transition:top .2s}
+.skip:focus{top:0}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:300;background:rgba(246,244,241,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.back-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;border:1px solid var(--border);font-family:inherit;font-size:11px;font-weight:500;color:var(--text-c);cursor:pointer;background:transparent;text-decoration:none;transition:background var(--dur),color var(--dur)}
+.back-btn:hover{background:var(--bg-alt);color:var(--text)}
+
+/* LOGO */
+.logo{color:var(--text);text-decoration:none;display:flex;align-items:center;transition:opacity var(--dur)}
+.logo:hover{opacity:.6}
+.topbar-right{display:flex;align-items:center;gap:10px}
+
+/* BUTTONS — matching index */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:16px;border:1px solid;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;background:transparent;transition:background .3s var(--ease),color .2s,border-color .2s;text-decoration:none;white-space:nowrap}
+.btn-resume{color:var(--text-c);border-color:var(--border);background:#FFFFFF}
+.btn-resume:hover{color:var(--text);border-color:var(--accent);background:var(--accent-l)}
+.btn-email{color:#FFFFFF;border-color:var(--accent);background:var(--accent)}
+.btn-email:hover{background:var(--accent-h);border-color:var(--accent-h)}
+.btn-icon{flex-shrink:0;opacity:.8;transition:opacity .2s}
+.btn:hover .btn-icon{opacity:1}
+.btn-label{white-space:nowrap}
+
+/* BACK BUTTON in sidebar */
+.back-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:16px;border:1px solid var(--border);font-family:inherit;font-size:11px;font-weight:500;color:var(--text-c);cursor:pointer;background:transparent;text-decoration:none;transition:background var(--dur),color var(--dur)}
+.back-btn:hover{background:var(--bg-alt);color:var(--text)}
+
+/* A11Y BUTTON + PANEL */
+.btn-a11y{width:40px;height:40px;padding:0;justify-content:center;border-color:var(--border-a);color:var(--text-c);border-radius:14px;background:var(--bg-lifted);box-shadow:0 2px 12px rgba(27,26,24,.08),0 0 0 1px rgba(27,26,24,.04);transition:background var(--dur),color var(--dur),border-color var(--dur)}
+.btn-a11y:hover,.btn-a11y.open{border-color:var(--accent);color:var(--accent-d);background:var(--accent-l)}
+.a11y-panel{position:absolute;bottom:calc(100% + 8px);right:0;width:220px;background:#FFFFFF;border:1px solid rgba(27,26,24,.08);border-radius:12px;padding:14px;box-shadow:0 8px 28px rgba(27,26,24,.1);z-index:500;display:none}
+.a11y-panel.open{display:block;animation:panelDown .2s var(--ease) both}
+@keyframes panelDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.a11y-title{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text-c);margin-bottom:12px}
+.a11y-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.a11y-row:last-of-type{margin-bottom:0}
+.a11y-lbl{font-size:13px;color:var(--text-s)}
+.a11y-toggle{width:36px;height:20px;border-radius:10px;border:1px solid var(--border);background:var(--bg-alt);cursor:pointer;position:relative;transition:background .2s,border-color .2s}
+.a11y-toggle.on{background:var(--accent);border-color:var(--accent-h)}
+.a11y-dot{width:14px;height:14px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s var(--spring)}
+.a11y-toggle.on .a11y-dot{transform:translateX(16px)}
+.a11y-note{font-size:11px;color:var(--text-c);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);line-height:1.5}
+
+/* Hide CTAs on small mobile */
+@media(max-width:520px){.btn-resume,.btn-email{display:none}}
+
+/* LAYOUT */
+.cs-page{padding-top:var(--topbar);min-height:100vh}
+.cs-inner{display:grid;grid-template-columns:var(--sidebar) 1fr;max-width:1080px;margin:0 auto;padding:0 32px;align-items:start}
+
+/* SIDEBAR */
+.cs-sidebar{position:sticky;top:calc(var(--topbar) + 40px);padding:40px 32px 40px 0}
+.cs-nav{display:flex;flex-direction:column;gap:2px}
+.cs-nav-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);margin-bottom:10px;padding-left:10px}
+.cs-nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;text-decoration:none;font-size:12px;color:var(--text-c);transition:background var(--dur),color var(--dur);position:relative}
+.cs-nav-item:hover{background:var(--bg-alt);color:var(--text)}
+.cs-nav-item.active{color:var(--accent-d);font-weight:500}
+.cs-nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:2px;height:14px;background:var(--accent-d);border-radius:2px}
+.cs-meta-block{padding-left:10px}
+.cs-meta-row{display:flex;gap:6px;margin-bottom:5px;align-items:baseline}
+.cs-meta-k{font-size:10px;color:var(--text-c);width:52px;flex-shrink:0}
+.cs-meta-v{font-size:10px;color:var(--text);font-weight:500}
+.cs-progress-bar{height:2px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:16px}
+.cs-progress-fill{height:100%;background:var(--accent-d);width:0%;transition:width .1s linear;border-radius:2px}
+
+/* MAIN */
+.cs-main{padding:48px 0 120px 40px;border-left:1px solid var(--border);min-height:100vh}
+
+/* HEADER */
+.cs-eyebrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.cs-pill{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:var(--accent-l);color:var(--accent-d);border:1px solid var(--border-a)}
+.cs-pill-mvp{background:#EDF2FA;color:#3A5085;border-color:#A8BDDE}
+.cs-title{font-size:clamp(26px,3.2vw,42px);font-weight:300;line-height:1.08;letter-spacing:-.025em;color:var(--text);margin-bottom:18px}
+.cs-title em{font-style:italic}
+.cs-hook{font-size:15px;font-style:italic;color:var(--accent-d);line-height:1.6;margin-bottom:40px;padding-left:14px;border-left:2px solid var(--accent-d)}
+
+/* SECTIONS */
+.cs-section{margin-bottom:0;padding:40px 0;border-top:1px solid var(--border);opacity:0;transform:translateY(12px);transition:opacity 400ms var(--ease),transform 400ms var(--ease)}
+.cs-section:first-of-type{border-top:none;padding-top:0}
+.cs-section.visible{opacity:1;transform:translateY(0)}
+
+/* SECTION HEADER — the skimmable layer */
+.cs-section-top{display:block;margin-bottom:0}
+.cs-section-eyebrow{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);margin-bottom:6px}
+.cs-section-heading{font-size:18px;font-weight:400;color:var(--text);line-height:1.25;letter-spacing:-.01em}
+.cs-section-heading em{font-style:italic}
+.cs-section-summary{font-size:13px;color:var(--text-c);line-height:1.65;margin-top:8px;max-width:520px}
+
+/* SECTION BODY — behind the expand */
+.cs-section-body{display:block}
+.cs-section-body-inner{padding-top:24px}
+
+/* TEXT */
+.cs-body{font-size:14px;color:var(--text-s);line-height:1.8;max-width:560px}
+.cs-body p{margin-bottom:14px}
+.cs-body p:last-child{margin-bottom:0}
+
+/* ILLUSTRATIONS — SVG inline blocks */
+.cs-illus{margin:24px 0;border-radius:10px;background:var(--bg-deep);border:1px solid var(--border);padding:20px 24px;overflow:hidden}
+.cs-illus svg{width:100%;height:auto;display:block}
+
+/* PHONE ROW */
+.cs-phone-strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;margin:24px 0;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.cs-phone-strip::-webkit-scrollbar{height:3px}
+.cs-phone-strip::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.cs-phone{flex:0 0 auto;width:130px;border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-deep)}
+.cs-phone img{width:100%;height:auto;display:block}
+.cs-phone-cap{font-size:10px;color:var(--text-c);padding:7px 10px;border-top:1px solid var(--border);line-height:1.4}
+
+/* GEN STRIP — 3-up with caption below */
+.cs-gen-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
+.cs-gen-phone{border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-deep)}
+.cs-gen-phone img{width:100%;height:auto;display:block}
+.cs-gen-cap{padding:10px 12px;border-top:1px solid var(--border)}
+.cs-gen-tag{display:inline-block;font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-bottom:5px}
+.dead{background:#F5DFDF;color:#8B2020;border:1px solid #E0B8B8}
+.live{background:#EAF3DE;color:#3B6D11;border:1px solid #A8C880}
+.cs-gen-label{font-size:11px;font-weight:500;color:var(--text);margin-bottom:2px}
+.cs-gen-note{font-size:10px;color:var(--text-c);line-height:1.5}
+
+/* ANNO PAIR */
+.cs-anno-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;align-items:start}
+.cs-anno-wrap{border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-deep)}
+.cs-anno-wrap img{width:100%;height:auto;display:block}
+.cs-anno-cap{padding:10px 12px;border-top:1px solid var(--border);font-size:11px;color:var(--text-c);line-height:1.5}
+.cs-anno-cap strong{display:block;font-size:11px;font-weight:500;color:var(--text);margin-bottom:2px}
+
+/* DECISION LIST — icon + one liner */
+.cs-decisions{display:flex;flex-direction:column;gap:0;margin:24px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.cs-decision{display:grid;grid-template-columns:32px 1fr auto;gap:14px;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);background:var(--bg-lifted);cursor:pointer;transition:background var(--dur)}
+.cs-decision:last-child{border-bottom:none}
+.cs-decision:hover{background:var(--bg-alt)}
+.cs-decision-icon{width:28px;height:28px;border-radius:6px;background:var(--accent-l);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cs-decision-text{font-size:13px;color:var(--text);font-weight:500;line-height:1.3}
+.cs-decision-why{font-size:11px;color:var(--text-c);margin-top:2px;line-height:1.4}
+.cs-decision-expand{font-size:10px;color:var(--accent-d);transition:transform 300ms var(--ease);flex-shrink:0}
+.cs-decision.open .cs-decision-expand{transform:rotate(180deg)}
+.cs-decision-detail{max-height:0;overflow:hidden;transition:max-height 400ms var(--ease);background:var(--bg-alt)}
+.cs-decision-detail.open{max-height:200px}
+.cs-decision-detail-inner{padding:12px 16px 14px 62px;font-size:12px;color:var(--text-c);line-height:1.7;border-top:1px solid var(--border)}
+
+/* DEAD BOX */
+.cs-dead{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:24px 0}
+.cs-dead-head{display:grid;grid-template-columns:1fr 1fr;background:var(--bg-alt);border-bottom:1px solid var(--border)}
+.cs-dead-col{padding:8px 14px;font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-c)}
+.cs-dead-col:first-child{border-right:1px solid var(--border)}
+.cs-dead-row{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.cs-dead-row:last-child{border-bottom:none}
+.cs-dead-cell{padding:11px 14px;font-size:12px;line-height:1.6}
+.cs-dead-cell:first-child{color:var(--text);font-weight:500;border-right:1px solid var(--border)}
+.cs-dead-cell:last-child{color:var(--text-c)}
+.cs-dead-cell code{font-family:ui-monospace,monospace;font-size:10px;background:var(--bg-deep);padding:1px 4px;border-radius:3px}
+
+/* FIGHT BLOCK */
+.cs-fight{border-left:2px solid #3B6D11;background:#EAF3DE;border-radius:0 8px 8px 0;padding:14px 18px;margin:20px 0}
+.cs-fight-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#3B6D11;margin-bottom:5px}
+.cs-fight-text{font-size:13px;color:var(--text-s);line-height:1.7}
+.cs-fight-text em{font-style:italic;color:#3B6D11}
+
+/* LENS */
+.cs-lens{border-left:2px solid var(--accent-d);background:var(--accent-l);border-radius:0 8px 8px 0;padding:14px 18px;margin:20px 0}
+.cs-lens-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-d);margin-bottom:5px}
+.cs-lens-text{font-size:14px;color:var(--text-s);line-height:1.7;font-style:italic}
+
+/* STAT ROW */
+.cs-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:24px 0}
+.cs-stat{background:var(--bg-lifted);padding:16px;text-align:center}
+.cs-stat-n{font-size:24px;font-weight:300;letter-spacing:-.02em;color:var(--text)}
+.cs-stat-l{font-size:10px;color:var(--text-c);margin-top:3px;line-height:1.3}
+
+/* OUTCOME 2x2 */
+.cs-outcome{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0}
+.cs-oc{border:1px solid var(--border);border-radius:10px;padding:14px 16px;background:var(--bg-lifted)}
+.cs-oc-t{font-size:12px;font-weight:500;color:var(--text);margin-bottom:4px}
+.cs-oc-b{font-size:11px;color:var(--text-c);line-height:1.6}
+
+/* TRANSFER */
+.cs-transfer{margin-top:48px;padding-top:24px;border-top:1px solid var(--border)}
+.cs-transfer-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);margin-bottom:12px}
+.cs-transfer-quote{font-size:clamp(17px,2vw,26px);font-weight:300;color:var(--text);line-height:1.3;font-style:italic;max-width:500px}
+
+/* NEXT */
+.cs-next{margin-top:56px;padding-top:32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.cs-next-label{font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-c);margin-bottom:5px}
+.cs-next-link{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-size:13px;transition:color var(--dur)}
+.cs-next-link:hover{color:var(--accent-d)}
+.cs-next-arrow{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:background var(--dur),border-color var(--dur),color var(--dur)}
+.cs-next-link:hover .cs-next-arrow{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  :root{--sidebar:160px}
+  .cs-inner{padding:0 24px}
+  .cs-sidebar{padding:32px 20px 32px 0}
+  .cs-main{padding:40px 0 80px 32px}
+}
+@media(max-width:768px){
+  :root{--sidebar:0px}
+  .cs-inner{grid-template-columns:1fr;padding:0 20px}
+  .cs-sidebar{position:static;padding:16px 0 12px;border-bottom:1px solid var(--border)}
+  .cs-nav{flex-direction:row;flex-wrap:wrap;gap:4px}
+  .cs-nav-label{display:none}
+  .cs-meta-block{display:none}
+  .cs-progress-bar{display:none}
+  .cs-main{padding:28px 0 80px;border-left:none}
+  .cs-gen-strip{grid-template-columns:1fr 1fr}
+  .cs-anno-pair,.cs-outcome{grid-template-columns:1fr}
+  .cs-anno-pair[style]{grid-template-columns:1fr !important}
+  .cs-dead-head,.cs-dead-row{grid-template-columns:1fr}
+  .cs-dead-col:first-child,.cs-dead-cell:first-child{border-right:none;border-bottom:1px solid var(--border)}
+  .cs-stats{grid-template-columns:1fr 1fr}
+  .cs-next{flex-direction:column;align-items:flex-start;gap:12px}
+  .topbar{padding:0 16px}
+}
+@media(max-width:480px){
+  .cs-inner{padding:0 16px}
+  .cs-gen-strip{grid-template-columns:1fr}
+  .cs-title{font-size:clamp(22px,6vw,30px)}
+  .cs-section-heading{font-size:16px}
+  .cs-phone{width:100px}
+}
+@media(prefers-reduced-motion:reduce){
+  .cs-section,.cs-section-body,.cs-decision-detail{transition:none}
+  .cs-section{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<a href="#cs-content" class="skip">Skip to case study</a>
+
+<header class="topbar" id="topbar">
+  <a href="index.html" class="logo" aria-label="Orsolya G. — home">
+    <svg height="20" viewBox="0 0 1000 168.7" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="width:auto;display:block">
+      <g>
+        <path d="M145.6,64.9c-3.1-7.3-7.4-13.7-12.8-19c-5.5-5.3-11.9-9.5-19.2-12.4c-7.3-3-15.2-4.4-23.6-4.4c-8.3,0-16.1,1.5-23.4,4.4c-7.3,3-13.7,7.1-19.2,12.4c-5.5,5.3-9.8,11.6-12.9,19c-3.1,7.3-4.7,15.4-4.7,24.3c0,8.7,1.6,16.8,4.7,24.1c3.1,7.3,7.4,13.7,12.9,19.1c5.5,5.4,11.9,9.5,19.2,12.5c7.3,3,15.1,4.4,23.4,4.4c8.4,0,16.2-1.5,23.5-4.4c7.3-3,13.7-7.1,19.2-12.5c5.5-5.4,9.8-11.7,12.9-19.1c3.1-7.3,4.6-15.4,4.6-24.1C150.2,80.3,148.7,72.2,145.6,64.9z M112.9,114c-5.8,6.3-13.4,9.4-22.9,9.4c-9.5,0-17.1-3.1-22.8-9.4c-5.7-6.3-8.6-14.5-8.6-24.8c0-10.5,2.9-18.9,8.6-25c5.7-6.2,13.3-9.2,22.8-9.2c9.5,0,17.1,3.1,22.9,9.2c5.8,6.2,8.6,14.5,8.6,25C121.5,99.4,118.6,107.7,112.9,114z"/>
+        <path d="M335,88.8c-3.5-2.5-7.4-4.5-11.7-6.2c-4.3-1.7-8.5-3.2-12.7-4.4c-4.2-1.3-8.1-2.6-11.7-4c-3.6-1.4-6.4-3-8.6-5c-2.1-1.9-3.2-4.3-3.2-7.2c0-3.5,1.3-6.1,3.9-8c2.6-1.8,5.7-2.8,9.4-2.8c4,0,7.4,1.3,10.2,3.8c1.7,1.5,3.1,3.5,4.1,5.8c1.3,2.9,4.4,4.5,7.4,3.7l15.6-4.1c3.6-1,5.7-4.9,4.3-8.4c-2.3-6.1-6.4-11.3-12.1-15.4c-7.7-5.6-17.3-8.4-28.9-8.4c-8.5,0-15.9,1.4-22.3,4.1c-6.4,2.7-11.4,6.7-15,12c-3.6,5.3-5.5,11.6-5.5,19c0,5.6,1.1,10.3,3.2,14.1c2.1,3.8,5,7,8.5,9.5c3.5,2.5,7.4,4.6,11.6,6.3c4.2,1.7,8.4,3.2,12.6,4.5c4.2,1.3,8,2.7,11.5,4c3.5,1.3,6.3,3,8.4,5c2.1,2,3.2,4.4,3.2,7.5c0,3.4-1.3,6-3.9,8.1c-2.6,2-6.4,3-11.2,3c-4.6,0-8.5-1.6-11.8-4.7c-2.2-2.1-3.9-4.7-5.1-7.8c-1.2-2.9-4.1-4.5-7.1-3.8l-15.6,3.5c-3.7,0.8-5.9,4.8-4.6,8.4c2.7,7.4,7.3,13.4,13.9,18.3c8.5,6.3,19,9.4,31.6,9.4c8.4,0,15.9-1.7,22.4-5c6.5-3.3,11.7-7.7,15.4-13.1c3.7-5.4,5.6-11.4,5.6-18c0-5.6-1.1-10.3-3.3-14.1C341.4,94.4,338.5,91.2,335,88.8z"/>
+        <path d="M462.8,45c-5.5-5.3-11.9-9.5-19.2-12.4c-7.3-3-15.2-4.4-23.6-4.4c-8.3,0-16.1,1.5-23.4,4.4c-7.3,3-13.7,7.1-19.2,12.4c-5.5,5.3-9.8,11.6-12.9,19c-3.1,7.3-4.7,15.4-4.7,24.3c0,8.7,1.6,16.8,4.7,24.1c3.1,7.3,7.4,13.7,12.9,19.1c5.5,5.4,11.9,9.5,19.2,12.5c7.3,3,15.1,4.4,23.4,4.4c8.4,0,16.2-1.5,23.5-4.4c7.3-3,13.7-7.1,19.2-12.5c5.5-5.4,9.8-11.7,12.9-19.1c3.1-7.3,4.6-15.4,4.6-24.1c0-8.8-1.5-16.9-4.6-24.3C472.6,56.7,468.3,50.4,462.8,45z M442.9,113.1c-5.8,6.3-13.4,9.4-22.9,9.4c-9.5,0-17.1-3.1-22.8-9.4c-5.7-6.3-8.6-14.5-8.6-24.8c0-10.5,2.9-18.9,8.6-25c5.7-6.2,13.3-9.2,22.8-9.2c9.5,0,17.1,3.1,22.9,9.2c5.8,6.2,8.6,14.5,8.6,25C451.6,98.6,448.7,106.9,442.9,113.1z"/>
+        <path d="M628.8,27.5h-17.3c-2.5,0-4.7,1.4-5.8,3.7l-15.4,33.5c-2.3,4.9-9.2,4.9-11.5,0l-15.5-33.5c-1-2.2-3.3-3.7-5.8-3.7H540c-4.8,0-7.8,5-5.6,9.3l35.1,68.1c0.5,0.9,0.7,1.9,0.7,2.9V139c0,3.5,2.8,6.3,6.3,6.3h15.7c3.5,0,6.3-2.8,6.3-6.3v-31.2c0-1,0.2-2,0.7-2.9l35.1-68.1C636.6,32.6,633.5,27.5,628.8,27.5z"/>
+        <path d="M698.5,31.7c-0.9-2.5-3.3-4.2-6-4.2h-23.8c-2.7,0-5.1,1.7-6,4.2l-38,105.2c-1.5,4.1,1.6,8.5,6,8.5h16.1c2.7,0,5.1-1.7,6-4.3l4.1-12.2c0.9-2.6,3.3-4.3,6-4.3h35.2c2.7,0,5.2,1.8,6,4.4l4,12.1c0.9,2.6,3.3,4.4,6,4.4h16.3c4.4,0,7.5-4.4,6-8.5L698.5,31.7z M686.3,102.6h-11.7c-4.3,0-7.4-4.3-6-8.4l5.9-17.4c1.9-5.8,10.1-5.7,12,0l5.8,17.4C693.7,98.3,690.6,102.6,686.3,102.6z"/>
+        <path d="M240.3,113.6c-4.2-6.1-9.1-10.8-14.7-14.1c-2.7-1.6-2.4-5.2,0.4-6.5c4.4-2,8.1-4.8,11.1-8.3c4.8-5.6,7.2-12,7.2-19.3c0-10.9-4-19.6-12-26.2c-8-6.6-19.4-9.9-34.2-9.9h-46c-3.2,0-4.8,3.2-3.5,5.5l.1.2.1.2c.1.1.1.1.2.2c8.6,10.5,38.5,50.7,1.1,106.5c-1.3,1.9.1,4.4,2.4,4.4h28.2c1.1,0,2.1-.6,2.5-1.6c2.3-4.6,8.9-18.8,11.6-37.3c3.2,1.2,6,2.7,8.6,4.5c5.1,3.7,9,8.6,11.6,14.6c2.2,5.2,3.7,10.9,4.4,17.3c.2,1.9,1.9,3.3,3.9,3.3h24.4c2.4,0,4.3-2,3.9-4.3C249.5,131.4,245.8,121.6,240.3,113.6z M209.1,77.5c-2.9,2.8-7.2,4.2-12.8,4.2h-1c-1-9.6-3.6-19.5-8.4-29.4h9.4c5.5,0,9.7,1.3,12.7,3.9c3,2.6,4.5,6.1,4.5,10.3C213.5,71.1,212,74.7,209.1,77.5z"/>
+        <path d="M541,123.4h-20.2c5.6-23.6,8.8-62.8-14.3-94.5c-.3-.3,0-.8-.4-.8l-6.5.1H483c-3.2,0-4.8,3.2-3.5,5.5l.1.2.1.2c.1.1.1.1.2.2c8.3,10.2,36.6,48.2,4.4,101.3c-2.6,4.2.5,9.6,5.4,9.6H511c.3,0,.6,0,.9-.1c.4.3.9.4,1.4.4H541c3.5,0,6.3-2.8,6.3-6.3v-9.3C547.3,126.2,544.5,123.4,541,123.4z"/>
+        <path d="M912.7,78.3h-54.3c-2.1,0-3.8,1.7-3.8,3.8v14.4c0,2.1,1.7,3.8,3.8,3.8h25.2c2.9,0,4.8,3.2,3.3,5.7c-.9,1.5-1.9,3-3.1,4.5c-2.6,3.2-5.7,5.8-9.5,7.8c-3.8,2-7.9,2.9-12.5,2.9c-6.5,0-12.2-1.4-17.2-4.2c-5-2.8-8.9-6.8-11.8-12c-2.9-5.2-4.3-11.5-4.3-18.9c0-10.3,2.8-18.6,8.4-24.8c5.6-6.2,13.1-9.3,22.5-9.3c6.4,0,11.7,1.6,16,4.7c3.4,2.5,6.1,5.7,8,9.7c.9,1.8,2.9,2.7,4.8,2l20.4-7.5c2.1-.8,3.1-3.1,2.2-5.1c-4-9.2-10.3-16.3-18.6-21.2c-9.5-5.6-20.4-8.4-32.7-8.4c-11.4,0-21.6,2.5-30.6,7.6c-9,5-16.1,12.1-21.3,21.1c-5.2,9-7.8,19.4-7.8,31.3c0,9,1.5,17.1,4.4,24.4c3,7.3,7.1,13.7,12.3,19.1c5.2,5.4,11.2,9.5,18,12.4c6.8,2.9,14,4.4,21.5,4.4c6.8,0,12.7-1.2,17.6-3.7c4.9-2.5,9-5.5,12.1-9.1l.1-.1c2.3-2.6,6.6-1.1,6.6,2.4v5.4c0,2.1,1.7,3.8,3.8,3.8h16.5c2.1,0,3.8-1.7,3.8-3.8V82.1C916.6,80,914.9,78.3,912.7,78.3z"/>
+        <circle cx="956.9" cy="129" r="18.9"/>
+      </g>
+    </svg>
+  </a>
+  <div class="topbar-right">
+    <a class="btn btn-resume" href="resume.pdf" target="_blank">
+      <span class="btn-label">Resume</span>
+      <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13V19C18 19.53 17.79 20.04 17.41 20.41C17.04 20.79 16.53 21 16 21H5C4.47 21 3.96 20.79 3.59 20.41C3.21 20.04 3 19.53 3 19V8C3 7.47 3.21 6.96 3.59 6.59C3.96 6.21 4.47 6 5 6H11M21 9V3H15M21 3L10 14"/></svg>
+    </a>
+    <button class="btn btn-email" id="btnEmail" onclick="doEmail()">
+      <span class="btn-label">Email me</span>
+      <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </button>
+    <div class="a11y-fixed" style="position:relative">
+      <button class="btn btn-a11y" id="btnA11y" onclick="toggleA11y()" aria-label="Accessibility settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 6C11.45 6 10.98 5.8 10.59 5.41C10.2 5.02 10 4.55 10 4C10 3.45 10.2 2.98 10.59 2.59C10.98 2.2 11.45 2 12 2C12.55 2 13.02 2.2 13.41 2.59C13.8 2.98 14 3.45 14 4C14 4.55 13.8 5.02 13.41 5.41C13.02 5.8 12.55 6 12 6ZM9 22V9H3V7H21V9H15V22H13V16H11V22H9Z"/></svg>
+      </button>
+      <div class="a11y-panel" id="a11yPanel">
+        <div class="a11y-title">Accessibility</div>
+        <div class="a11y-row" style="flex-direction:column;align-items:flex-start;gap:6px">
+          <span class="a11y-lbl">Text size</span>
+          <div style="display:flex;align-items:center;gap:8px;width:100%">
+            <span style="font-size:12px;color:var(--text-c)">A</span>
+            <input type="range" id="fsSlider" min="-2" max="2" step="1" value="0" style="flex:1;height:3px;accent-color:var(--accent);cursor:pointer" oninput="fs(parseInt(this.value))">
+            <span style="font-size:15px;color:var(--text-c)">A</span>
+          </div>
+        </div>
+        <div class="a11y-row">
+          <span class="a11y-lbl">High contrast</span>
+          <div class="a11y-toggle" id="ctToggle" onclick="toggleCT()"><div class="a11y-dot"></div></div>
+        </div>
+        <div class="a11y-row">
+          <span class="a11y-lbl">Reduce motion</span>
+          <div class="a11y-toggle" id="rmToggle" onclick="toggleRM()"><div class="a11y-dot"></div></div>
+        </div>
+        <div class="a11y-note">Respects your system preferences by default.</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cs-page">
+  <div class="cs-inner">
+
+    <!-- SIDEBAR — generic labels, same across all 4 case studies -->
+    <aside class="cs-sidebar">
+      <a href="index.html" class="back-btn" aria-label="Back to all work">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        All work
+      </a>
+      <div class="cs-nav-label" style="margin-top:16px">In this study</div>
+      <nav class="cs-nav">
+        <a href="#s-overview"  class="cs-nav-item active" data-s="s-overview">Overview</a>
+        <a href="#s-problem"   class="cs-nav-item" data-s="s-problem">Problem</a>
+        <a href="#s-research"  class="cs-nav-item" data-s="s-research">Research</a>
+        <a href="#s-decisions" class="cs-nav-item" data-s="s-decisions">Decisions</a>
+        <a href="#s-solution"  class="cs-nav-item" data-s="s-solution">Solution</a>
+        <a href="#s-reflection"class="cs-nav-item" data-s="s-reflection">Reflection</a>
+      </nav>
+      <div class="cs-meta-block">
+        <div class="cs-meta-row"><span class="cs-meta-k">Role</span><span class="cs-meta-v">Lead designer</span></div>
+        <div class="cs-meta-row"><span class="cs-meta-k">Type</span><span class="cs-meta-v">AI · MVP</span></div>
+        <div class="cs-meta-row"><span class="cs-meta-k">Sprints</span><span class="cs-meta-v">10</span></div>
+        <div class="cs-meta-row"><span class="cs-meta-k">Status</span><span class="cs-meta-v">Pre-launch</span></div>
+      </div>
+      <div class="cs-progress-bar"><div class="cs-progress-fill" id="pf"></div></div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="cs-main" id="cs-content">
+
+      <!-- TITLE BLOCK -->
+      <div class="cs-eyebrow">
+        <span class="cs-pill">AI Product</span>
+        <span class="cs-pill">Human-AI Interaction</span>
+        <span class="cs-pill">Intent Search</span>
+        <span class="cs-pill cs-pill-mvp">MVP</span>
+      </div>
+      <h1 class="cs-title">Tribe — <em>Intent-Based Human Search</em></h1>
+      <p class="cs-hook">"The design problem wasn't matching. It was building enough safety for someone to type the thing they actually want."</p>
+
+      <!-- ── OVERVIEW ── -->
+      <section class="cs-section" id="s-overview">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">Overview</div>
+            <h2 class="cs-section-heading">Connect strangers through intent, <em>not profiles.</em></h2>
+            <p class="cs-section-summary">A social app where one prompt replaces the profile. The whole product rests on a single text field — and the trust required to use it honestly.</p>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+            <!-- Interaction gap illustration -->
+            <div class="cs-illus" aria-label="Three human states in the Tribe user journey and their design responses">
+              <svg viewBox="0 0 560 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- State 1 -->
+                <rect x="0" y="8" width="160" height="104" rx="8" fill="#FDFCFA" stroke="#DEDAD5" stroke-width="1"/>
+                <text x="80" y="32" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" font-weight="500" fill="#1B1A18">Intent + vulnerability</text>
+                <text x="80" y="50" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#6E6B68">Fear of sharing before</text>
+                <text x="80" y="63" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#6E6B68">trust is established</text>
+                <rect x="12" y="76" width="136" height="24" rx="6" fill="#EEEDF4"/>
+                <text x="80" y="92" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-weight="500" fill="#46496D">→ Smart Echo Input</text>
+                <!-- Connector -->
+                <line x1="160" y1="60" x2="200" y2="60" stroke="#DEDAD5" stroke-width="1" stroke-dasharray="4 3"/>
+                <polygon points="196,56 202,60 196,64" fill="#DEDAD5"/>
+                <!-- State 2 -->
+                <rect x="200" y="8" width="160" height="104" rx="8" fill="#FDFCFA" stroke="#DEDAD5" stroke-width="1"/>
+                <text x="280" y="32" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" font-weight="500" fill="#1B1A18">Black box anxiety</text>
+                <text x="280" y="50" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#6E6B68">Stress during AI</text>
+                <text x="280" y="63" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#6E6B68">processing</text>
+                <rect x="212" y="76" width="136" height="24" rx="6" fill="#EEEDF4"/>
+                <text x="280" y="92" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-weight="500" fill="#46496D">→ XAI teachable wait</text>
+                <!-- Connector -->
+                <line x1="360" y1="60" x2="400" y2="60" stroke="#DEDAD5" stroke-width="1" stroke-dasharray="4 3"/>
+                <polygon points="396,56 402,60 396,64" fill="#DEDAD5"/>
+                <!-- State 3 -->
+                <rect x="400" y="8" width="160" height="104" rx="8" fill="#FDFCFA" stroke="#DEDAD5" stroke-width="1"/>
+                <text x="480" y="32" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" font-weight="500" fill="#1B1A18">Decision fatigue</text>
+                <text x="480" y="50" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#6E6B68">Skepticism of</text>
+                <text x="480" y="63" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#6E6B68">match results</text>
+                <rect x="412" y="76" width="136" height="24" rx="6" fill="#EEEDF4"/>
+                <text x="480" y="92" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-weight="500" fill="#46496D">→ XAI confidence badges</text>
+              </svg>
+            </div>
+            <div class="cs-body">
+              <p>Tribe connects people through a single prompt — not a profile, not a browse interface. The user types what they want to do, the AI matches them with people looking for the same thing, and connection happens before either party knows who the other is.</p>
+              <p>The entire product hangs on one text field. Making someone feel safe enough to be honest in it was the design problem — not the matching algorithm.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── PROBLEM ── -->
+      <section class="cs-section" id="s-problem">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">Problem</div>
+            <h2 class="cs-section-heading">Every social app optimises for attention. <em>Nobody designed for trust.</em></h2>
+            <p class="cs-section-summary">The market is saturated with engagement-first products. The unmet need was safer connection — intent-based, not identity-first.</p>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+            <!-- Problem illustration: market vs tribe -->
+            <div class="cs-illus" aria-label="Market landscape: attention extraction vs intent-based connection">
+              <svg viewBox="0 0 560 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="0" width="256" height="80" rx="8" fill="#F5DFDF"/>
+                <text x="128" y="22" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-weight="500" letter-spacing=".08em" fill="#8B2020">THE MARKET</text>
+                <text x="128" y="40" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" font-weight="500" fill="#1B1A18">Time-on-app as primary KPI</text>
+                <text x="128" y="57" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#666360">Profiles · Browse · Swipe · Notifications</text>
+                <text x="128" y="72" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#8B2020">No safety layer before first contact</text>
+                <rect x="304" y="0" width="256" height="80" rx="8" fill="#EAF3DE"/>
+                <text x="432" y="22" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-weight="500" letter-spacing=".08em" fill="#3B6D11">TRIBE'S BET</text>
+                <text x="432" y="40" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" font-weight="500" fill="#1B1A18">Quality of connection as KPI</text>
+                <text x="432" y="57" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#666360">Intent · NLP · Anonymity · Trust</text>
+                <text x="432" y="72" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#3B6D11">Safety designed in from the first word</text>
+                <text x="280" y="44" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="14" fill="#DEDAD5">vs</text>
+              </svg>
+            </div>
+            <div class="cs-body">
+              <p>The brief was an intent-based social network for Budapest. The real brief, once I'd mapped the competitive landscape, was: how do you get someone to type what they actually want — not a curated version of it — into a field connected to a stranger-matching algorithm?</p>
+              <p>That's a trust problem before it's a product problem. It shaped every design decision from the first sprint.</p>
+            </div>
+            <!-- Sprint 1 wireframe -->
+            <div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;margin:20px 0">
+              <img src="Sprint_1.png" alt="Sprint 1 wireframe sheet — landing states, input validation, processing, GPS permission, error categories, spacing specs" loading="lazy" style="width:100%;height:auto;display:block">
+            </div>
+            <p style="font-size:11px;color:var(--text-c);font-style:italic;margin-top:-12px;margin-bottom:0">Sprint 1 wireframes. Error handling, processing logic, GPS permission timing, input states — thinking before the visual layer.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── RESEARCH ── -->
+      <section class="cs-section" id="s-research">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">Research</div>
+            <h2 class="cs-section-heading">Map the vulnerability states <em>before opening a design tool.</em></h2>
+            <p class="cs-section-summary">Human factors gave me the frame. Three distinct states between intent and connection — each one a specific design problem.</p>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+            <div class="cs-lens">
+              <div class="cs-lens-label">The reframe</div>
+              <div class="cs-lens-text">"The product's job isn't matching people. It's building enough psychological safety that someone types the thing they actually want."</div>
+            </div>
+            <div class="cs-body">
+              <p>The interaction gap diagram above was the first deliverable — before any screens. Three human states in the critical path from intent to connection. Each one mapped to a specific design response. This became the brief for every sprint that followed.</p>
+              <p>Edge cases carried the most design weight: the no-match screen, the breathe chat, the safety exit. These were where the product's character was decided — not in the happy path.</p>
+            </div>
+            <!-- Safety screens trio -->
+            <div class="cs-anno-pair" style="grid-template-columns:1fr 1fr 1fr">
+              <div class="cs-anno-wrap">
+                <img src="Leave_chat.png" alt="Leave chat — five neutral exit reasons, I'm feeling unsafe visually separated at bottom" loading="lazy">
+                <div class="cs-anno-cap"><strong>Safety exit design</strong>Five neutral reasons. "I'm feeling unsafe" separated — red, findable instantly without scanning.</div>
+              </div>
+              <div class="cs-anno-wrap">
+                <img src="breathe.png" alt="Breathe chat — 24h pause, acknowledge toggle, notify me when back" loading="lazy">
+                <div class="cs-anno-cap"><strong>Breathe chat</strong>24h pause, no pressure. Reframes absence as temporary — not abandonment.</div>
+              </div>
+              <div class="cs-anno-wrap">
+                <img src="report_user_focus.png" alt="Report user inline — appears in the same row when I'm feeling unsafe is selected" loading="lazy">
+                <div class="cs-anno-cap"><strong>Report inline</strong>Zero navigation cost at the highest-stress moment. Report button appears in the same row.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── DECISIONS ── -->
+      <section class="cs-section" id="s-decisions">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">Decisions</div>
+            <h2 class="cs-section-heading">Three generations of input validation. <em>Two of them died.</em></h2>
+            <p class="cs-section-summary">The prompt input is the product. Getting it right required understanding why the smart approach failed — technically, financially, structurally.</p>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+
+            <!-- Three-generation strip -->
+            <div class="cs-gen-strip">
+              <div class="cs-gen-phone">
+                <img src="Landing-Signed_In_empty_state_collapsed.png" alt="Gen 1 — manual tags added by user" loading="lazy">
+                <div class="cs-gen-cap">
+                  <span class="cs-gen-tag dead">Gen 1 — Cut</span>
+                  <div class="cs-gen-label">Manual tags</div>
+                  <div class="cs-gen-note">Freeform. No structure. System can't match on noise.</div>
+                </div>
+              </div>
+              <div class="cs-gen-phone">
+                <img src="Landing-Signed_In_empty_state.png" alt="Gen 2 — AI-generated metadata tags from prompt" loading="lazy">
+                <div class="cs-gen-cap">
+                  <span class="cs-gen-tag dead">Gen 2 — Cut</span>
+                  <div class="cs-gen-label">AI metadata extraction</div>
+                  <div class="cs-gen-note">Smarter — but unreliable JSON, 1.4s latency, 25× token cost.</div>
+                </div>
+              </div>
+              <div class="cs-gen-phone">
+                <img src="Landing-Signed_In_filled_state_correct.png" alt="Gen 3 — NLP chip validation, Well done badge, CTA unlocked" loading="lazy">
+                <div class="cs-gen-cap">
+                  <span class="cs-gen-tag live">Gen 3 — Shipped</span>
+                  <div class="cs-gen-label">Chip validation</div>
+                  <div class="cs-gen-note">NLP parses What / When / Where in real time. Hard to build. Worth the fight.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Why gen 2 died -->
+            <div class="cs-dead">
+              <div class="cs-dead-head">
+                <div class="cs-dead-col">Why gen 2 died</div>
+                <div class="cs-dead-col">The numbers</div>
+              </div>
+              <div class="cs-dead-row">
+                <div class="cs-dead-cell">Structural unreliability</div>
+                <div class="cs-dead-cell">System expects <code>{"tags":["x","y"]}</code>. LLM returns conversational text. Fatal parse error. Every call needs a retry wrapper — just to extract two words.</div>
+              </div>
+              <div class="cs-dead-row">
+                <div class="cs-dead-cell">Latency</div>
+                <div class="cs-dead-cell">800ms standard + 600ms metadata extraction = 1.4s wait before anything useful happens.</div>
+              </div>
+              <div class="cs-dead-row">
+                <div class="cs-dead-cell">Token cost</div>
+                <div class="cs-dead-cell">15-word prompt + 400-token system prompt to classify it. 25× more to categorise than to process. Not viable for an MVP budget.</div>
+              </div>
+            </div>
+
+            <div class="cs-fight">
+              <div class="cs-fight-label">Why I pushed for gen 3</div>
+              <div class="cs-fight-text">Chips are harder to build. I pushed for them because <em>match quality is the entire product bet.</em> Vague input → bad matches → no Tribe. The chips are the quality gate that makes everything downstream worth building.</div>
+            </div>
+
+            <!-- Chip validation strip -->
+            <div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;margin:20px 0">
+              <img src="App_Screen.png" alt="Nine-frame chip validation sequence: empty → typing → What chip fires → When chip fires → all three green → error state" loading="lazy" style="width:100%;height:auto;display:block">
+            </div>
+            <p style="font-size:11px;color:var(--text-c);font-style:italic;margin-top:-12px;margin-bottom:16px">Left to right: empty → "ba" → "basketball" (What chip fires) → full sentence (When + Where chips) → green face → FIND THEM unlocks → error state for special characters.</p>
+
+            <!-- All other decisions — expandable list -->
+            <div class="cs-section-eyebrow" style="margin-bottom:8px">Other design decisions</div>
+            <div class="cs-decisions" id="decision-list">
+
+              <div class="cs-decision" onclick="toggleDecision(this)">
+                <div class="cs-decision-icon">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#46496D" stroke-width="1.2"/><circle cx="7" cy="7" r="2" fill="#46496D"/></svg>
+                </div>
+                <div>
+                  <div class="cs-decision-text">Anonymous until mutual yes</div>
+                  <div class="cs-decision-why">Trust is bilateral — removes vulnerability of the initiating user</div>
+                </div>
+                <svg class="cs-decision-expand" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="cs-decision-detail"><div class="cs-decision-detail-inner">Profiles reveal gradually: initials only → mutual yes → images revealed. The asymmetry of "one person knows who the other is" creates a structural power imbalance. Removing it at the design level was more reliable than hoping users would feel safe.</div></div>
+
+              <div class="cs-decision" onclick="toggleDecision(this)">
+                <div class="cs-decision-icon">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" stroke="#46496D" stroke-width="1.2"/><path d="M5 7h4M7 5v4" stroke="#46496D" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="cs-decision-text">Galactic background on passive screens only</div>
+                  <div class="cs-decision-why">Attention split on mobile kills both brand and task</div>
+                </div>
+                <svg class="cs-decision-expand" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="cs-decision-detail"><div class="cs-decision-detail-inner">Founder wanted galactic background everywhere. I pushed back: rich backgrounds compete with tasks on small screens. Resolution: atmosphere on passive screens (processing, waiting), clean surface on decision screens (prompt, results, accept/decline). The argument was grounded in cognitive load, not preference.</div></div>
+
+              <div class="cs-decision" onclick="toggleDecision(this)">
+                <div class="cs-decision-icon">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2v10" stroke="#46496D" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="cs-decision-text">One active chat only — no search</div>
+                  <div class="cs-decision-why">Focus drives commitment — multitasking kills intent</div>
+                </div>
+                <svg class="cs-decision-expand" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="cs-decision-detail"><div class="cs-decision-detail-inner">No chat search, one active conversation. The constraint is intentional: users who can only be in one chat take it more seriously. Motivation stays high. Tribe Suggests (AI conversation starter) supports the user without removing the constraint.</div></div>
+
+              <div class="cs-decision" onclick="toggleDecision(this)">
+                <div class="cs-decision-icon">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v6M4 10l3 2 3-2" stroke="#46496D" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div>
+                  <div class="cs-decision-text">GPS deleted after match — aggregated only</div>
+                  <div class="cs-decision-why">Location used to find nearby people, not stored</div>
+                </div>
+                <svg class="cs-decision-expand" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="cs-decision-detail"><div class="cs-decision-detail-inner">My proposal: GPS appears mid-processing, used only until match is found, then deleted. Aggregated location used for statistics only. This was a trust signal I designed into the product spec — not a legal compliance item. The copy explicitly names it on the permission modal.</div></div>
+
+              <div class="cs-decision" onclick="toggleDecision(this)">
+                <div class="cs-decision-icon">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 10l4-8 4 8" stroke="#46496D" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 7h6" stroke="#46496D" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="cs-decision-text">"Luck is around the corner" — positive no-match framing</div>
+                  <div class="cs-decision-why">Prevents abandonment without overselling the product</div>
+                </div>
+                <svg class="cs-decision-expand" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="cs-decision-detail"><div class="cs-decision-detail-inner">No match found: positive eyebrow + invite-friends module (closable) + 3 nearby intents the user can connect with (not matches — no compatibility score). Gives the user something real to do without pretending the product succeeded.</div></div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SOLUTION ── -->
+      <section class="cs-section" id="s-solution">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">Solution</div>
+            <h2 class="cs-section-heading">10 sprints. Full IA. <em>A trust model built from first principles.</em></h2>
+            <p class="cs-section-summary">Complete design system, all interaction states, safety flows, and a documented trust model. The full flow from empty prompt to real-world meeting.</p>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+
+            <div class="cs-stats">
+              <div class="cs-stat"><div class="cs-stat-n">10</div><div class="cs-stat-l">sprints</div></div>
+              <div class="cs-stat"><div class="cs-stat-n">3</div><div class="cs-stat-l">sprint sheets</div></div>
+              <div class="cs-stat"><div class="cs-stat-n">7</div><div class="cs-stat-l">core flows</div></div>
+              <div class="cs-stat"><div class="cs-stat-n">0</div><div class="cs-stat-l">templates used</div></div>
+            </div>
+
+            <!-- Full flow phone strip -->
+            <div class="cs-phone-strip" role="region" aria-label="Complete Tribe flow — scroll to see all screens">
+              <div class="cs-phone"><img src="Landing-Signed.png" alt="Onboarding — Your people are already out there" loading="lazy"><div class="cs-phone-cap">Onboarding</div></div>
+              <div class="cs-phone"><img src="Landing-Signed_In_empty_state_collapseds.png" alt="Empty prompt workspace" loading="lazy"><div class="cs-phone-cap">Empty state</div></div>
+              <div class="cs-phone"><img src="Landing-Signed_In_filled_state_correct.png" alt="Validated prompt — green face, CTA active" loading="lazy"><div class="cs-phone-cap">Validated</div></div>
+              <div class="cs-phone"><img src="Landing-processing1.png" alt="Processing — galactic background, XAI steps" loading="lazy"><div class="cs-phone-cap">Processing</div></div>
+              <div class="cs-phone"><img src="processing_2.png" alt="Processing + GPS permission modal" loading="lazy"><div class="cs-phone-cap">GPS ask</div></div>
+              <div class="cs-phone"><img src="Match.png" alt="Match results — Here are your people, 84% and 68% compatibility" loading="lazy"><div class="cs-phone-cap">Matches</div></div>
+              <div class="cs-phone"><img src="Messaging-Mobile.png" alt="Chat with Anna K." loading="lazy"><div class="cs-phone-cap">Chat</div></div>
+              <div class="cs-phone"><img src="Messaging-Mobile-1.png" alt="Tribe Suggests AI conversation starter" loading="lazy"><div class="cs-phone-cap">AI suggest</div></div>
+              <div class="cs-phone"><img src="meethub.png" alt="Meet hub — set up your meeting" loading="lazy"><div class="cs-phone-cap">Meet hub</div></div>
+              <div class="cs-phone"><img src="NO_MATCH_FOUND.png" alt="No match — Luck is around the corner" loading="lazy"><div class="cs-phone-cap">No match</div></div>
+            </div>
+
+            <div class="cs-outcome">
+              <div class="cs-oc"><div class="cs-oc-t">What the product gained</div><div class="cs-oc-b">A cognitive and ethical design layer that wasn't in the brief. Trust model structured and documentable, not assumed.</div></div>
+              <div class="cs-oc"><div class="cs-oc-t">What remains unproven</div><div class="cs-oc-b">Cold-start behaviour — the first time a real user types a real intent into the real system — is untested.</div></div>
+              <div class="cs-oc"><div class="cs-oc-t">What surprised</div><div class="cs-oc-b">The edge cases carried the most weight. No-match, breathe chat, safety exit — these decided the product's character.</div></div>
+              <div class="cs-oc"><div class="cs-oc-t">What transfers</div><div class="cs-oc-b">Map vulnerability states first. The happy path is not the frame. The human state at each step is.</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── REFLECTION ── -->
+      <section class="cs-section" id="s-reflection">
+        <div class="cs-section-top">
+          <div>
+            <div class="cs-section-eyebrow">Reflection</div>
+            <h2 class="cs-section-heading">The processing copy <em>needed more honesty.</em></h2>
+            <p class="cs-section-summary">"Analysing Social Energy" sat in the file for three sprints. It's atmospheric. It tells the user nothing about what is happening to their data.</p>
+          </div>
+        </div>
+        <div class="cs-section-body">
+          <div class="cs-section-body-inner">
+            <div class="cs-anno-pair">
+              <div class="cs-anno-wrap">
+                <img src="Landing-processing1.png" alt="Processing screen — Analyzing Social Energy, Mapping your vibe" loading="lazy">
+                <div class="cs-anno-cap"><strong style="color:#8B2020">The problem</strong>"Analyzing Social Energy" and "Mapping your vibe" — atmospheric copy at peak black-box anxiety. The user's data has just left their control. Wrong moment for personality.</div>
+              </div>
+              <div class="cs-anno-wrap">
+                <img src="processing_2.png" alt="GPS permission mid-processing — two simultaneous trust asks" loading="lazy">
+                <div class="cs-anno-cap"><strong>Two trust asks at once</strong>GPS permission arrives while atmospheric copy is still running. The copy needed to earn this moment — not undermine it.</div>
+              </div>
+            </div>
+            <div class="cs-body">
+              <p>In a product built on trust and data minimisation, the highest-anxiety moment deserved honesty, not atmosphere. The lesson: hold copy to the same standard as interaction design. They're describing the same human moment.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANSFER -->
+      <div class="cs-transfer">
+        <div class="cs-transfer-label">The insight that transfers</div>
+        <p class="cs-transfer-quote">"The best interface doesn't ask you what you mean. It makes you feel safe enough to say it."</p>
+      </div>
+
+      <!-- NEXT -->
+      <nav class="cs-next">
+        <div>
+          <div class="cs-next-label">Next</div>
+          <a href="case-study-01.html" class="cs-next-link">
+            Ethical Guardrail Plugin
+            <span class="cs-next-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 1.5l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </div>
+      </nav>
+
+    </main>
+  </div>
+</div>
+
+<script>
+// Sections animate in
+const sections = document.querySelectorAll('.cs-section');
+const io = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible') }), {threshold:0.06});
+sections.forEach(s => io.observe(s));
+
+// Progress bar
+const pf = document.getElementById('pf');
+window.addEventListener('scroll', () => {
+  const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+  if(pf) pf.style.width = pct + '%';
+  // Active nav
+  let cur = '';
+  sections.forEach(s => { if(window.scrollY >= s.offsetTop - 100) cur = s.id });
+  document.querySelectorAll('.cs-nav-item').forEach(n => n.classList.toggle('active', n.dataset.s === cur));
+}, {passive:true});
+
+
+// Decision row expand
+function toggleDecision(row) {
+  const detail = row.nextElementSibling;
+  const open = row.classList.contains('open');
+  row.classList.toggle('open', !open);
+  detail.classList.toggle('open', !open);
+}
+
+// ── A11Y PANEL ──
+let a11yOpen = false;
+function toggleA11y(){
+  a11yOpen = !a11yOpen;
+  const p = document.getElementById('a11yPanel');
+  const b = document.getElementById('btnA11y');
+  if(p) p.classList.toggle('open', a11yOpen);
+  if(b) b.classList.toggle('open', a11yOpen);
+}
+document.addEventListener('click', e => {
+  if(a11yOpen && !e.target.closest('.a11y-fixed')){
+    a11yOpen = false;
+    const p = document.getElementById('a11yPanel');
+    const b = document.getElementById('btnA11y');
+    if(p) p.classList.remove('open');
+    if(b) b.classList.remove('open');
+  }
+});
+function fs(v){
+  const s = {'-2':.82,'-1':.91,'0':1,'1':1.1,'2':1.2};
+  document.body.style.fontSize = (s[String(v)] * 100) + '%';
+}
+function toggleCT(){
+  const t = document.getElementById('ctToggle');
+  const on = t.classList.toggle('on');
+  document.documentElement.style.setProperty('--text', on ? '#000' : '#1B1A18');
+  document.documentElement.style.setProperty('--bg', on ? '#FFF' : '#F4F1ED');
+}
+function toggleRM(){
+  const t = document.getElementById('rmToggle');
+  t.classList.toggle('on');
+  document.documentElement.style.setProperty('--dur', t.classList.contains('on') ? '0ms' : '200ms');
+}
+function doEmail(){
+  window.open('mailto:hello@orsolyag.com','_blank');
+}
+</script>
+</body>
+</html>

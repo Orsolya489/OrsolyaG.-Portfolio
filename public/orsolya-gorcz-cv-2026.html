@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orsolya Gorcz — CV 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF9F5;
+    --text: #1E1C1A;
+    --text-secondary: #6B6862;
+    --text-caption: #8A877F;
+    --accent: #5B5E8A;
+    --border: #E2DFD8;
+    --surface: #F2EFE8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 48px 72px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 24px;
+    padding-bottom: 28px;
+    margin-bottom: 32px;
+  }
+
+  .name {
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--text);
+  }
+
+  .title-line {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    margin-top: 6px;
+  }
+
+  .summary {
+    margin-top: 14px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    max-width: 520px;
+  }
+
+  .contact {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 2;
+  }
+
+  .contact a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .contact a:hover { text-decoration: underline; }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 28px;
+  }
+
+  .section-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-caption);
+    margin-bottom: 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── ROLE ── */
+  .role {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .role:last-child { margin-bottom: 0; }
+
+  .role-left {}
+
+  .role-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .role-org {
+    font-size: 12.5px;
+    color: var(--accent);
+    font-weight: 400;
+    margin-top: 1px;
+  }
+
+  .role-meta {
+    font-size: 11px;
+    color: var(--text-caption);
+    margin-top: 2px;
+    font-style: italic;
+  }
+
+  .role-right {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .role-date {
+    font-size: 11px;
+    color: var(--text-caption);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .role-location {
+    font-size: 11px;
+    color: var(--text-caption);
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  .bullets {
+    margin-top: 8px;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .bullets li {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    padding-left: 14px;
+    position: relative;
+    margin-bottom: 4px;
+  }
+
+  .bullets li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--border);
+    font-weight: 400;
+  }
+
+  .bullets li strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ── DIVIDER between role groups ── */
+  .role-divider {
+    height: 1px;
+    background: var(--surface);
+    margin: 18px 0;
+  }
+
+  /* ── EARLIER SECTION ── */
+  .earlier-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 32px;
+  }
+
+  .earlier-item {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    padding: 3px 0;
+  }
+
+  .earlier-item span {
+    color: var(--text-caption);
+    font-size: 11px;
+  }
+
+  /* ── EDUCATION ── */
+  .edu-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    margin-bottom: 12px;
+  }
+
+  .edu-item:last-child { margin-bottom: 0; }
+
+  .edu-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .edu-org {
+    font-size: 12px;
+    color: var(--accent);
+    margin-top: 1px;
+  }
+
+  .edu-note {
+    font-size: 11.5px;
+    color: var(--text-caption);
+    margin-top: 2px;
+  }
+
+  .edu-date {
+    font-size: 11px;
+    color: var(--text-caption);
+    text-align: right;
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 32px;
+  }
+
+  .skill-group-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .skill-list {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ── FOOTER ── */
+  .cv-footer {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-caption);
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: white; font-size: 12px; }
+    .page { padding: 32px 40px 48px; max-width: 100%; }
+    a { color: var(--accent) !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="name">Orsolya Gorcz</div>
+      <div class="title-line">Human Factors · AI Product Designer · Human-AI Interaction</div>
+      <div class="summary">
+        Product designer with 10+ years across motion, graphic, and product design. I specialize in human-AI interaction and human factors — designing the layer where AI behaviour becomes human experience. I work at the intersection of cognitive load, trust design, and system complexity, and I also build what I design.
+      </div>
+    </div>
+    <div class="contact">
+      <a href="mailto:orsigorcz@gmail.com">orsigorcz@gmail.com</a><br>
+      <a href="https://orsolyagorcz.figma.site" target="_blank">orsolyagorcz.figma.site</a><br>
+      <a href="https://linkedin.com/in/orsolyagorcz" target="_blank">LinkedIn</a><br>
+      Hungary<br>
+      Open to remote &amp; relocation
+    </div>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="section">
+    <div class="section-label">Experience</div>
+
+    <!-- Tribe -->
+    <div class="role">
+      <div class="role-left">
+        <div class="role-title">AI Product Designer — Human-AI Interaction</div>
+        <div class="role-org">Tribe <span style="color:var(--text-caption);font-size:11px;">· Pre-MVP startup, contract</span></div>
+        <ul class="bullets">
+          <li>Designed a HAII framework targeting <strong>70% Match-to-Chat conversion</strong> by eliminating decision fatigue at the AI-human handoff moment — the highest-friction point in the funnel.</li>
+          <li>Mapped trust-formation patterns in early user interactions to inform when and how AI uncertainty should be surfaced, not hidden.</li>
+        </ul>
+      </div>
+      <div class="role-right">
+        <div class="role-date">Feb 2026 – Present</div>
+        <div class="role-location">Budapest · Remote</div>
+      </div>
+    </div>
+
+    <div class="role-divider"></div>
+
+    <!-- For Our Families -->
+    <div class="role">
+      <div class="role-left">
+        <div class="role-title">Human-Centered Product Designer</div>
+        <div class="role-org">For Our Families Foundation <span style="color:var(--text-caption);font-size:11px;">· contract</span></div>
+        <ul class="bullets">
+          <li>Led full-cycle brand development and website design from research through delivery — user research, client workshops, information architecture, usability testing, and analytics integration.</li>
+          <li>Designed a scalable visual identity system built for long-term maintainability, not just launch quality.</li>
+        </ul>
+      </div>
+      <div class="role-right">
+        <div class="role-date">Aug 2025 – Feb 2026</div>
+        <div class="role-location">Budapest · Remote</div>
+      </div>
+    </div>
+
+    <div class="role-divider"></div>
+
+    <!-- Puzled -->
+    <div class="role">
+      <div class="role-left">
+        <div class="role-title">UX / UI Designer</div>
+        <div class="role-org">Puzled <span style="color:var(--text-caption);font-size:11px;">· Pre-MVP startup, contract</span></div>
+        <ul class="bullets">
+          <li>Translated founder vision into a coherent product language and market-ready visual system from scratch.</li>
+          <li>Established research-backed wireframes for B2B dashboard and authentication flows, defining the MVP's core interaction logic.</li>
+        </ul>
+      </div>
+      <div class="role-right">
+        <div class="role-date">Feb 2025 – May 2025</div>
+        <div class="role-location">Dublin · Remote</div>
+      </div>
+    </div>
+
+    <div class="role-divider"></div>
+
+    <!-- Picsart -->
+    <div class="role">
+      <div class="role-left">
+        <div class="role-title">Product Usability Tester & Template Designer</div>
+        <div class="role-org">Picsart <span style="color:var(--text-caption);font-size:11px;">· contract</span></div>
+        <ul class="bullets">
+          <li>Stress-tested the platform at scale — 15+ templates weekly — identifying critical friction points that contributed to a <strong>20% improvement in software intuitiveness</strong>.</li>
+          <li>Delivered structured feedback and feature recommendations to product and engineering, bridging the gap between professional and non-designer user needs.</li>
+        </ul>
+      </div>
+      <div class="role-right">
+        <div class="role-date">2021 – 2022</div>
+        <div class="role-location">New York · Remote</div>
+      </div>
+    </div>
+
+    <div class="role-divider"></div>
+
+    <!-- MTVA -->
+    <div class="role">
+      <div class="role-left">
+        <div class="role-title">Broadcast Motion Graphics Specialist & Graphic Designer</div>
+        <div class="role-org">MTVA — Hungarian Public Media <span style="color:var(--text-caption);font-size:11px;">· full-time</span></div>
+        <ul class="bullets">
+          <li>Designed and produced live broadcast motion graphics and <strong>AR/holographic elements</strong> — real-time visual systems where timing errors are permanent and attention is the only metric.</li>
+          <li>Developed visual systems that had to perform across uncontrolled viewing contexts: the earliest applied human factors work, before it had that name.</li>
+        </ul>
+      </div>
+      <div class="role-right">
+        <div class="role-date">2015 – 2018</div>
+        <div class="role-location">Budapest</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EARLIER EXPERIENCE -->
+  <div class="section">
+    <div class="section-label">Earlier Experience</div>
+    <div class="earlier-grid">
+      <div class="earlier-item">Graphic Designer — Zooom Productions <span>· Salzburg, 2024</span></div>
+      <div class="earlier-item">Freelance Graphic Designer <span>· Budapest, 2021–2024</span></div>
+      <div class="earlier-item">Independent travel & work across Australia & Asia <span>· 2018–2021 · three years navigating systems outside native language and cultural context</span></div>
+      <div class="earlier-item"></div>
+    </div>
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="section">
+    <div class="section-label">Education & Credentials</div>
+
+    <div class="edu-item">
+      <div>
+        <div class="edu-name">Human Factors & Usability Engineering</div>
+        <div class="edu-org">Arizona State University · Coursera</div>
+        <div class="edu-note">Professional Certificate · Specialization</div>
+      </div>
+      <div class="edu-date">Sept 2025 – Jan 2026</div>
+    </div>
+
+    <div class="edu-item">
+      <div>
+        <div class="edu-name">Systems Engineering</div>
+        <div class="edu-org">MathWorks · Coursera</div>
+        <div class="edu-note">Certificate</div>
+      </div>
+      <div class="edu-date">2026</div>
+    </div>
+
+    <div class="edu-item">
+      <div>
+        <div class="edu-name">Introduction to the Philosophy of Cognitive Science</div>
+        <div class="edu-org">The University of Edinburgh · Coursera</div>
+        <div class="edu-note">Certificate</div>
+      </div>
+      <div class="edu-date">2025</div>
+    </div>
+
+    <div class="edu-item">
+      <div>
+        <div class="edu-name">Advanced Diploma — Graphic Design</div>
+        <div class="edu-org">Vocational School of Fine Arts and Music, Szombathely</div>
+        <div class="edu-note">5-year programme · visual communication, composition, and form</div>
+      </div>
+      <div class="edu-date">2010 – 2014</div>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="section">
+    <div class="section-label">Skills & Languages</div>
+    <div class="skills-grid">
+      <div>
+        <div class="skill-group-label">Design & Research</div>
+        <div class="skill-list">Human Factors · Human-AI Interaction · Human-Centered AI · Systems Thinking · Ethical Design · Cognitive Load Analysis · Usability Testing · Information Architecture</div>
+      </div>
+      <div>
+        <div class="skill-group-label">Craft & Build</div>
+        <div class="skill-list">Visual Communication · Motion & Prototyping · AI Literacy · Figma · HTML/CSS · Brand Systems · Design Systems</div>
+      </div>
+      <div style="margin-top:12px; grid-column: 1 / -1;">
+        <div class="section-label">Languages</div>
+        <div class="skill-list"><strong>Hungarian</strong> — Native · <strong>English</strong> — Advanced · <strong>Japanese</strong> — Pre-intermediate</div>
+      </div>    </div>
+  </div>
+
+
+
+</div>
+</body>
+</html>
