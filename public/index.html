@@ -317,6 +317,7 @@ body::before{
   display:flex;align-items:center;justify-content:center;
   padding:28px 24px;
 }
+.cs-schema-inner .cs-schema-map-wrap .cs-schema-map{padding:0}
 .cs-schema-map svg{
   width:100%;
   max-width:100%;
@@ -333,12 +334,13 @@ body::before{
   max-height:80px;opacity:1;
   padding-top:14px;padding-bottom:16px;
   border-top-width:1px;
-.cs-schema-inner{display:flex;align-items:center;gap:10px;width:100%;height:100%}
-.cs-schema-map-wrap{flex:0 0 67%;height:100%}
-.cs-schema-ui{flex:0 0 30%;height:88%;border-radius:6px;overflow:hidden;border:1px solid var(--border);opacity:0.88;transition:opacity 0.8s ease}
+}
+.cs-schema-inner{display:flex;align-items:center;gap:10px;width:100%;padding:28px 24px}
+.cs-schema-map-wrap{flex:0 0 67%;min-width:0}
+.cs-schema-map-wrap svg{width:100%;display:block}
+.cs-schema-ui{flex:0 0 30%;height:100px;border-radius:6px;overflow:hidden;border:1px solid var(--border);opacity:0.88;transition:opacity 0.8s ease}
 .cs-schema-ui img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
 .cs-project:hover .cs-schema-ui{opacity:1}
-}
 .draw{stroke-dasharray:400;stroke-dashoffset:400}
 .draw.go{animation:stroke 1.1s var(--ease) forwards}
 @keyframes stroke{to{stroke-dashoffset:0}}
