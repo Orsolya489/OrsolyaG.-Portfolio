@@ -1745,7 +1745,12 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
           <strong>Open to opportunities</strong>
           <span>Available for full-time roles · Remote or relocation</span>
         </div>
-        <button class="btn btn-email" onclick="doEmail()">Email me</button>
+        <button class="btn btn-email" id="btnEmail2" onclick="doEmail()">
+          <span class="btn-label">Email me</span>
+          <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </button>
       </div>
 
     </div>
@@ -2056,14 +2061,15 @@ function copyEmail(e,el){
 }
 function doEmail(){
   navigator.clipboard.writeText('orsigorcz@gmail.com').catch(()=>{window.open('mailto:orsigorcz@gmail.com','_blank');});
-  const b=$('btnEmail');
-  if(b&&!b.classList.contains('done')){
-    setTimeout(()=>{
-      b.classList.add('done');
-      const lbl=b.querySelector('.btn-label');
-      if(lbl)lbl.textContent='Copied ✓';
-    },400);
-  }
+  [$('btnEmail'),$('btnEmail2')].forEach(b=>{
+    if(b&&!b.classList.contains('done')){
+      setTimeout(()=>{
+        b.classList.add('done');
+        const lbl=b.querySelector('.btn-label');
+        if(lbl)lbl.textContent='Copied ✓';
+      },400);
+    }
+  });
 }
 const lbImages=[
   {src:'about_me_ducks.jpg',caption:'How I guide user\'s attention'},
