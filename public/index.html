@@ -357,37 +357,43 @@ body::before{
   border:1px solid rgba(27,26,24,.09);
   box-shadow:0 1px 4px rgba(27,26,24,.06);
   overflow:hidden;
+  min-height:auto;
 }
-.cs-body{padding:20px 22px 18px}
+.cs-body{padding:24px 24px 20px;display:flex;flex-direction:column}
 .cs-num{
   font-size:11px;font-weight:400;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--text-c);
-  margin-bottom:4px;
+  text-transform:uppercase;color:var(--text-m);
+  margin-bottom:6px;
 }
 .cs-title{
-  font-size:20px;font-weight:400;color:var(--text);
-  line-height:1.25;letter-spacing:-.02em;
-  margin-bottom:10px;
+  font-size:22px;font-weight:400;color:var(--text);
+  line-height:1.28;letter-spacing:-.02em;
+  margin-bottom:18px;
+  flex:1;
 }
 .cs-hook{
   font-size:12px;color:var(--text-s);
   line-height:1.7;font-style:italic;
-  margin-bottom:16px;max-width:520px;
+  margin-bottom:18px;max-width:520px;
 }
 .cs-foot{
-  display:flex;align-items:flex-start;
-  justify-content:space-between;gap:6px;
+  display:flex;align-items:center;
+  justify-content:space-between;
+  gap:6px;
   flex-wrap:wrap;
+  padding-top:14px;
+  border-top:1px solid var(--border);
+  margin-top:auto;
 }
-.cs-foot .cs-link{margin-left:auto;flex-shrink:0;align-self:center;}
-.cs-foot .cs-tag{flex-shrink:0;}
+.cs-foot .cs-link{margin-left:auto;flex-shrink:0;align-self:center}
+.cs-foot .cs-tag{flex-shrink:0}
 .cs-tag{
-  font-size:13px;padding:3px 10px;border-radius:20px;
-  border:1px solid var(--border);color:var(--text-c);
+  font-size:12px;padding:3px 10px;border-radius:20px;
+  border:1px solid var(--border);color:var(--text-m);
   white-space:nowrap;background:var(--bg);
 }
 .cs-tag-wip{
-  font-size:13px;padding:3px 10px;border-radius:20px;
+  font-size:12px;padding:3px 10px;border-radius:20px;
   border:1px solid #C8A96E;color:#7A5A2E;
   white-space:nowrap;background:#FBF3E8;
 }
