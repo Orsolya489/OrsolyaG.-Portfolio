@@ -473,14 +473,18 @@ body::before{
   :root{--sidebar:0px}
   .page{display:block}
   .main{padding:0 28px 96px;max-width:100%;margin:0;width:100%}
-  /* bottom tab bar — flush to screen edge */
+  /* bottom tab bar — truly flush to screen bottom */
   .sidebar{
     display:flex;flex-direction:row;
-    height:auto;width:100%;
-    position:fixed;bottom:0;left:0;right:0;top:auto;
+    width:100%;
+    position:fixed;
+    bottom:0!important;
+    top:auto!important;
+    left:0;right:0;
+    transform:none!important;
     border-right:none;border-top:1px solid var(--border);
-    padding:8px 8px 0;
-    padding-bottom:env(safe-area-inset-bottom,0px);
+    padding:8px 4px;
+    padding-bottom:max(8px,env(safe-area-inset-bottom));
     background:rgba(253,252,250,.97);
     backdrop-filter:blur(12px);
     -webkit-backdrop-filter:blur(12px);
@@ -568,16 +572,16 @@ body::before{
   /* about main photo — full width, portrait crop */
   .about-photo-fixed{width:100%!important;flex-shrink:0;border-radius:16px;overflow:hidden}
   .about-photo-fixed img{
-    width:100%;
-    height:auto;
-    aspect-ratio:3/4;
-    object-fit:cover;
-    object-position:center top;
-    display:block;
+    width:100%!important;
+    height:auto!important;
+    aspect-ratio:3/4!important;
+    object-fit:cover!important;
+    object-position:center top!important;
+    display:block!important;
   }
-  /* email CTA: full rounded rectangle, generous padding */
+  /* email CTA: full rounded rectangle */
   .btn-email span{display:inline!important}
-  .btn-email{padding:16px 32px;font-size:15px;gap:10px;border-radius:20px}
+  .btn-email{padding:24px 24px!important;font-size:18px!important;gap:10px;border-radius:16px!important}
   /* footer: clear the bottom nav */
   footer{padding-bottom:calc(72px + max(8px,env(safe-area-inset-bottom)))}
   /* bottom nav: hug screen edge, safe area */
@@ -674,7 +678,7 @@ body::before{
   /* topbar */
   .btn-resume span{display:none}
   .btn-resume{padding:8px 10px}
-  .btn-email{padding:8px 12px}
+  /* btn-email padding preserved from 960px rule */
   /* pills */
   .pills{gap:4px}
   .pill{font-size:13px;padding:4px 11px}
@@ -715,8 +719,7 @@ body::before{
   .cs-title{font-size:26px;line-height:1.2}
   .cs-schema{height:auto;min-height:100px;padding:12px 16px}
   .topbar{padding:0 14px}
-  .btn-email span{display:none}
-  .btn-email{padding:8px}
+  .btn-email span{display:inline!important}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -886,7 +889,7 @@ body::before{
 .about-banner{display:flex;align-items:center;justify-content:space-between;background:var(--bg-deep);border-radius:14px;padding:16px 20px;margin-top:24px}
 .about-banner-text strong{font-size:13px;font-weight:500;color:var(--text);display:block;margin-bottom:2px}
 .about-banner-text span{font-size:13px;color:var(--text-c)}
-@media(max-width:700px){.about-wrap{flex-direction:column}.about-photo-fixed{width:100%}.about-photo-fixed img{height:200px}}
+@media(max-width:700px){.about-wrap{flex-direction:column}.about-photo-fixed{width:100%}}
 
 /* ── SNIPPET LIST ── */
 .snip-list{display:flex;flex-direction:column}
