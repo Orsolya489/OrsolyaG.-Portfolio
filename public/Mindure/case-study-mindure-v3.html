@@ -182,7 +182,30 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
 /* RESPONSIVE */
 @media(max-width:1024px){:root{--sidebar:198px}.cs-inner{padding-left:var(--sidebar);padding-right:24px}.cs-sidebar{padding:32px 16px 32px 20px}.cs-main{padding:48px 0 80px;margin:0 auto}}
 @media(max-width:768px){:root{--sidebar:0px}.cs-inner{padding:0 20px}.cs-sidebar{position:static;width:100%;height:auto;padding:16px 0 12px}.cs-nav{flex-direction:row;flex-wrap:wrap;gap:4px}.cs-nav-label{display:none}.cs-meta-block{display:none}.cs-progress-bar{display:none}.cs-next-case{display:none}.cs-main{max-width:100%;padding:20px 0 80px}.cs-stats-row{grid-template-columns:1fr}.topbar{padding:0 16px}}
-@media(max-width:480px){.cs-inner{padding:0 16px}.cs-stats-row{grid-template-columns:1fr}}
+@media(max-width:480px){
+  .cs-inner{padding:0 16px}
+  .cs-stats-row{grid-template-columns:1fr}
+  /* 3-col stacks to single */
+  .cs-3col{grid-template-columns:1fr}
+  /* constraint table stacks */
+  .cs-constraint-table{grid-template-columns:1fr}
+  /* compare pair columns stack */
+  .cs-pair-cols{grid-template-columns:1fr}
+  .cs-pair-col+.cs-pair-col{border-left:none;border-top:1px solid var(--border)}
+  /* image+text side-by-side stacks */
+  .cs-section-body{flex-direction:column}
+  /* title size */
+  .cs-title{font-size:clamp(26px,8vw,36px)}
+  .cs-section-heading{font-size:clamp(20px,5.5vw,26px)}
+  /* SVG diagrams scroll rather than clip */
+  .cs-illus{overflow-x:auto}
+}
+@media(max-width:600px){
+  /* compare sliders full-width */
+  .cs-compare{width:100%}
+  /* empathy map stacks */
+  .cs-3col{grid-template-columns:1fr}
+}
 @media(prefers-reduced-motion:reduce){.cs-section{transition:none;opacity:1;transform:none}}
 </style>
 </head>
