@@ -279,29 +279,42 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
   .cs-inner{padding:0 16px}
   .cs-gen-strip{grid-template-columns:1fr}
   .cs-stats{grid-template-columns:1fr 1fr}
-  .cs-title{font-size:clamp(26px,8vw,36px)}
-  .cs-section-heading{font-size:clamp(20px,5.5vw,26px)}
+  .cs-title{font-size:clamp(32px,8vw,42px);line-height:1.15}
+  .cs-section-heading{font-size:clamp(26px,6.5vw,34px);line-height:1.2}
   .cs-phone{width:100px}
   .cs-body,.cs-section-summary,.cs-fight-text,.cs-lens-text{word-break:break-word;overflow-wrap:break-word}
-  /* process map: stack image + text vertically, image first */
-  .cs-pm-step,.cs-pm-fork{grid-template-columns:1fr}
-  .cs-pm-step .cs-pm-cell--ann{order:2}
-  .cs-pm-step .cs-pm-cell--img{order:1}
-  .cs-pm-phone img{width:100%;max-width:100%}
-  .cs-pm-phone{width:100%}
+  /* ── processing→match decision flow ── */
+  /* step: always single column, image on top, text below */
+  .cs-pm-step{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:16px;
+  }
+  .cs-pm-cell--img{order:1;width:100%}
+  .cs-pm-cell--ann{order:2;width:100%;max-width:100%!important;text-align:left!important;justify-self:auto!important;padding-top:0}
+  /* phone images: all same width, full container */
+  .cs-pm-phone{width:100%!important;align-self:auto!important}
+  .cs-pm-phone img{width:100%;max-width:100%;height:auto}
+  /* fork: single column, same order: image then text */
+  .cs-pm-fork{display:flex!important;flex-direction:column!important;gap:32px}
+  .cs-pm-fork-side{align-items:flex-start!important;text-align:left!important}
+  .cs-pm-fork-side--right{align-items:flex-start!important;text-align:left!important}
+  .cs-pm-fork-side--right .cs-pm-phone{align-self:auto!important}
+  .cs-pm-fork-side--right .cs-pm-ann-title,
+  .cs-pm-fork-side--right .cs-pm-ann-body{text-align:left!important;width:100%!important}
+  /* hide SVG connectors on mobile */
+  .cs-pm-conn{display:none}
   .cs-pm-ann-note--right{border-left:2px solid var(--border-a);border-right:none;padding-left:10px;padding-right:0;text-align:left}
-  /* edge flow: stack nodes, image first */
-  .cs-ef-node{flex-direction:column;gap:12px}
-  .cs-ef-node--right{flex-direction:column;gap:12px}
-  .cs-ef-img{order:1}
+  /* edge flow: stack, image first */
+  .cs-ef-node,.cs-ef-node--right{flex-direction:column!important;gap:12px}
+  .cs-ef-img-wrap{order:1;width:100%}
+  .cs-ef-img{width:100%}
+  .cs-ef-img img{width:100%;max-width:100%;height:auto}
   .cs-ef-ann{order:2;padding-top:0}
-  .cs-ef-img img{width:100%;max-width:100%}
   /* annotated block: image first */
   .cs-ann-block{grid-template-columns:1fr}
   .cs-ann-phone{order:1;position:static;max-width:100%;width:100%}
   .cs-ann-body{order:2}
-  /* SVG connectors: allow horizontal scroll if needed */
-  .cs-pm-conn{overflow-x:auto}
   /* gap + split cards */
   .cs-gap-cards{grid-template-columns:1fr}
   .cs-gap-arrow{display:none}
