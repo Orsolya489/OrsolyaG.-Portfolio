@@ -403,6 +403,12 @@ body::before{
   display:flex;align-items:center;gap:6px;
   pointer-events:none;
 }
+.cs-wip-badges--inline{
+  position:static;
+  display:none;
+  margin-bottom:10px;
+  pointer-events:none;
+}
 .cs-wip-badge{
   font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
   padding:4px 10px;border-radius:20px;
@@ -657,6 +663,9 @@ body::before{
   .cs-title{font-size:20px}
   .cs-hook{font-size:13px;max-width:100%}
   .cs-card{margin:0 8px 8px}
+  /* wip badges: hide absolute, show inline inside card */
+  .cs-wip-badges:not(.cs-wip-badges--inline){display:none}
+  .cs-wip-badges--inline{display:flex}
   /* floatBtns above bottom tab bar */
   #floatBtns{bottom:calc(56px + max(8px,env(safe-area-inset-bottom)) + 16px) !important}
   /* a11y panel — same as desktop, no squeeze */
@@ -1411,6 +1420,10 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
 </div>
           <div class="cs-card" id="cs1" style="scroll-margin-top:80px">
             <div class="cs-body">
+            <div class="cs-wip-badges cs-wip-badges--inline">
+              <span class="cs-wip-badge">In progress</span>
+              <span class="cs-wip-badge cs-wip-badge--survey">Survey re-opened</span>
+            </div>
             <div class="cs-num">Multi-modal Feedback Design · LLM Uncertainty</div>
             <div class="cs-title">When AI is most uncertain, humans are least equipped to notice</div>
             <div class="cs-foot">
