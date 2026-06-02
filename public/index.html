@@ -398,6 +398,15 @@ body::before{
   border:1px solid #C8A96E;color:#7A5A2E;
   white-space:nowrap;background:#FBF3E8;
 }
+.cs-wip-badge{
+  position:absolute;top:12px;right:12px;z-index:10;
+  font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 10px;border-radius:20px;
+  background:rgba(27,26,24,.72);color:rgba(246,244,241,.9);
+  backdrop-filter:blur(4px);
+  pointer-events:none;
+  white-space:nowrap;
+}
 .cs-link{
   display:inline-flex;align-items:center;gap:3px;
   font-size:13px;font-weight:500;color:var(--accent-h);
@@ -1365,7 +1374,8 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
         </div>
 
         <!-- 02 -->
-                <div class="cs-project" onclick="location.href='case-study-guardrail.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='case-study-guardrail.html'" style="cursor:pointer">
+                <div class="cs-project" onclick="location.href='case-study-guardrail.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='case-study-guardrail.html'" style="cursor:pointer;position:relative">
+          <span class="cs-wip-badge">In progress</span>
           <div class="cs-schema" id="schema1">
     <div class="cs-schema-map">
       <svg width="100%" height="120" viewBox="0 0 520 78" fill="none">
@@ -1395,7 +1405,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
             <div class="cs-num">Multi-modal Feedback Design · LLM Uncertainty</div>
             <div class="cs-title">When AI is most uncertain, humans are least equipped to notice</div>
             <div class="cs-foot">
-              <span class="cs-tag-wip">In progress</span><span class="cs-tag">Human Factors</span><span class="cs-tag">Human-AI Interaction</span>
+              <span class="cs-tag">Human Factors</span><span class="cs-tag">Human-AI Interaction</span>
               <a class="cs-link" href="case-study-guardrail.html">Open case study ↗</a>
             </div>
           </div>
