@@ -536,6 +536,31 @@ body::before{
   /* hide focus button on mobile — lives in a11y panel instead */
   #btnFocus{display:none!important}
   #focusRow{display:flex}
+  /* ── GLOBAL WRAP ── */
+  body{overflow-x:hidden}
+  *{max-width:100%;box-sizing:border-box}
+  img,svg,video,iframe,embed{max-width:100%;height:auto}
+  /* every flex row wraps */
+  .cs-foot{flex-wrap:wrap}
+  .cert-foot{flex-wrap:wrap;gap:8px}
+  .topbar-right{flex-wrap:wrap;gap:8px}
+  .cs-eyebrow{flex-wrap:wrap}
+  .snip-row{flex-wrap:wrap}
+  .about-slide-portrait{flex-wrap:wrap}
+  .about-wrap{flex-wrap:wrap}
+  .cs-next{flex-wrap:wrap}
+  /* wide overview row in case studies */
+  [style*="display:flex"]{flex-wrap:wrap}
+  /* cert grid full width */
+  .cert-grid{grid-template-columns:1fr 1fr}
+  /* cred rows don't overflow */
+  .cred-row-title{min-width:0;word-break:break-word}
+  /* lens cards */
+  .lens-card{min-width:0;word-break:break-word}
+  /* about outside thumbs — no overflow */
+  .about-outside-thumbs{flex-wrap:nowrap;overflow:hidden}
+  /* case study overview strip */
+  div[style*="justify-content:space-between"]{flex-wrap:wrap;gap:8px}
   .thesis{margin-left:0;max-width:100%}
   .sub{max-width:100%}
   /* grids */
