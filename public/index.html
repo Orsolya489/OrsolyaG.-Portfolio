@@ -565,8 +565,41 @@ body::before{
   .cred-row-title{min-width:0;word-break:break-word}
   /* lens cards */
   .lens-card{min-width:0;word-break:break-word}
-  /* about outside thumbs — no overflow */
-  .about-outside-thumbs{flex-wrap:nowrap;overflow:hidden}
+  /* about outside thumbs — spread out, tap to open */
+  .about-outside-thumbs{
+    height:auto;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    gap:8px;
+    padding-bottom:4px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .about-outside-thumbs::-webkit-scrollbar{display:none}
+  .about-outside-thumb{
+    width:100px;height:80px;flex-shrink:0;
+    margin-left:0!important;
+    transform:none!important;
+  }
+  .about-outside-thumbs:hover .about-outside-thumb{margin-left:0!important;transform:none!important}
+  /* Leica images: swipeable carousel on mobile */
+  .snip-img-carousel{
+    display:flex!important;
+    flex-direction:row;
+    gap:10px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding-bottom:4px;
+  }
+  .snip-img-carousel::-webkit-scrollbar{display:none}
+  .snip-img-carousel img{
+    flex:0 0 85%;
+    scroll-snap-align:start;
+    height:220px;
+    border-radius:12px;
+  }
   /* case study overview strip */
   div[style*="justify-content:space-between"]{flex-wrap:wrap;gap:8px}
   /* about main photo — full width, portrait crop */
@@ -579,9 +612,9 @@ body::before{
     object-position:center top!important;
     display:block!important;
   }
-  /* email CTA: full rounded rectangle */
+  /* email CTA */
   .btn-email span{display:inline!important}
-  .btn-email{padding:24px 24px!important;font-size:18px!important;gap:10px;border-radius:16px!important}
+  .btn-email{padding:12px 16px!important;font-size:16px!important;gap:8px;border-radius:16px!important}
   /* footer: clear the bottom nav */
   footer{padding-bottom:calc(72px + max(8px,env(safe-area-inset-bottom)))}
   /* bottom nav: hug screen edge, safe area */
@@ -1462,7 +1495,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
           </div>
           <div class="snip-expand" id="se0"><div class="snip-expand-inner">
             <p class="snip-insight">Three design variants resolving the same manufacturing constraints differently — logo clearance, hole radius, corner tolerance. Proof that design decisions have physical consequences.</p>
-            <div class="snip-img-grid">
+            <div class="snip-img-grid snip-img-carousel">
               <img src="snippets_leica__technical_drawing_1.png" alt="Leica variant 1" onclick="openImg(this.src)">
               <img src="snippets_leica__technical_drawing_2.png" alt="Leica variant 2" onclick="openImg(this.src)">
               <img src="snippets_leica__technical_drawing_3.png" alt="Leica variant 3" onclick="openImg(this.src)">
@@ -1989,11 +2022,11 @@ function doEmail(){
   }
 }
 const lbImages=[
-  {src:'public/about_me_ducks.jpg',caption:'How I guide user\'s attention'},
-  {src:'public/about_me_ha_giang_lookout.jpg',caption:'Zooming out to see the big picture.'},
-  {src:'public/about_me_image_2.PNG',caption:'How I face a complex design challenge'},
-  {src:'public/about_me_image_3.PNG',caption:'When the brief finally clicks and everyone\'s looking the same direction'},
-  {src:'public/about_me_terrain.jpeg',caption:'Mapping out the problem before I touch it.'}
+  {src:'about_me_ducks.jpg',caption:'How I guide user\'s attention'},
+  {src:'about_me_ha_giang_lookout.jpg',caption:'Zooming out to see the big picture.'},
+  {src:'about_me_image_2.png',caption:'How I face a complex design challenge'},
+  {src:'about_me_image_3.png',caption:'When the brief finally clicks and everyone\'s looking the same direction'},
+  {src:'about_me_terrain.jpeg',caption:'Mapping out the problem before I touch it.'}
 ];
 let lbIdx=0;
 function openLb(idx){
