@@ -339,7 +339,7 @@ body::before{
 .cs-schema-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;height:220px;padding:28px 24px;box-sizing:border-box}
 .cs-schema-map-wrap{flex:1 1 0;min-width:0;height:100%;display:flex;align-items:center}
 .cs-schema-map-wrap svg{width:100%;height:auto;display:block}
-.cs-schema-ui{flex:0 0 27%;height:160px;border-radius:8px;overflow:hidden;border:1px solid var(--border);opacity:0.88;transition:opacity 0.8s ease}
+.cs-schema-ui{flex:0 0 27%;height:160px;border-radius:8px;overflow:hidden;opacity:0.88;transition:opacity 0.8s ease}
 .cs-schema-ui img{width:100%;height:100%;object-fit:contain;background:transparent;display:block}
 .cs-project:hover .cs-schema-ui{opacity:1}
 /* Tribe thumbnail — slightly smaller to match schematic density */
@@ -1304,9 +1304,13 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
         <!-- 01 -->
                 <div class="cs-project" onclick="location.href='tribe/tribe-case-study-final.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='tribe/tribe-case-study-final.html'" style="cursor:pointer">
           <div class="cs-schema" id="schema0">
-    <div class="cs-schema-inner">
-      <div class="cs-schema-map-wrap">
-        <svg width="100%" height="132" viewBox="0 0 580 132" fill="none">
+    <div class="cs-schema-map">
+      <svg width="100%" viewBox="0 0 580 300" fill="none" style="display:block">
+        <defs>
+          <clipPath id="vgImgClip">
+            <rect x="68" y="108" width="198" height="172" rx="8" ry="8"/>
+          </clipPath>
+        </defs>
 
           <!-- Node 1: User Intent -->
           <circle cx="50" cy="66" r="30" stroke="#6B5F9E" stroke-width="1.5" class="draw"/>
@@ -1319,6 +1323,13 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
           <!-- Node 2: Validation Gap -->
           <rect x="108" y="52" width="118" height="28" rx="5" stroke="#6B5F9E" stroke-width="2" fill="#F0ECF4" class="draw"/>
           <text x="167" y="69" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A2E6A" text-anchor="middle" font-weight="700">validation gap</text>
+
+          <!-- Validation gap → UI mockup (downward connector) -->
+          <line x1="167" y1="80" x2="167" y2="104" stroke="#8C7E96" stroke-width="1" stroke-dasharray="3 2" class="draw"/>
+          <polygon points="163,101 167,108 171,101" fill="#8C7E96"/>
+
+          <!-- UI mockup image embedded below validation gap -->
+          <image href="tribe/mockup.png" x="68" y="108" width="198" height="172" preserveAspectRatio="xMidYMin slice" clip-path="url(#vgImgClip)"/>
 
           <!-- 2 → 3 + label -->
           <line x1="226" y1="66" x2="290" y2="66" stroke="#9E9AAA" stroke-width="1.2" class="draw"/>
@@ -1358,17 +1369,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
           <line x1="440" y1="94" x2="440" y2="108" stroke="#9E9AAA" stroke-width="1" stroke-dasharray="3 2" class="draw"/>
           <text x="440" y="121" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#5A5268" text-anchor="middle">safety exit</text>
 
-          <!-- Arrow from user intent → thumbnail (curves below nodes) -->
-          <path d="M50,96 C100,125 480,125 568,100" stroke="#8C7E96" stroke-width="1" stroke-dasharray="3 2" fill="none" class="draw"/>
-          <polygon points="562,97 568,100 562,103" fill="#8C7E96"/>
-          <!-- Label: validation gap belongs to UI -->
-          <text x="310" y="130" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#8C7E96" text-anchor="middle" font-style="italic">validation gap — shown in UI</text>
-
-        </svg>
-      </div>
-      <div class="cs-schema-ui">
-        <img src="tribe/mockup.png" alt="">
-      </div>
+      </svg>
     </div>
     <div class="cs-schema-desc">A human-first search engine using NLP — built to help people find what they actually need, without being consumed by the app parasitism that surrounds AI tools.</div>
 </div>
