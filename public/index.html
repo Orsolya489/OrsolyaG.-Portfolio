@@ -507,11 +507,14 @@ body::before{
   .nav-item:hover .nav-icon{color:var(--accent)}
   .nav-item.on .nav-icon{color:var(--accent)}
   .nav-label{
-    font-size:12px;
+    font-size:10px;
     font-weight:500;
     color:var(--text-m);
     transition:color .2s var(--ease);
     white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:56px;
   }
   .nav-item:hover .nav-label{color:var(--accent-d)}
   .nav-item.on .nav-label{color:var(--accent-d)}
@@ -602,30 +605,24 @@ body::before{
     letter-spacing:-.02em;
     line-height:1.15;
   }
+  .thesis{font-size:12px}
+  .sub{font-size:14px}
+  /* topbar */
+  .btn-resume span{display:none}
+  .btn-resume{padding:8px 10px}
+  .btn-email{padding:8px 12px}
+  /* pills */
+  .pills{gap:4px}
+  .pill{font-size:13px;padding:4px 11px}
   /* focus button icon-only */
   #btnFocus{width:40px;height:40px;padding:0;justify-content:center}
   .focus-label{display:none}
-  /* schema mobile */
+  /* project cards */
   .cs-schema{height:auto;min-height:120px;padding:16px 20px}
   .cs-schema-inner{height:auto;min-height:120px;flex-direction:column;align-items:flex-start}
   .cs-schema-map-wrap{width:100%}
   .cs-schema-ui{width:100%;height:160px;flex:none}
   .cs-schema-ui img{object-fit:contain}
-  .thesis{font-size:12px}
-  .sub{font-size:14px}
-  /* topbar — hide resume label, keep icon */
-  .btn-resume span{display:none}
-  .btn-resume{padding:8px 10px}
-  .btn-email{padding:8px 12px}
-  /* pills wrap naturally */
-  .pills{gap:4px}
-  .pill{font-size:13px;padding:4px 11px}
-  /* toc */
-  
-  
-  
-  /* project cards */
-  .cs-schema{height:120px;padding:16px 20px}
   .cs-title{font-size:18px}
   .cs-hook{font-size:13px;margin-bottom:12px}
   .cs-body{padding:14px 16px 14px}
@@ -644,8 +641,8 @@ body::before{
   .snip-title{font-size:13px}
   .snip-body{font-size:12px}
   /* nav */
-  .nav-label{font-size:12px}
-  .nav-icon{width:12px;height:12px}
+  .nav-label{font-size:10px;overflow:hidden;text-overflow:ellipsis;max-width:56px}
+  .nav-icon{width:18px;height:18px}
 }
 
 /* Very small — 375px */
