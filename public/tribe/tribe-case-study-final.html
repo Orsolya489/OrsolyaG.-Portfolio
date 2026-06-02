@@ -283,19 +283,32 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
   .cs-section-heading{font-size:clamp(20px,5.5vw,26px)}
   .cs-phone{width:100px}
   .cs-body,.cs-section-summary,.cs-fight-text,.cs-lens-text{word-break:break-word;overflow-wrap:break-word}
-  /* process map: stack image + text vertically */
+  /* process map: stack image + text vertically, image first */
   .cs-pm-step,.cs-pm-fork{grid-template-columns:1fr}
-  .cs-pm-phone img{width:100%;max-width:260px}
+  .cs-pm-step .cs-pm-cell--ann{order:2}
+  .cs-pm-step .cs-pm-cell--img{order:1}
+  .cs-pm-phone img{width:100%;max-width:100%}
+  .cs-pm-phone{width:100%}
   .cs-pm-ann-note--right{border-left:2px solid var(--border-a);border-right:none;padding-left:10px;padding-right:0;text-align:left}
-  /* edge flow: stack nodes */
-  .cs-ef-node,.cs-ef-node--right{flex-direction:column;gap:12px}
-  .cs-ef-img img{width:100%;max-width:240px}
-  .cs-ef-ann{padding-top:0}
+  /* edge flow: stack nodes, image first */
+  .cs-ef-node{flex-direction:column;gap:12px}
+  .cs-ef-node--right{flex-direction:column;gap:12px}
+  .cs-ef-img{order:1}
+  .cs-ef-ann{order:2;padding-top:0}
+  .cs-ef-img img{width:100%;max-width:100%}
+  /* annotated block: image first */
+  .cs-ann-block{grid-template-columns:1fr}
+  .cs-ann-phone{order:1;position:static;max-width:100%;width:100%}
+  .cs-ann-body{order:2}
   /* SVG connectors: allow horizontal scroll if needed */
   .cs-pm-conn{overflow-x:auto}
-  /* gap cards already handled at 640px, reinforce */
+  /* gap + split cards */
   .cs-gap-cards{grid-template-columns:1fr}
   .cs-gap-arrow{display:none}
+  /* body overflow guard */
+  body{overflow-x:hidden}
+  *{max-width:100%;box-sizing:border-box}
+  img{max-width:100%;height:auto}
 }
 @media(prefers-reduced-motion:reduce){
   .cs-section,.cs-section-body,.cs-decision-detail{transition:none}

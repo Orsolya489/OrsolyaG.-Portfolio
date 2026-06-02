@@ -189,16 +189,21 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
   .cs-3col{grid-template-columns:1fr}
   /* constraint table stacks */
   .cs-constraint-table{grid-template-columns:1fr}
-  /* compare pair columns stack */
+  /* compare pair columns stack: image first, text below */
   .cs-pair-cols{grid-template-columns:1fr}
   .cs-pair-col+.cs-pair-col{border-left:none;border-top:1px solid var(--border)}
-  /* image+text side-by-side stacks */
+  /* any image+text side by side → image first */
   .cs-section-body{flex-direction:column}
+  .cs-section-body img,.cs-section-body figure{order:-1;width:100%;max-width:100%}
   /* title size */
   .cs-title{font-size:clamp(26px,8vw,36px)}
   .cs-section-heading{font-size:clamp(20px,5.5vw,26px)}
   /* SVG diagrams scroll rather than clip */
   .cs-illus{overflow-x:auto}
+  /* global overflow guard */
+  body{overflow-x:hidden}
+  *{max-width:100%;box-sizing:border-box}
+  img{max-width:100%;height:auto}
 }
 @media(max-width:600px){
   /* compare sliders full-width */
