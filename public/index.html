@@ -2122,6 +2122,11 @@ document.addEventListener('keydown',e=>{
       </svg>
     </span>
     <span class="focus-label">NOISE FOR FOCUS</span>
+    <span class="focus-vol" id="focusVol" onclick="event.stopPropagation()">
+      <input type="range" id="focusVolSlider" min="0" max="100" value="40" step="1"
+        oninput="setFocusVol(this.value)"
+        style="width:64px;height:3px;accent-color:currentColor;cursor:pointer;vertical-align:middle">
+    </span>
   </button>
 
   <!-- A11y trigger -->
@@ -2186,6 +2191,16 @@ document.addEventListener('keydown',e=>{
 }
 #btnFocus.active .focus-icon-off{display:none!important}
 #btnFocus.active .focus-icon-on{display:flex!important}
+/* volume slider — only visible when active + hovered */
+.focus-vol{
+  display:flex;align-items:center;
+  max-width:0;overflow:hidden;opacity:0;
+  transition:max-width .3s var(--ease),opacity .25s var(--ease);
+  pointer-events:none;
+}
+#btnFocus.active:hover .focus-vol{
+  max-width:80px;opacity:1;pointer-events:all;
+}
 </style>
 <script>
 (function(){
@@ -2207,6 +2222,7 @@ document.addEventListener('keydown',e=>{
 
   window.toggleFocus = function(){
     const btn = document.getElementById('btnFocus');
+    const slider = document.getElementById('focusVolSlider');
     if(!active){
       ctx = new (window.AudioContext || window.webkitAudioContext)();
       const buf = brownNoise(ctx);
@@ -2214,8 +2230,9 @@ document.addEventListener('keydown',e=>{
       source.buffer = buf;
       source.loop = true;
       gainNode = ctx.createGain();
+      const vol = slider ? (slider.value / 100) * 0.8 : 0.4;
       gainNode.gain.setValueAtTime(0, ctx.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 1.2);
+      gainNode.gain.linearRampToValueAtTime(vol, ctx.currentTime + 1.2);
       source.connect(gainNode);
       gainNode.connect(ctx.destination);
       source.start();
@@ -2228,6 +2245,12 @@ document.addEventListener('keydown',e=>{
       btn.classList.remove('active');
       btn.setAttribute('aria-label','Toggle focus noise');
       active = false;
+    }
+  };
+
+  window.setFocusVol = function(val){
+    if(gainNode && active){
+      gainNode.gain.setTargetAtTime((val / 100) * 0.8, ctx.currentTime, 0.05);
     }
   };
 })();
