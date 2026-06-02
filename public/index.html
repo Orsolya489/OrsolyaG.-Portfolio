@@ -137,6 +137,7 @@ body::before{
 }
 .a11y-toggle.on .a11y-dot{transform:translateX(16px)}
 .a11y-note{font-size:13px;color:var(--text-m);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);line-height:1.5}
+#focusRow{display:none}
 .a11y-btn.active{background:var(--accent-d);color:#FFFFFF;border-color:var(--accent)}
 
 /* ── LAYOUT ── */
@@ -478,29 +479,29 @@ body::before{
     height:auto;width:100%;
     position:fixed;bottom:0;left:0;right:0;top:auto;
     border-right:none;border-top:1px solid var(--border);
-    padding:8px 0 max(8px,env(safe-area-inset-bottom));
+    padding:6px 8px max(6px,env(safe-area-inset-bottom));
     background:rgba(253,252,250,.97);
     backdrop-filter:blur(12px);
     z-index:200;
-    overflow:visible;
+    overflow:hidden;
   }
   .nav-cap{
     display:flex;flex-direction:row;
     width:100%;border-radius:0;
     border:none;background:transparent;
-    box-shadow:none;padding:0;
+    box-shadow:none;padding:0;gap:2px;
   }
   .nav-item{
-    flex:1;
+    flex:1;min-width:0;
     display:flex;flex-direction:column;
     align-items:center;justify-content:center;
-    gap:4px;
-    padding:4px 6px;
-    border-radius:16px;
+    gap:3px;
+    padding:4px 2px;
+    border-radius:10px;
     text-align:center;
   }
   .nav-icon{
-    width:20px;height:20px;
+    width:20px;height:20px;flex-shrink:0;
     color:var(--text-m);
     transition:color var(--dur) var(--ease);
   }
@@ -514,7 +515,10 @@ body::before{
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-    max-width:56px;
+    max-width:100%;
+    display:block;
+    width:100%;
+    text-align:center;
   }
   .nav-item:hover .nav-label{color:var(--accent-d)}
   .nav-item.on .nav-label{color:var(--accent-d)}
@@ -524,11 +528,14 @@ body::before{
   /* hero */
   .hello{padding:56px 0 80px}
   .hero-h{
-    font-size:clamp(34px,7.5vw,44px);
+    font-size:clamp(32px,6.5vw,40px);
     margin-left:0;
     word-break:break-word;
     overflow-wrap:break-word;
   }
+  /* hide focus button on mobile — lives in a11y panel instead */
+  #btnFocus{display:none!important}
+  #focusRow{display:flex}
   .thesis{margin-left:0;max-width:100%}
   .sub{max-width:100%}
   /* grids */
@@ -601,7 +608,7 @@ body::before{
   .main{padding:0 16px 64px}
   .hello{padding:40px 0 64px}
   .hero-h{
-    font-size:clamp(30px,8vw,36px);
+    font-size:clamp(32px,8vw,36px);
     letter-spacing:-.02em;
     line-height:1.15;
   }
@@ -647,7 +654,7 @@ body::before{
 
 /* Very small — 375px */
 @media(max-width:400px){
-  .hero-h{font-size:28px}
+  .hero-h{font-size:32px}
   .cs-schema{height:auto;min-height:100px;padding:12px 16px}
   .topbar{padding:0 14px}
   .btn-email span{display:none}
@@ -2010,6 +2017,12 @@ document.addEventListener('keydown',e=>{
     <div class="a11y-row">
       <span class="a11y-lbl">Reduce motion</span>
       <div class="a11y-toggle" id="rmToggle" onclick="toggleRM()"><div class="a11y-dot"></div></div>
+    </div>
+    <div class="a11y-row" id="focusRow">
+      <span class="a11y-lbl">Focus noise</span>
+      <button onclick="toggleFocus()" aria-label="Toggle focus noise" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--text-c);display:flex;align-items:center;border-radius:6px;transition:color .2s" id="btnFocusPanel">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 9L17 15M17 9L23 15M11 5L6 9H2V15H6L11 19V5Z"/></svg>
+      </button>
     </div>
     <div class="a11y-note">Respects your system preferences by default.</div>
   </div>
