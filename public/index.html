@@ -578,8 +578,9 @@ body::before{
   *{max-width:100%;box-sizing:border-box}
   img,svg,video,iframe,embed{max-width:100%;height:auto}
   /* every flex row wraps */
-  .cs-foot{flex-wrap:wrap}
-  .cert-foot{flex-wrap:wrap;gap:8px}
+  .cs-foot{flex-wrap:wrap;justify-content:flex-start;gap:6px}
+  .cs-foot .cs-link{margin-left:0;width:100%}
+.cert-foot{flex-wrap:wrap;gap:8px}
   .topbar-right{flex-wrap:wrap;gap:8px}
   .cs-eyebrow{flex-wrap:wrap}
   .snip-row{flex-wrap:wrap}
@@ -760,7 +761,7 @@ body::before{
   .cs-hook{font-size:13px;margin-bottom:12px}
   .cs-body{padding:14px 16px 14px}
   .cs-card{margin:0 6px 6px}
-  .cs-foot{flex-wrap:wrap;gap:8px}
+  .cs-foot{flex-wrap:wrap;justify-content:flex-start;gap:6px}
   /* section cards */
   .sec-card{padding:16px;border-radius:12px}
   .sec-ey{margin-bottom:12px}
