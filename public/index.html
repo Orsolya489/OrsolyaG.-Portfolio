@@ -420,13 +420,16 @@ body::before{
   background:rgba(107,95,158,.82);color:#fff;
 }
 .cs-link{
-  display:inline-flex;align-items:center;gap:3px;
-  font-size:13px;font-weight:500;color:var(--accent-h);
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:18px;font-weight:500;color:var(--accent-h);
   text-decoration:none;white-space:nowrap;
-  cursor:pointer;background:none;border:none;font-family:inherit;
-  transition:color var(--dur);
+  cursor:pointer;border:none;font-family:inherit;
+  background:none;
+  padding:8px 14px;border-radius:10px;
+  transition:color var(--dur) var(--ease),background var(--dur) var(--ease);
 }
-.cs-link:hover{color:var(--accent-d)}
+.cs-link:hover{color:var(--accent-d);background:var(--accent-l)}
+.cs-link:active{background:var(--accent-l);color:var(--accent-d)}
 
 /* cs-card wrapper — holds schema + card together per project */
 .cs-project{margin-bottom:16px;display:flex;flex-direction:column;gap:8px}
@@ -579,7 +582,7 @@ body::before{
   img,svg,video,iframe,embed{max-width:100%;height:auto}
   /* every flex row wraps */
   .cs-foot{flex-wrap:wrap;justify-content:flex-start;gap:6px}
-  .cs-foot .cs-link{margin-left:0;width:100%}
+  .cs-foot .cs-link{margin-left:0;width:100%;margin-top:8px;margin-bottom:4px;padding:12px 14px;font-size:18px}
 .cert-foot{flex-wrap:wrap;gap:8px}
   .topbar-right{flex-wrap:wrap;gap:8px}
   .cs-eyebrow{flex-wrap:wrap}
