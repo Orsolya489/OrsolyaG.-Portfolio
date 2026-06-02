@@ -2201,6 +2201,37 @@ document.addEventListener('keydown',e=>{
 #btnFocus.active:hover .focus-vol{
   max-width:80px;opacity:1;pointer-events:all;
 }
+/* purple slider track + circle thumb */
+#focusVolSlider{
+  -webkit-appearance:none;appearance:none;
+  width:64px;height:3px;border-radius:2px;
+  background:rgba(107,95,158,.3);
+  cursor:pointer;outline:none;border:none;
+}
+#focusVolSlider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--accent);
+  cursor:grab;
+  box-shadow:0 1px 4px rgba(107,95,158,.45);
+  transition:transform .15s var(--ease),box-shadow .15s;
+}
+#focusVolSlider::-moz-range-thumb{
+  width:14px;height:14px;border-radius:50%;border:none;
+  background:var(--accent);
+  cursor:grab;
+  box-shadow:0 1px 4px rgba(107,95,158,.45);
+}
+#focusVolSlider::-webkit-slider-thumb:hover,
+#focusVolSlider::-webkit-slider-thumb:active{
+  transform:scale(1.2);
+  box-shadow:0 2px 8px rgba(107,95,158,.6);
+  cursor:grabbing;
+}
+#focusVolSlider::-webkit-slider-runnable-track{
+  height:3px;border-radius:2px;
+  background:linear-gradient(to right, var(--accent) calc(var(--vol,40)*1%), rgba(107,95,158,.25) calc(var(--vol,40)*1%));
+}
 </style>
 <script>
 (function(){
@@ -2249,10 +2280,16 @@ document.addEventListener('keydown',e=>{
   };
 
   window.setFocusVol = function(val){
+    document.getElementById('focusVolSlider').style.setProperty('--vol', val);
     if(gainNode && active){
       gainNode.gain.setTargetAtTime((val / 100) * 0.8, ctx.currentTime, 0.05);
     }
   };
+  // Init track fill on load
+  document.addEventListener('DOMContentLoaded', function(){
+    var s = document.getElementById('focusVolSlider');
+    if(s) s.style.setProperty('--vol', s.value);
+  });
 })();
 </script>
 </body>
