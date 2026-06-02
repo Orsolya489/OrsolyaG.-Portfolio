@@ -407,6 +407,10 @@ body::before{
   pointer-events:none;
   white-space:nowrap;
 }
+.cs-wip-badge--survey{
+  right:auto;left:12px;
+  background:rgba(107,95,158,.82);color:#fff;
+}
 .cs-link{
   display:inline-flex;align-items:center;gap:3px;
   font-size:13px;font-weight:500;color:var(--accent-h);
@@ -1374,8 +1378,9 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
         </div>
 
         <!-- 02 -->
-                <div class="cs-project" onclick="location.href='case-study-guardrail.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='case-study-guardrail.html'" style="cursor:pointer;position:relative">
+                <div class="cs-project" style="cursor:default;position:relative">
           <span class="cs-wip-badge">In progress</span>
+          <span class="cs-wip-badge cs-wip-badge--survey">Survey re-opened</span>
           <div class="cs-schema" id="schema1">
     <div class="cs-schema-map">
       <svg width="100%" height="120" viewBox="0 0 520 78" fill="none">
@@ -1406,7 +1411,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
             <div class="cs-title">When AI is most uncertain, humans are least equipped to notice</div>
             <div class="cs-foot">
               <span class="cs-tag">Human Factors</span><span class="cs-tag">Human-AI Interaction</span>
-              <a class="cs-link" href="case-study-guardrail.html">Open case study ↗</a>
+              <a class="cs-link" href="https://docs.google.com/forms/d/e/1FAIpQLScUGaVmknaF3fdoSA8XJl7O3H1-aps5p4rMU6ZrJ7tLUl--fQ/viewform?usp=dialog" target="_blank" rel="noopener" onclick="event.stopPropagation()">Open research survey ↗</a>
             </div>
           </div>
         </div>
