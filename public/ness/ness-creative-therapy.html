@@ -91,7 +91,7 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
 .cs-progress-fill{height:100%;background:var(--accent-d);width:0%;transition:width .1s linear;border-radius:2px}
 
 /* MAIN */
-.cs-main{width:100%;max-width:800px;margin:0 auto 0 0;padding:clamp(56px,10vh,96px) 0 120px;min-width:0;overflow-x:hidden}
+.cs-main{width:100%;max-width:800px;margin:0 auto 0 max(0px,calc((100% - 800px)/2 - 38px));padding:clamp(56px,10vh,96px) 0 120px;min-width:0;overflow-x:hidden}
 
 /* HEADER */
 .cs-eyebrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:14px}
@@ -293,25 +293,6 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
       <span>Email me</span>
       <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
     </button>
-    <div style="position:relative">
-      <button class="btn btn-a11y" id="btnA11y" onclick="toggleA11y()" aria-label="Accessibility settings" aria-expanded="false">
-        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="10" cy="3.5" r="1.8"/>
-          <path d="M4 8h12M10 6.5v5M10 11.5l-3 5M10 11.5l3 5"/>
-        </svg>
-      </button>
-      <div class="a11y-panel" id="a11yPanel" role="dialog" aria-label="Accessibility settings">
-        <div class="a11y-title">Accessibility</div>
-        <div class="a11y-row">
-          <span class="a11y-lbl">High contrast</span>
-          <button class="a11y-toggle" id="ctToggle" onclick="toggleCT()" aria-label="Toggle high contrast"><div class="a11y-dot"></div></button>
-        </div>
-        <div class="a11y-row">
-          <span class="a11y-lbl">Reduce motion</span>
-          <button class="a11y-toggle" id="rmToggle" onclick="toggleRM()" aria-label="Toggle reduced motion"><div class="a11y-dot"></div></button>
-        </div>
-      </div>
-    </div>
   </div>
 </header>
 
@@ -492,12 +473,12 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-      <img src="desktop/Prototype_test1.png" alt="Check-in start screen — welcome to today's session" style="width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)">
-      <img src="desktop/prototype_test2.png" alt="Mood slider — from Terrible to Amazing" style="width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)">
+      <img src="desktop/Prototype_test1.png" alt="Check-in start screen — welcome to today's session" style="width:100%;height:auto;display:block;border-radius:8px;mix-blend-mode:multiply">
+      <img src="desktop/prototype_test2.png" alt="Mood slider — from Terrible to Amazing" style="width:100%;height:auto;display:block;border-radius:8px;mix-blend-mode:multiply">
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <img src="desktop/prototype_test3.png" alt="Sleep thermometer check-in screen" style="width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)">
-      <img src="desktop/prototype_test4.png" alt="Emotion vocabulary selector screen" style="width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)">
+      <img src="desktop/prototype_test3.png" alt="Sleep thermometer check-in screen" style="width:100%;height:auto;display:block;border-radius:8px;mix-blend-mode:multiply">
+      <img src="desktop/prototype_test4.png" alt="Emotion vocabulary selector screen" style="width:100%;height:auto;display:block;border-radius:8px;mix-blend-mode:multiply">
     </div>
   </section>
 
@@ -507,8 +488,8 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
     <h2 class="cs-section-heading">The guide doesn't speak until you've made something. Then it notices — without naming.</h2>
 
     <div class="cs-img-pair">
-      <img src="desktop/Artboard_brush.png" alt="Blank artboard with Johnathan's opening message">
-      <img src="desktop/Artboard_brush-1.png" alt="Active painting session with Johnathan observing colour shift">
+      <img src="desktop/Artboard_brush.png" alt="Blank artboard with Johnathan's opening message" style="width:100%;height:auto;display:block;border-radius:8px;mix-blend-mode:multiply">
+      <img src="desktop/Artboard_brush-1.png" alt="Active painting session with Johnathan observing colour shift" style="width:100%;height:auto;display:block;border-radius:8px;mix-blend-mode:multiply">
     </div>
 
     <div class="cs-pullquote">
@@ -625,9 +606,9 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
     <h2 class="cs-section-heading">The progress view doesn't score how you felt. It shows how far you've come.</h2>
 
     <div class="cs-img-trio">
-      <img src="desktop/Profile%20Overview.png" alt="Profile overview with mood arc chart">
-      <img src="desktop/Profile%20Progress.png" alt="Engagement and AI weekly reflection">
-      <img src="desktop/Profile%20Creations.png" alt="Creations gallery">
+      <img src="desktop/Profile%20Overview.png" alt="Profile overview with mood arc chart" style="width:100%;height:auto;display:block;border-radius:8px;mix-blend-mode:multiply">
+      <img src="desktop/Profile%20Progress.png" alt="Engagement and AI weekly reflection" style="width:100%;height:auto;display:block;border-radius:8px;mix-blend-mode:multiply">
+      <img src="desktop/Profile%20Creations.png" alt="Creations gallery" style="width:100%;height:auto;display:block;border-radius:8px;mix-blend-mode:multiply">
     </div>
 
     <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin:20px 0 24px">
@@ -733,6 +714,95 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
 </div>
 </div>
 
+<!-- FLOAT BUTTONS -->
+<div id="floatBtns" style="position:fixed;bottom:24px;right:24px;z-index:500;display:flex;flex-direction:row;gap:8px;align-items:center;transition:bottom .15s var(--ease)">
+
+  <!-- Noise for focus -->
+  <button class="btn btn-a11y" id="btnFocus" onclick="toggleFocus()" aria-label="Toggle focus noise" title="Noise for focus — brown noise" style="width:auto;padding:6px 10px;gap:6px;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase">
+    <span class="focus-icon-off" style="display:flex;align-items:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 9L17 15M17 9L23 15M11 5L6 9H2V15H6L11 19V5Z"/></svg>
+    </span>
+    <span class="focus-icon-on" style="display:none;align-items:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.07 4.93C20.94 6.8 22 9.35 22 12C22 14.65 20.94 17.2 19.07 19.07M15.54 8.46C16.48 9.4 17 10.67 17 12C17 13.32 16.48 14.59 15.54 15.54M11 5L6 9H2V15H6L11 19V5Z"/></svg>
+    </span>
+    NOISE FOR FOCUS
+  </button>
+
+  <!-- A11y -->
+  <div style="position:relative">
+    <button class="btn btn-a11y" id="btnA11y" onclick="toggleA11y()" aria-label="Accessibility settings" aria-expanded="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <circle cx="12" cy="4" r="2"/>
+        <path d="M9 22V9H3V7h18v2h-6v13h-2v-6h-2v6H9z"/>
+      </svg>
+    </button>
+    <div class="a11y-panel" id="a11yPanel" role="dialog" aria-label="Accessibility settings">
+      <div class="a11y-title">Accessibility</div>
+      <div class="a11y-row" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <span class="a11y-lbl">Text size</span>
+        <div style="display:flex;align-items:center;gap:8px;width:100%">
+          <span style="font-size:12px;color:var(--text-m)">A</span>
+          <input type="range" id="fsSlider" min="-2" max="2" step="1" value="0" style="flex:1;height:3px;accent-color:var(--accent);cursor:pointer" oninput="fs(parseInt(this.value))">
+          <span style="font-size:16px;color:var(--text-m)">A</span>
+        </div>
+      </div>
+      <div class="a11y-row">
+        <span class="a11y-lbl">High contrast</span>
+        <div class="a11y-toggle" id="ctToggle" onclick="toggleCT()"><div class="a11y-dot"></div></div>
+      </div>
+      <div class="a11y-row">
+        <span class="a11y-lbl">Reduce motion</span>
+        <div class="a11y-toggle" id="rmToggle" onclick="toggleRM()"><div class="a11y-dot"></div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-m);margin-top:10px;font-style:italic;line-height:1.4">Respects your system preferences by default.</div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+#btnFocus.active{border-color:var(--accent);color:var(--accent);background:var(--accent-l);box-shadow:0 4px 16px rgba(107,95,158,.18),0 0 0 1px var(--accent)}
+#btnFocus.active .focus-icon-off{display:none!important}
+#btnFocus.active .focus-icon-on{display:flex!important}
+</style>
+<script>
+(function(){
+  let ctx, source, gainNode, active = false;
+  function brownNoise(ctx){
+    const bufSize = ctx.sampleRate * 4;
+    const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    let lastOut = 0;
+    for(let i = 0; i < bufSize; i++){
+      const white = Math.random() * 2 - 1;
+      data[i] = (lastOut + (0.02 * white)) / 1.02;
+      lastOut = data[i];
+      data[i] *= 3.5;
+    }
+    return buf;
+  }
+  window.toggleFocus = function(){
+    const btn = document.getElementById('btnFocus');
+    if(!active){
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const buf = brownNoise(ctx);
+      source = ctx.createBufferSource();
+      source.buffer = buf; source.loop = true;
+      gainNode = ctx.createGain();
+      gainNode.gain.setValueAtTime(0, ctx.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 1.2);
+      source.connect(gainNode); gainNode.connect(ctx.destination);
+      source.start();
+      btn.classList.add('active'); btn.setAttribute('aria-label','Stop focus noise'); active = true;
+    } else {
+      gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.8);
+      setTimeout(function(){ source.stop(); ctx.close(); }, 900);
+      btn.classList.remove('active'); btn.setAttribute('aria-label','Toggle focus noise'); active = false;
+    }
+  };
+})();
+</script>
+
 <!-- FOOTER -->
 <footer>
   <a href="../index.html" style="color:var(--text);text-decoration:none;opacity:.7;transition:opacity .2s" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.7'" aria-label="Orsolya G. — home">
@@ -798,26 +868,35 @@ function doEmail() {
 
 // A11y panel
 let a11yOpen = false;
-function toggleA11y() {
+function toggleA11y(){
   a11yOpen = !a11yOpen;
-  document.getElementById('a11yPanel').classList.toggle('open', a11yOpen);
-  document.getElementById('btnA11y').setAttribute('aria-expanded', a11yOpen);
+  const p = document.getElementById('a11yPanel');
+  const b = document.getElementById('btnA11y');
+  if(p) p.classList.toggle('open', a11yOpen);
+  if(b){ b.classList.toggle('open', a11yOpen); b.setAttribute('aria-expanded', String(a11yOpen)); }
 }
 document.addEventListener('click', e => {
-  if(a11yOpen && !e.target.closest('[id="btnA11y"]') && !e.target.closest('[id="a11yPanel"]')) {
+  if(a11yOpen && !e.target.closest('#floatBtns')){
     a11yOpen = false;
-    document.getElementById('a11yPanel').classList.remove('open');
-    document.getElementById('btnA11y').setAttribute('aria-expanded', 'false');
+    document.getElementById('a11yPanel')?.classList.remove('open');
+    const b = document.getElementById('btnA11y');
+    if(b){ b.classList.remove('open'); b.setAttribute('aria-expanded','false'); }
   }
 });
-function toggleCT() {
-  document.body.classList.toggle('high-contrast');
-  document.getElementById('ctToggle').classList.toggle('on');
+function fs(v){
+  const s = {'-2':.82,'-1':.91,'0':1,'1':1.1,'2':1.2};
+  document.body.style.fontSize = (s[String(v)] * 100) + '%';
 }
-function toggleRM() {
-  document.body.classList.toggle('reduce-motion');
-  document.getElementById('rmToggle').classList.toggle('on');
+function toggleCT(){
+  const t = document.getElementById('ctToggle'); const on = t.classList.toggle('on');
+  document.documentElement.style.setProperty('--text', on ? '#000' : '#1B1A18');
+  document.documentElement.style.setProperty('--bg', on ? '#FFF' : '#F4F1ED');
 }
+function toggleRM(){
+  const t = document.getElementById('rmToggle'); t.classList.toggle('on');
+  document.documentElement.style.setProperty('--dur', t.classList.contains('on') ? '0ms' : '200ms');
+}
+
 </script>
 </body>
 </html>
