@@ -1,0 +1,6 @@
+# Figma SVG exports — too large for GitHub, not used on site
+*.svg
+
+# OS files
+.DS_Store
+Thumbs.db

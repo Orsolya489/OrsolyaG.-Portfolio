@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ness — Orsolya G.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F1ED;--bg-alt:#EBE7E1;--bg-deep:#E2DDD6;
+  --bg-white:#FFFFFF;--bg-lifted:#FDFCFA;
+  --text:#1B1A18;--text-s:#5A5856;--text-c:#6D6A67;--text-m:#6E6B68;
+  --accent:#6B5F9E;--accent-l:#EAE8F4;--accent-d:#4A4272;--accent-h:#7A6DAE;
+  --border:rgba(27,26,24,.11);--border-a:#B0A8C8;
+  --ease:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);
+  --dur:200ms;--reveal:500ms;
+  --sidebar:238px;--topbar:64px;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
+
+body::before{content:'';position:fixed;inset:0;background-image:var(--grain);background-repeat:repeat;background-size:300px 300px;pointer-events:none;z-index:9998;opacity:1;mix-blend-mode:multiply}
+
+:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radius:4px}
+.skip{position:fixed;top:-100px;left:8px;background:var(--accent-d);color:#fff;padding:8px 16px;border-radius:0 0 8px 8px;font-size:14px;font-weight:500;text-decoration:none;z-index:9999;transition:top .2s}.skip:focus{top:0}
+
+/* PROGRESS */
+#prog{position:fixed;top:0;left:0;right:0;height:2px;background:var(--border);z-index:400}
+#progFill{height:100%;background:var(--accent);width:0;transition:width .08s linear}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:300;background:rgba(244,241,237,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.logo{color:var(--text);text-decoration:none;display:flex;align-items:center;transition:opacity var(--dur)}.logo:hover{opacity:.6}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:16px;border:1px solid;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;background:transparent;transition:background .3s var(--ease),color .2s,border-color .2s;text-decoration:none;white-space:nowrap}
+.btn-resume{color:var(--text-c);border-color:var(--border);background:#fff}.btn-resume:hover{color:var(--text);border-color:var(--accent);background:var(--accent-l)}
+.btn-email{color:#fff;border-color:var(--accent-d);background:var(--accent-d)}.btn-email:hover{background:var(--accent-h);border-color:var(--accent-h)}
+.btn-icon{flex-shrink:0;opacity:.8;transition:opacity .2s}.btn:hover .btn-icon{opacity:1}
+@media(max-width:520px){.btn-resume,.btn-email{display:none}}
+
+/* A11Y */
+.btn-a11y{width:40px;height:40px;padding:0;justify-content:center;border-color:var(--border-a);color:var(--text-c);border-radius:14px;background:var(--bg-lifted);box-shadow:0 2px 12px rgba(27,26,24,.08);transition:background var(--dur),color var(--dur),border-color var(--dur)}
+.btn-a11y:hover,.btn-a11y.open{border-color:var(--accent);color:var(--accent-d);background:var(--accent-l)}
+.a11y-panel{position:absolute;bottom:calc(100% + 8px);right:0;width:220px;background:#fff;border:1px solid rgba(27,26,24,.08);border-radius:12px;padding:14px;box-shadow:0 8px 28px rgba(27,26,24,.1);z-index:500;display:none}
+.a11y-panel.open{display:block;animation:panelDown .2s var(--ease) both}
+@keyframes panelDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.a11y-title{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text-c);margin-bottom:12px}
+.a11y-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.a11y-row:last-of-type{margin-bottom:0}
+.a11y-lbl{font-size:14px;color:var(--text-s)}
+.a11y-toggle{width:36px;height:20px;border-radius:10px;border:1px solid var(--border);background:var(--bg-alt);cursor:pointer;position:relative;transition:background .2s,border-color .2s}
+.a11y-toggle.on{background:var(--accent-d);border-color:var(--accent-h)}
+.a11y-dot{width:14px;height:14px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s var(--spring)}
+.a11y-toggle.on .a11y-dot{transform:translateX(16px)}
+
+/* LAYOUT */
+.cs-page{padding-top:var(--topbar);min-height:100vh}
+.cs-inner{display:block;padding-left:calc(var(--sidebar) + 32px);padding-right:40px;box-sizing:border-box}
+
+/* SIDEBAR */
+.cs-sidebar{position:fixed;left:0;top:var(--topbar);width:var(--sidebar);height:calc(100vh - var(--topbar));overflow-y:auto;overflow-x:hidden;padding:40px 24px 24px 32px;background:var(--bg);z-index:100;scrollbar-width:thin;scrollbar-color:var(--border) transparent;display:flex;flex-direction:column}
+.cs-sidebar::-webkit-scrollbar{width:3px}.cs-sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.cs-next-case{margin-top:auto;text-decoration:none;display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg-lifted);transition:background var(--dur),border-color var(--dur)}
+.cs-next-case:hover{background:var(--bg-alt);border-color:var(--border-a)}
+.cs-next-case-label{font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-c)}
+.cs-next-case-title{font-size:14px;font-weight:500;color:var(--text);line-height:1.3}
+.cs-next-case-arrow{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.cs-next-case-arrow span{font-size:14px;color:var(--accent-d)}
+.back-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;border:1px solid var(--border);font-family:inherit;font-size:14px;font-weight:500;color:var(--text-c);cursor:pointer;background:transparent;text-decoration:none;transition:background var(--dur),color var(--dur)}.back-btn:hover{background:var(--bg-alt);color:var(--text)}
+.cs-nav{display:flex;flex-direction:column;gap:2px}
+.cs-nav-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);margin-bottom:10px;padding-left:10px}
+.cs-nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;text-decoration:none;font-size:14px;color:var(--text-c);transition:background var(--dur),color var(--dur);position:relative}
+.cs-nav-item:hover{background:var(--bg-alt);color:var(--text)}
+.cs-nav-item.active{color:var(--accent-d);font-weight:500}
+.cs-nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:2px;height:14px;background:var(--accent-d);border-radius:2px}
+
+/* SIDEBAR META */
+.cs-meta-block{padding-left:10px;margin-top:32px}
+.cs-meta-row{display:flex;gap:6px;margin-bottom:5px;align-items:baseline}
+.cs-meta-k{font-size:12px;color:var(--text-c);width:60px;flex-shrink:0}
+.cs-meta-v{font-size:12px;color:var(--text);font-weight:500;line-height:1.4}
+
+/* SIDEBAR TAGS */
+.cs-sidebar-tags{padding-left:10px;margin-top:12px;display:flex;flex-wrap:wrap;gap:4px}
+.cs-sidebar-tag{font-size:10px;font-weight:500;letter-spacing:.04em;padding:2px 8px;border-radius:20px;border:1px solid var(--border-a);color:var(--accent-d);background:var(--accent-l)}
+
+.cs-progress-bar{height:2px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:20px}
+.cs-progress-fill{height:100%;background:var(--accent-d);width:0%;transition:width .1s linear;border-radius:2px}
+
+/* MAIN */
+.cs-main{width:100%;max-width:800px;margin:0 auto 0 0;padding:clamp(56px,10vh,96px) 0 120px;min-width:0;overflow-x:hidden}
+
+/* HEADER */
+.cs-eyebrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.cs-pill{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:var(--accent-l);color:var(--accent-d);border:1px solid var(--border-a)}
+.cs-case-label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-c);margin-bottom:10px;display:block}
+.cs-title{font-size:clamp(44px,6vw,72px);font-weight:300;line-height:1.0;letter-spacing:-.04em;color:var(--text);margin-bottom:16px}
+.cs-subtitle{font-size:18px;font-style:italic;font-weight:300;color:var(--text-c);line-height:1.5;margin-bottom:56px;max-width:560px}
+
+/* STATS SECTION — no cards */
+.cs-stats-plain{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:40px;border-top:1px solid var(--border);padding-top:40px}
+.cs-stat-plain{padding:0 24px 0 0;border-right:1px solid var(--border)}
+.cs-stat-plain:last-child{border-right:none;padding-right:0;padding-left:24px}
+.cs-stat-plain:nth-child(2){padding:0 24px}
+.cs-stat-n{font-size:clamp(40px,5vw,64px);font-weight:300;color:var(--accent-d);letter-spacing:-.04em;line-height:1;margin-bottom:10px}
+.cs-stat-l{font-size:13px;color:var(--text-s);line-height:1.45;margin-bottom:6px}
+.cs-stat-src{font-size:11px;color:var(--text-m);font-style:italic;line-height:1.4}
+
+/* SECTIONS */
+.cs-section{padding:72px 0;border-top:1px solid var(--border);opacity:0;transform:translateY(12px);transition:opacity 440ms var(--ease),transform 440ms var(--ease);scroll-margin-top:80px}
+.cs-section.visible{opacity:1;transform:translateY(0)}
+.cs-section-eyebrow{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--text-c);margin-bottom:10px;display:block}
+.cs-section-heading{font-size:clamp(20px,2.6vw,30px);font-weight:400;color:var(--text);line-height:1.2;letter-spacing:-.02em;margin-bottom:28px}
+.cs-body-p{font-size:14px;color:var(--text-s);line-height:1.8;max-width:580px;margin-bottom:20px}
+.cs-body-p:last-child{margin-bottom:0}
+
+/* 3-COL RESEARCH — no icons */
+.cs-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:40px}
+.cs-3col-item{}
+.cs-3col-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.3}
+.cs-3col-text{font-size:13px;color:var(--text-c);line-height:1.6}
+
+/* FULL WIDTH IMAGE */
+.cs-full-img{width:100%;border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:0}
+.cs-full-img img{width:100%;height:auto;display:block}
+
+/* ACCORDION */
+.cs-accordion{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:16px}
+.cs-accordion summary{padding:12px 16px;cursor:pointer;font-size:13px;font-weight:500;color:var(--accent-d);list-style:none;background:var(--bg-lifted);user-select:none;display:flex;align-items:center;justify-content:space-between}
+.cs-accordion summary::-webkit-details-marker{display:none}
+.cs-accordion summary::after{content:'↓';font-size:12px;color:var(--text-m);transition:transform .2s}
+.cs-accordion[open] summary{border-bottom:1px solid var(--border)}
+.cs-accordion[open] summary::after{transform:rotate(180deg)}
+.cs-accordion-body{padding:14px 16px;font-size:12px;color:var(--text-s);line-height:1.7;background:var(--bg)}
+.cs-accordion-body p{margin-bottom:6px}.cs-accordion-body p:last-child{margin-bottom:0}
+
+/* HMW SECTION */
+.cs-hmw{font-size:clamp(22px,2.8vw,34px);font-weight:300;font-style:italic;color:var(--text);line-height:1.35;text-align:center;padding:64px 0 48px;max-width:700px;margin:0 auto}
+
+/* PERSONA */
+.cs-persona{display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:32px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:0}
+.cs-persona-left{}
+.cs-persona-name{font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px}
+.cs-persona-role{font-size:12px;color:var(--text-c);margin-bottom:16px}
+.cs-persona-quote{font-size:14px;font-style:italic;color:var(--accent-d);line-height:1.65;padding-left:14px;border-left:2px solid var(--accent-d)}
+.cs-persona-right{display:flex;flex-direction:column;gap:16px}
+.cs-persona-note{font-size:13px;color:var(--text-s);line-height:1.65;padding:14px 16px;background:var(--bg-alt);border-radius:8px}
+
+/* CHECK-IN FLOW — horizontal HTML/CSS */
+.cs-flow-h{display:flex;align-items:flex-start;gap:0;margin-bottom:40px;padding:32px 0}
+.cs-flow-step{flex:1;display:flex;flex-direction:column;align-items:flex-start;position:relative}
+.cs-flow-step:not(:last-child)::after{content:'→';position:absolute;right:-12px;top:16px;color:var(--accent-d);font-size:18px;font-weight:300;z-index:1}
+.cs-flow-step-inner{padding-right:24px}
+.cs-flow-num{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.cs-flow-label{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.2}
+.cs-flow-desc{font-size:12px;color:var(--text-c);line-height:1.55}
+
+/* ITERATION FLOW — vertical HTML/CSS */
+.cs-flow-v{display:flex;flex-direction:column;gap:0;margin-bottom:40px}
+.cs-flow-vnode{display:flex;align-items:flex-start;gap:16px;position:relative;padding-bottom:0}
+.cs-flow-vnode:not(:last-child){padding-bottom:0}
+.cs-flow-vline-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:32px}
+.cs-flow-vdot{width:12px;height:12px;border-radius:50%;border:2px solid var(--border);background:var(--bg-lifted);flex-shrink:0;margin-top:4px}
+.cs-flow-vdot.highlight{border-color:var(--accent-d);background:var(--accent-l)}
+.cs-flow-vconnect{width:2px;height:32px;background:var(--border);margin-top:4px}
+.cs-flow-vnode:last-child .cs-flow-vconnect{display:none}
+.cs-flow-vcontent{padding-bottom:32px}
+.cs-flow-vtag{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-c);margin-bottom:4px}
+.cs-flow-vtag.accent{color:var(--accent-d)}
+.cs-flow-vlabel{font-size:14px;font-weight:500;color:var(--text);line-height:1.35}
+.cs-flow-vdesc{font-size:13px;color:var(--text-s);line-height:1.6;margin-top:3px}
+
+/* ITERATION TABLE */
+.cs-iter-table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:13px}
+.cs-iter-table th{text-align:left;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-c);padding:10px 12px;border-bottom:1px solid var(--border)}
+.cs-iter-table td{padding:14px 12px;border-bottom:1px solid rgba(27,26,24,.07);color:var(--text-s);line-height:1.55;vertical-align:top}
+.cs-iter-table tr:last-child td{border-bottom:none}
+.cs-iter-note{font-size:12px;color:var(--text-m);font-style:italic;margin-bottom:40px}
+
+/* WIREFRAME COMPARISON */
+.cs-wire-pair{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
+.cs-wire-img{width:100%;border-radius:8px;border:1px solid var(--border);display:block}
+.cs-wire-annotation{font-size:13px;color:var(--text-s);font-style:italic;margin-top:10px;line-height:1.5;padding-left:2px;border-left:2px solid var(--accent)}
+.cs-wire-annotation::before{content:'↑ ';color:var(--accent-d);font-style:normal}
+
+/* TWO SCREENSHOT ROW */
+.cs-img-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px}
+.cs-img-pair img{width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)}
+
+/* THREE SCREENSHOT ROW */
+.cs-img-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.cs-img-trio img{width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)}
+
+/* PULL QUOTE */
+.cs-pullquote{padding:48px 0;text-align:center;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:40px 0}
+.cs-pullquote p{font-size:clamp(16px,1.8vw,22px);font-weight:300;color:var(--text);line-height:1.55;max-width:620px;margin:0 auto;font-style:italic}
+
+/* DESIGN SYSTEM 2-COL */
+.cs-ds-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px}
+.cs-ds-img{width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin-bottom:14px}
+.cs-ds-notes{font-size:13px;color:var(--text-s);line-height:1.7}
+.cs-ds-notes p{margin-bottom:4px}
+
+/* TRANSFER INSIGHT */
+.cs-transfer{padding:80px 0;text-align:center}
+.cs-transfer p{font-size:2rem;font-weight:300;color:var(--text);line-height:1.4;max-width:600px;margin:0 auto}
+
+/* MORE CASE STUDIES */
+.cs-more-row{display:flex;align-items:baseline;gap:12px;padding:14px 8px;border-bottom:1px solid var(--border);text-decoration:none;border-radius:6px;transition:background .2s}
+.cs-more-row:last-child{border-bottom:none}
+.cs-more-row:hover{background:var(--bg-alt)}
+.cs-more-num{font-size:13px;color:var(--text-m);flex-shrink:0;width:40px}
+.cs-more-title{font-size:13px;color:var(--text-s);flex:1;transition:color .2s}
+.cs-more-arrow{font-size:13px;color:var(--text-m);flex-shrink:0;transition:color .2s}
+.cs-more-row:hover .cs-more-title{color:var(--text)}
+.cs-more-row:hover .cs-more-arrow{color:var(--accent-d)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);width:100%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;box-sizing:border-box}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  :root{--sidebar:198px}
+  .cs-inner{padding-left:var(--sidebar);padding-right:24px}
+  .cs-sidebar{padding:32px 16px 32px 20px}
+  .cs-main{padding:48px 0 80px;margin:0 auto}
+}
+@media(max-width:768px){
+  :root{--sidebar:0px}
+  .cs-inner{padding:0 20px}
+  .cs-sidebar{position:static;width:100%;height:auto;padding:16px 0 12px}
+  .cs-nav{flex-direction:row;flex-wrap:wrap;gap:4px}
+  .cs-nav-label{display:none}
+  .cs-meta-block{display:none}
+  .cs-sidebar-tags{display:none}
+  .cs-progress-bar{display:none}
+  .cs-next-case{display:none}
+  .cs-main{max-width:100%;padding:20px 0 80px}
+  .cs-stats-plain{grid-template-columns:1fr}
+  .cs-stat-plain{border-right:none;padding:0 0 24px 0;border-bottom:1px solid var(--border)}
+  .cs-stat-plain:nth-child(2){padding:24px 0}
+  .cs-stat-plain:last-child{padding:24px 0 0;border-bottom:none}
+  .topbar{padding:0 16px}
+  .cs-flow-h{flex-direction:column;gap:24px}
+  .cs-flow-step:not(:last-child)::after{content:'↓';right:auto;left:12px;top:auto;bottom:-18px}
+  .cs-flow-step-inner{padding-right:0}
+  .cs-img-pair{grid-template-columns:1fr}
+  .cs-img-trio{grid-template-columns:1fr}
+  .cs-wire-pair{grid-template-columns:1fr}
+  .cs-ds-grid{grid-template-columns:1fr}
+  .cs-3col{grid-template-columns:1fr}
+  .cs-persona{grid-template-columns:1fr}
+  .cs-transfer p{font-size:1.5rem}
+}
+@media(max-width:480px){
+  .cs-inner{padding:0 16px}
+  .cs-title{font-size:clamp(36px,10vw,52px)}
+}
+@media(prefers-reduced-motion:reduce){.cs-section{transition:none;opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<a href="#cs-content" class="skip">Skip to content</a>
+
+<div id="prog"><div id="progFill"></div></div>
+
+<!-- TOPBAR -->
+<header class="topbar" id="topbar">
+  <a href="../index.html" class="logo" aria-label="Orsolya G. — home">
+    <svg height="20" viewBox="0 0 1000 168.7" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="width:auto;display:block">
+      <g>
+        <path d="M145.6,64.9c-3.1-7.3-7.4-13.7-12.8-19c-5.5-5.3-11.9-9.5-19.2-12.4c-7.3-3-15.2-4.4-23.6-4.4c-8.3,0-16.1,1.5-23.4,4.4c-7.3,3-13.7,7.1-19.2,12.4c-5.5,5.3-9.8,11.6-12.9,19c-3.1,7.3-4.7,15.4-4.7,24.3c0,8.7,1.6,16.8,4.7,24.1c3.1,7.3,7.4,13.7,12.9,19.1c5.5,5.4,11.9,9.5,19.2,12.5c7.3,3,15.1,4.4,23.4,4.4c8.4,0,16.2-1.5,23.5-4.4c7.3-3,13.7-7.1,19.2-12.5c5.5-5.4,9.8-11.7,12.9-19.1c3.1-7.3,4.6-15.4,4.6-24.1C150.2,80.3,148.7,72.2,145.6,64.9z M112.9,114c-5.8,6.3-13.4,9.4-22.9,9.4c-9.5,0-17.1-3.1-22.8-9.4c-5.7-6.3-8.6-14.5-8.6-24.8c0-10.5,2.9-18.9,8.6-25c5.7-6.2,13.3-9.2,22.8-9.2c9.5,0,17.1,3.1,22.9,9.2c5.8,6.2,8.6,14.5,8.6,25C121.5,99.4,118.6,107.7,112.9,114z"/>
+        <path d="M335,88.8c-3.5-2.5-7.4-4.5-11.7-6.2c-4.3-1.7-8.5-3.2-12.7-4.4c-4.2-1.3-8.1-2.6-11.7-4c-3.6-1.4-6.4-3-8.6-5c-2.1-1.9-3.2-4.3-3.2-7.2c0-3.5,1.3-6.1,3.9-8c2.6-1.8,5.7-2.8,9.4-2.8c4,0,7.4,1.3,10.2,3.8c1.7,1.5,3.1,3.5,4.1,5.8c1.3,2.9,4.4,4.5,7.4,3.7l15.6-4.1c3.6-1,5.7-4.9,4.3-8.4c-2.3-6.1-6.4-11.3-12.1-15.4c-7.7-5.6-17.3-8.4-28.9-8.4c-8.5,0-15.9,1.4-22.3,4.1c-6.4,2.7-11.4,6.7-15,12c-3.6,5.3-5.5,11.6-5.5,19c0,5.6,1.1,10.3,3.2,14.1c2.1,3.8,5,7,8.5,9.5c3.5,2.5,7.4,4.6,11.6,6.3c4.2,1.7,8.4,3.2,12.6,4.5c4.2,1.3,8,2.7,11.5,4c3.5,1.3,6.3,3,8.4,5c2.1,2,3.2,4.4,3.2,7.5c0,3.4-1.3,6-3.9,8.1c-2.6,2-6.4,3-11.2,3c-4.6,0-8.5-1.6-11.8-4.7c-2.2-2.1-3.9-4.7-5.1-7.8c-1.2-2.9-4.1-4.5-7.1-3.8l-15.6,3.5c-3.7,0.8-5.9,4.8-4.6,8.4c2.7,7.4,7.3,13.4,13.9,18.3c8.5,6.3,19,9.4,31.6,9.4c8.4,0,15.9-1.7,22.4-5c6.5-3.3,11.7-7.7,15.4-13.1c3.7-5.4,5.6-11.4,5.6-18c0-5.6-1.1-10.3-3.3-14.1C341.4,94.4,338.5,91.2,335,88.8z"/>
+        <path d="M462.8,45c-5.5-5.3-11.9-9.5-19.2-12.4c-7.3-3-15.2-4.4-23.6-4.4c-8.3,0-16.1,1.5-23.4,4.4c-7.3,3-13.7,7.1-19.2,12.4c-5.5,5.3-9.8,11.6-12.9,19c-3.1,7.3-4.7,15.4-4.7,24.3c0,8.7,1.6,16.8,4.7,24.1c3.1,7.3,7.4,13.7,12.9,19.1c5.5,5.4,11.9,9.5,19.2,12.5c7.3,3,15.1,4.4,23.4,4.4c8.4,0,16.2-1.5,23.5-4.4c7.3-3,13.7-7.1,19.2-12.5c5.5-5.4,9.8-11.7,12.9-19.1c3.1-7.3,4.6-15.4,4.6-24.1c0-8.8-1.5-16.9-4.6-24.3C472.6,56.7,468.3,50.4,462.8,45z M442.9,113.1c-5.8,6.3-13.4,9.4-22.9,9.4c-9.5,0-17.1-3.1-22.8-9.4c-5.7-6.3-8.6-14.5-8.6-24.8c0-10.5,2.9-18.9,8.6-25c5.7-6.2,13.3-9.2,22.8-9.2c9.5,0,17.1,3.1,22.9,9.2c5.8,6.2,8.6,14.5,8.6,25C451.6,98.6,448.7,106.9,442.9,113.1z"/>
+        <path d="M628.8,27.5h-17.3c-2.5,0-4.7,1.4-5.8,3.7l-15.4,33.5c-2.3,4.9-9.2,4.9-11.5,0l-15.5-33.5c-1-2.2-3.3-3.7-5.8-3.7H540c-4.8,0-7.8,5-5.6,9.3l35.1,68.1c0.5,0.9,0.7,1.9,0.7,2.9V139c0,3.5,2.8,6.3,6.3,6.3h15.7c3.5,0,6.3-2.8,6.3-6.3v-31.2c0-1,0.2-2,0.7-2.9l35.1-68.1C636.6,32.6,633.5,27.5,628.8,27.5z"/>
+        <path d="M698.5,31.7c-0.9-2.5-3.3-4.2-6-4.2h-23.8c-2.7,0-5.1,1.7-6,4.2l-38,105.2c-1.5,4.1,1.6,8.5,6,8.5h16.1c2.7,0,5.1-1.7,6-4.3l4.1-12.2c0.9-2.6,3.3-4.3,6-4.3h35.2c2.7,0,5.2,1.8,6,4.4l4,12.1c0.9,2.6,3.3,4.4,6,4.4h16.3c4.4,0,7.5-4.4,6-8.5L698.5,31.7z M686.3,102.6h-11.7c-4.3,0-7.4-4.3-6-8.4l5.9-17.4c1.9-5.8,10.1-5.7,12,0l5.8,17.4C693.7,98.3,690.6,102.6,686.3,102.6z"/>
+        <path d="M240.3,113.6c-4.2-6.1-9.1-10.8-14.7-14.1c-2.7-1.6-2.4-5.2,0.4-6.5c4.4-2,8.1-4.8,11.1-8.3c4.8-5.6,7.2-12,7.2-19.3c0-10.9-4-19.6-12-26.2c-8-6.6-19.4-9.9-34.2-9.9h-46c-3.2,0-4.8,3.2-3.5,5.5c0,0.1,0.1,0.1,0.1,0.2c0,0,0.1,0.1,0.1,0.2c0.1,0.1,0.1,0.1,0.2,0.2c8.6,10.5,38.5,50.7,1.1,106.5c-1.3,1.9,0.1,4.4,2.4,4.4h28.2c1.1,0,2.1-0.6,2.5-1.6c2.3-4.6,8.9-18.8,11.6-37.3c3.2,1.2,6,2.7,8.6,4.5c5.1,3.7,9,8.6,11.6,14.6c2.2,5.2,3.7,10.9,4.4,17.3c0.2,1.9,1.9,3.3,3.9,3.3h24.4c2.4,0,4.3-2,3.9-4.3C249.5,131.4,245.8,121.6,240.3,113.6z M209.1,77.5c-2.9,2.8-7.2,4.2-12.8,4.2h-1c-1-9.6-3.6-19.5-8.4-29.4h9.4c5.5,0,9.7,1.3,12.7,3.9c3,2.6,4.5,6.1,4.5,10.3C213.5,71.1,212,74.7,209.1,77.5z"/>
+        <path d="M541,123.4h-20.2c5.6-23.6,8.8-62.8-14.3-94.5c-0.3-0.3,0-0.8-0.4-0.8l-6.5,0.1H483c-3.2,0-4.8,3.2-3.5,5.5c0,0.1,0.1,0.1,0.1,0.2c0,0,0.1,0.1,0.1,0.2c0.1,0.1,0.1,0.1,0.2,0.2c8.3,10.2,36.6,48.2,4.4,101.3c-2.6,4.2,0.5,9.6,5.4,9.6H511c0.3,0,0.6,0,0.9-0.1c0.4,0.3,0.9,0.4,1.4,0.4H541c3.5,0,6.3-2.8,6.3-6.3v-9.3C547.3,126.2,544.5,123.4,541,123.4z"/>
+        <path d="M912.7,78.3h-54.3c-2.1,0-3.8,1.7-3.8,3.8v14.4c0,2.1,1.7,3.8,3.8,3.8h25.2c2.9,0,4.8,3.2,3.3,5.7c-0.9,1.5-1.9,3-3.1,4.5c-2.6,3.2-5.7,5.8-9.5,7.8c-3.8,2-7.9,2.9-12.5,2.9c-6.5,0-12.2-1.4-17.2-4.2c-5-2.8-8.9-6.8-11.8-12c-2.9-5.2-4.3-11.5-4.3-18.9c0-10.3,2.8-18.6,8.4-24.8c5.6-6.2,13.1-9.3,22.5-9.3c6.4,0,11.7,1.6,16,4.7c3.4,2.5,6.1,5.7,8,9.7c0.9,1.8,2.9,2.7,4.8,2l20.4-7.5c2.1-0.8,3.1-3.1,2.2-5.1c-4-9.2-10.3-16.3-18.6-21.2c-9.5-5.6-20.4-8.4-32.7-8.4c-11.4,0-21.6,2.5-30.6,7.6c-9,5-16.1,12.1-21.3,21.1c-5.2,9-7.8,19.4-7.8,31.3c0,9,1.5,17.1,4.4,24.4c3,7.3,7.1,13.7,12.3,19.1c5.2,5.4,11.2,9.5,18,12.4c6.8,2.9,14,4.4,21.5,4.4c6.8,0,12.7-1.2,17.6-3.7c4.9-2.5,9-5.5,12.1-9.1c0,0,0.1-0.1,0.1-0.1c2.3-2.6,6.6-1.1,6.6,2.4v5.4c0,2.1,1.7,3.8,3.8,3.8h16.5c2.1,0,3.8-1.7,3.8-3.8V82.1C916.6,80,914.9,78.3,912.7,78.3z"/>
+        <circle cx="956.9" cy="129" r="18.9"/>
+      </g>
+    </svg>
+  </a>
+  <div class="topbar-right">
+    <a class="btn btn-resume" href="../resume.pdf" target="_blank">
+      <span>Resume</span>
+      <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13V19C18 19.53 17.79 20.04 17.41 20.41C17.04 20.79 16.53 21 16 21H5C4.47 21 3.96 20.79 3.59 20.41C3.21 20.04 3 19.53 3 19V8C3 7.47 3.21 6.96 3.59 6.59C3.96 6.21 4.47 6 5 6H11M21 9V3H15M21 3L10 14"/></svg>
+    </a>
+    <button class="btn btn-email" onclick="doEmail()">
+      <span>Email me</span>
+      <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </button>
+    <div style="position:relative">
+      <button class="btn btn-a11y" id="btnA11y" onclick="toggleA11y()" aria-label="Accessibility settings" aria-expanded="false">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="10" cy="3.5" r="1.8"/>
+          <path d="M4 8h12M10 6.5v5M10 11.5l-3 5M10 11.5l3 5"/>
+        </svg>
+      </button>
+      <div class="a11y-panel" id="a11yPanel" role="dialog" aria-label="Accessibility settings">
+        <div class="a11y-title">Accessibility</div>
+        <div class="a11y-row">
+          <span class="a11y-lbl">High contrast</span>
+          <button class="a11y-toggle" id="ctToggle" onclick="toggleCT()" aria-label="Toggle high contrast"><div class="a11y-dot"></div></button>
+        </div>
+        <div class="a11y-row">
+          <span class="a11y-lbl">Reduce motion</span>
+          <button class="a11y-toggle" id="rmToggle" onclick="toggleRM()" aria-label="Toggle reduced motion"><div class="a11y-dot"></div></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cs-page">
+<div class="cs-inner">
+
+<!-- SIDEBAR -->
+<aside class="cs-sidebar">
+  <a href="../index.html" class="back-btn">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    All work
+  </a>
+  <div class="cs-nav-label" style="margin-top:16px">In this study</div>
+  <nav class="cs-nav">
+    <a href="#s-overview"   class="cs-nav-item active" data-s="s-overview">Overview</a>
+    <a href="#s-research"   class="cs-nav-item" data-s="s-research">Research</a>
+    <a href="#s-hmw"        class="cs-nav-item" data-s="s-hmw">How might we</a>
+    <a href="#s-checkin"    class="cs-nav-item" data-s="s-checkin">Check-in flow</a>
+    <a href="#s-guide"      class="cs-nav-item" data-s="s-guide">AI guide</a>
+    <a href="#s-iteration"  class="cs-nav-item" data-s="s-iteration">Iteration</a>
+    <a href="#s-progress"   class="cs-nav-item" data-s="s-progress">Progress tracking</a>
+    <a href="#s-ds"         class="cs-nav-item" data-s="s-ds">Design system</a>
+    <a href="#s-reflection" class="cs-nav-item" data-s="s-reflection">Reflection</a>
+  </nav>
+  <div class="cs-meta-block">
+    <div class="cs-meta-row"><span class="cs-meta-k">Role</span><span class="cs-meta-v">Full-Stack Designer</span></div>
+    <div class="cs-meta-row"><span class="cs-meta-k">Duration</span><span class="cs-meta-v">14 weeks</span></div>
+    <div class="cs-meta-row"><span class="cs-meta-k">Type</span><span class="cs-meta-v">Conceptual / MVP</span></div>
+    <div class="cs-meta-row"><span class="cs-meta-k">Status</span><span class="cs-meta-v">Completed</span></div>
+  </div>
+  <div class="cs-sidebar-tags">
+    <span class="cs-sidebar-tag">Creative Therapy</span>
+    <span class="cs-sidebar-tag">AI Guide</span>
+    <span class="cs-sidebar-tag">Emotional Safety</span>
+    <span class="cs-sidebar-tag">Human Factors</span>
+  </div>
+  <div class="cs-progress-bar"><div class="cs-progress-fill" id="pf"></div></div>
+  <a href="../mindure-dashboard-research.html" class="cs-next-case">
+    <span class="cs-next-case-label">Next</span>
+    <span class="cs-next-case-title">Built to calm the fear. Found out why that was the wrong goal.</span>
+    <div class="cs-next-case-arrow"><span>↗</span></div>
+  </a>
+</aside>
+
+<!-- MAIN -->
+<main class="cs-main" id="cs-content">
+
+  <!-- HEADER -->
+  <div id="s-overview">
+    <span class="cs-case-label">Case Study 04</span>
+    <div class="cs-eyebrow">
+      <span class="cs-pill">Creative Therapy</span>
+      <span class="cs-pill">AI Guide</span>
+      <span class="cs-pill">Emotional Safety</span>
+      <span class="cs-pill">Human Factors</span>
+    </div>
+    <h1 class="cs-title">Ness</h1>
+    <p class="cs-subtitle">A creative therapy app for people who don't think in words.</p>
+    <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-top:40px">
+      <img src="ness_hero_image.png" alt="Ness app hero — artboard interface with Johnathan AI guide" style="width:100%;height:auto;display:block">
+    </div>
+  </div>
+
+  <!-- SECTION 01 — STATS -->
+  <div class="cs-stats-plain">
+    <div class="cs-stat-plain">
+      <div class="cs-stat-n">3.3%</div>
+      <div class="cs-stat-l">30-day retention in mental health apps</div>
+      <div class="cs-stat-src">Baumel et al., 2019 — JMIR Mental Health</div>
+    </div>
+    <div class="cs-stat-plain">
+      <div class="cs-stat-n">75%</div>
+      <div class="cs-stat-l">trust AI feedback in creative work</div>
+      <div class="cs-stat-src">Ness user survey, n=16</div>
+    </div>
+    <div class="cs-stat-plain">
+      <div class="cs-stat-n">63%</div>
+      <div class="cs-stat-l">open to AI-guided creative therapy</div>
+      <div class="cs-stat-src">Ness user survey, n=16</div>
+    </div>
+  </div>
+
+  <p class="cs-body-p">Most therapy apps ask you to describe how you feel. But some people can't. Not because they won't — because the words aren't there yet. Yet every tool assumes verbal clarity at the exact moment people have the least access to words.</p>
+
+  <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin:32px 0 24px">
+    <img src="ness_finalUI_landing_mockup_desktop.png" alt="Ness landing screen — desktop UI mockup showing the welcome interface" style="width:100%;height:auto;display:block">
+  </div>
+  <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:72px">
+    <img src="ness_user_retention_illustration_desktop.png" alt="User retention chart showing the gap between existing apps and Ness's engagement approach" style="width:100%;height:auto;display:block">
+  </div>
+
+  <!-- SECTION 02 — RESEARCH -->
+  <section class="cs-section" id="s-research">
+    <span class="cs-section-eyebrow">Research</span>
+    <h2 class="cs-section-heading">Three things the research kept saying.</h2>
+
+    <div class="cs-3col">
+      <div class="cs-3col-item">
+        <div class="cs-3col-title">Expression barrier</div>
+        <div class="cs-3col-text">Many people can't accurately describe how they feel in words. This creates friction at the exact moment support is needed — when emotions are highest and verbal access is lowest.</div>
+      </div>
+      <div class="cs-3col-item">
+        <div class="cs-3col-title">Creative processing</div>
+        <div class="cs-3col-text">Drawing and visual expression allow people to access emotions faster than writing. It bypasses verbal translation and reduces cognitive effort, lowering the barrier to engagement.</div>
+      </div>
+      <div class="cs-3col-item">
+        <div class="cs-3col-title">AI trust is conditional</div>
+        <div class="cs-3col-text">Trust in AI-generated emotional feedback depended on transparency, user control, and how the feedback was framed. Observation without labelling was consistently more acceptable than diagnosis.</div>
+      </div>
+    </div>
+
+    <div class="cs-full-img">
+      <img src="../Mindure/casestudy1_empathy_map_2.png" alt="Empathy map showing what users feel, see, hear, and do">
+    </div>
+
+    <details class="cs-accordion">
+      <summary>Research sources</summary>
+      <div class="cs-accordion-body">
+        <p>Baumel A et al. (2019). Real-World Implementation Outcomes of Mental Health Apps. JMIR Mental Health.</p>
+        <p>Tyron G et al. (2024). Visual expression and emotional processing in non-verbal populations.</p>
+        <p>Soyer R (2015). Phototherapy as a tool of emotional identification. ERIC.</p>
+        <p>Malchiodi C (2011). Handbook of Art Therapy. Guilford Press.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- SECTION 03 — HMW + PERSONA -->
+  <section class="cs-section" id="s-hmw">
+    <p class="cs-hmw">"How do you make therapy feel natural for people who think and feel in images, not sentences?"</p>
+
+    <div class="cs-persona">
+      <div class="cs-persona-left">
+        <div class="cs-persona-name">Elisa Stewart, 27 — Marketing Analyst</div>
+        <div class="cs-persona-role" style="margin-bottom:20px">Survey participant · Ness user research</div>
+        <blockquote class="cs-persona-quote">"I needed something that goes beyond reflection — something that guides creativity."</blockquote>
+      </div>
+      <div class="cs-persona-right">
+        <div class="cs-persona-note">Struggles to put feelings into words, especially under pressure.</div>
+        <div class="cs-persona-note">Looking for a creative outlet that doubles as emotional support.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 04 — CHECK-IN FLOW -->
+  <section class="cs-section" id="s-checkin">
+    <span class="cs-section-eyebrow">Design</span>
+    <h2 class="cs-section-heading">Before the canvas opens, the app learns what state you're in — without asking you to explain it.</h2>
+
+    <div class="cs-flow-h">
+      <div class="cs-flow-step">
+        <div class="cs-flow-step-inner">
+          <div class="cs-flow-num">Step 1</div>
+          <div class="cs-flow-label">Mood state</div>
+          <div class="cs-flow-desc">A slider from Terrible to Amazing. No words required.</div>
+        </div>
+      </div>
+      <div class="cs-flow-step">
+        <div class="cs-flow-step-inner">
+          <div class="cs-flow-num">Step 2</div>
+          <div class="cs-flow-label">Body awareness</div>
+          <div class="cs-flow-desc">A sleep thermometer. Physical, not cognitive.</div>
+        </div>
+      </div>
+      <div class="cs-flow-step">
+        <div class="cs-flow-step-inner">
+          <div class="cs-flow-num">Step 3</div>
+          <div class="cs-flow-label">Emotion vocabulary</div>
+          <div class="cs-flow-desc">Visual emotion selector. Tap, don't write.</div>
+        </div>
+      </div>
+      <div class="cs-flow-step">
+        <div class="cs-flow-step-inner">
+          <div class="cs-flow-num">Step 4</div>
+          <div class="cs-flow-label">Intention setting</div>
+          <div class="cs-flow-desc">One open question. What do you want from today?</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <img src="desktop/Prototype_test1.png" alt="Check-in start screen — welcome to today's session" style="width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)">
+      <img src="desktop/prototype_test2.png" alt="Mood slider — from Terrible to Amazing" style="width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <img src="desktop/prototype_test3.png" alt="Sleep thermometer check-in screen" style="width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)">
+      <img src="desktop/prototype_test4.png" alt="Emotion vocabulary selector screen" style="width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)">
+    </div>
+  </section>
+
+  <!-- SECTION 05 — JOHNATHAN / AI GUIDE -->
+  <section class="cs-section" id="s-guide">
+    <span class="cs-section-eyebrow">AI Guide</span>
+    <h2 class="cs-section-heading">The guide doesn't speak until you've made something. Then it notices — without naming.</h2>
+
+    <div class="cs-img-pair">
+      <img src="desktop/Artboard_brush.png" alt="Blank artboard with Johnathan's opening message">
+      <img src="desktop/Artboard_brush-1.png" alt="Active painting session with Johnathan observing colour shift">
+    </div>
+
+    <div class="cs-pullquote">
+      <p>The gradual shift in colour from muted shades to something brighter shows a potential change in mood or thought — let's keep exploring what that might mean for you.</p>
+    </div>
+
+    <p class="cs-body-p">Johnathan observes pattern. He reflects without labelling. The person stays in control of what the observation means — or whether it means anything at all.</p>
+
+    <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-top:32px">
+      <img src="ness_finalUI_artboard_mockup_desktop.png" alt="Final artboard UI — full desktop mockup showing the creative canvas with Johnathan's observation panel" style="width:100%;height:auto;display:block">
+    </div>
+  </section>
+
+  <!-- SECTION 06 — ITERATION -->
+  <section class="cs-section" id="s-iteration">
+    <span class="cs-section-eyebrow">Iteration</span>
+    <h2 class="cs-section-heading">Two rounds of testing. Each one changed something specific.</h2>
+
+    <div class="cs-flow-v">
+      <div class="cs-flow-vnode">
+        <div class="cs-flow-vline-wrap">
+          <div class="cs-flow-vdot"></div>
+          <div class="cs-flow-vconnect"></div>
+        </div>
+        <div class="cs-flow-vcontent">
+          <div class="cs-flow-vtag">Round 1</div>
+          <div class="cs-flow-vlabel">Usability Test 1</div>
+          <div class="cs-flow-vdesc">5 participants, remote, unmoderated</div>
+        </div>
+      </div>
+      <div class="cs-flow-vnode">
+        <div class="cs-flow-vline-wrap">
+          <div class="cs-flow-vdot highlight"></div>
+          <div class="cs-flow-vconnect"></div>
+        </div>
+        <div class="cs-flow-vcontent">
+          <div class="cs-flow-vtag accent">Finding</div>
+          <div class="cs-flow-vlabel">3 friction points found</div>
+          <div class="cs-flow-vdesc">Icon clarity, chat panel identity, tool access</div>
+        </div>
+      </div>
+      <div class="cs-flow-vnode">
+        <div class="cs-flow-vline-wrap">
+          <div class="cs-flow-vdot highlight"></div>
+          <div class="cs-flow-vconnect"></div>
+        </div>
+        <div class="cs-flow-vcontent">
+          <div class="cs-flow-vtag accent">Action</div>
+          <div class="cs-flow-vlabel">Key design changes made</div>
+          <div class="cs-flow-vdesc">Labels, panel identity, and tool tray redesigned</div>
+        </div>
+      </div>
+      <div class="cs-flow-vnode">
+        <div class="cs-flow-vline-wrap">
+          <div class="cs-flow-vdot"></div>
+          <div class="cs-flow-vconnect"></div>
+        </div>
+        <div class="cs-flow-vcontent">
+          <div class="cs-flow-vtag">Round 2</div>
+          <div class="cs-flow-vlabel">Usability Test 2</div>
+          <div class="cs-flow-vdesc">Same format, improvements validated</div>
+        </div>
+      </div>
+    </div>
+
+    <table class="cs-iter-table">
+      <thead>
+        <tr>
+          <th>What testing found</th>
+          <th>What changed</th>
+          <th>Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>70% of users couldn't connect icons to their function</td>
+          <td>Labels added beneath each icon, icons replaced with familiar visual patterns</td>
+          <td>100% icon comprehension in Test 2</td>
+        </tr>
+        <tr>
+          <td>80% confused the therapeutic chat panel with a user profile</td>
+          <td>Panel given explicit title "Johnathan, AI Therapy Guide" with visual separation</td>
+          <td>100% panel comprehension in Test 2</td>
+        </tr>
+        <tr>
+          <td>40% wanted core creation tools more accessible</td>
+          <td>Brush, pen, pencil, sponge grouped in a persistent tray at the bottom</td>
+          <td>60% rated tool placement as satisfactory in Test 2</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="cs-iter-note">n=5 per round. Small sample — findings used directionally, not as conclusive evidence.</p>
+
+    <div class="cs-wire-pair">
+      <div>
+        <img class="cs-wire-img" src="ness_iterationpcoress_1st_wireframe.png" alt="First wireframe iteration of the Ness interface">
+        <p class="cs-wire-annotation">"Jonathan" reads as a participant list, not a therapy guide.</p>
+      </div>
+      <div>
+        <img class="cs-wire-img" src="ness_iterationpcoress_3rd_wireframe.png" alt="Third wireframe iteration with labelled Johnathan panel">
+        <p class="cs-wire-annotation">"Johnathan, AI Therapy Guide" — role is explicit, chat is unambiguous.</p>
+      </div>
+    </div>
+
+    <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-top:32px">
+      <img src="ness_finalUI_test_mockup_desktop.png" alt="Final tested interface — the validated design after two rounds of usability testing" style="width:100%;height:auto;display:block">
+    </div>
+  </section>
+
+  <!-- SECTION 07 — PROGRESS -->
+  <section class="cs-section" id="s-progress">
+    <span class="cs-section-eyebrow">Tracking</span>
+    <h2 class="cs-section-heading">The progress view doesn't score how you felt. It shows how far you've come.</h2>
+
+    <div class="cs-img-trio">
+      <img src="desktop/Profile%20Overview.png" alt="Profile overview with mood arc chart">
+      <img src="desktop/Profile%20Progress.png" alt="Engagement and AI weekly reflection">
+      <img src="desktop/Profile%20Creations.png" alt="Creations gallery">
+    </div>
+
+    <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin:20px 0 24px">
+      <img src="ness_finalUI_profile_mockup_desktop.png" alt="Full profile view desktop mockup — mood arc, journal and Johnathan's weekly reflection in context" style="width:100%;height:auto;display:block">
+    </div>
+
+    <p class="cs-body-p">The arc uses mood symbols as its Y-axis — not clinical scores. Johnathan's weekly reflection is written in plain language. Creations are titled by the person, not the system.</p>
+  </section>
+
+  <!-- SECTION 08 — DESIGN SYSTEM -->
+  <section class="cs-section" id="s-ds">
+    <span class="cs-section-eyebrow">Design System</span>
+    <h2 class="cs-section-heading">Every colour was chosen for what it does to the nervous system, not what it looks like.</h2>
+
+    <div class="cs-ds-grid">
+      <div>
+        <img class="cs-ds-img" src="ness_designsystem_color_psychology.png" alt="Brand colours and their psychological rationale">
+        <div class="cs-ds-notes">
+          <p>— <strong>Serene Teal:</strong> calming, associated with nature and wellness. Lowers perceived threat.</p>
+          <p>— <strong>Lavender Blush:</strong> soft, creative, slightly whimsical. Reduces clinical association.</p>
+          <p>— <strong>Dusty Peach:</strong> warmth without energy. Prevents the palette reading as cold or sterile.</p>
+        </div>
+      </div>
+      <div>
+        <img class="cs-ds-img" src="ness_designsystem_typography.png" alt="Typography specimen showing Create to heal">
+        <div class="cs-ds-notes">
+          <p>"Create to heal" — the tagline lives in the type specimen, not the hero. It earns its place here.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-ds-grid" style="margin-top:0">
+      <div>
+        <img class="cs-ds-img" src="ness_designsystem_branding_logo.png" alt="Ness logo and brand mark — logotype construction and usage rules">
+        <div class="cs-ds-notes">
+          <p>The logotype uses weight contrast to mirror the app's thesis — quiet structure that doesn't shout.</p>
+        </div>
+      </div>
+      <div>
+        <img class="cs-ds-img" src="ness_designsystem_components.png" alt="Core UI components — cards, inputs, feedback states">
+        <div class="cs-ds-notes">
+          <p>Every component was tested against the emotional register of its context. No sharp shadows. No assertive motion.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-ds-grid" style="margin-top:0">
+      <div>
+        <img class="cs-ds-img" src="ness_designsystem_button_components.png" alt="Button component system — primary, secondary, and ghost states">
+        <div class="cs-ds-notes">
+          <p>Buttons use rounded corners and generous padding — readable at low focus, never demanding.</p>
+        </div>
+      </div>
+      <div>
+        <img class="cs-ds-img" src="ness_designsystem_interactive_components.png" alt="Interactive component states — sliders, selectors, toggles">
+        <div class="cs-ds-notes">
+          <p>Sliders and selectors replace text inputs wherever possible. The interaction is physical, not linguistic.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 09 — WHAT I GOT WRONG -->
+  <section class="cs-section" id="s-reflection">
+    <span class="cs-section-eyebrow">Reflection</span>
+    <h2 class="cs-section-heading">What I got wrong.</h2>
+    <p class="cs-body-p">The check-in asks 'How are you feeling today?' before the person has touched the canvas. That directly contradicts the core thesis — make something first, understand it second. I'd redesign the entry point so the artboard opens first and the check-in follows the session, not precedes it. The data would be richer and the friction would disappear.</p>
+  </section>
+
+  <!-- BOTTOM BANNER -->
+  <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:0">
+    <img src="ness_bottom_banner.png" alt="Ness — create to heal" style="width:100%;height:auto;display:block">
+  </div>
+
+  <!-- SECTION 10 — TRANSFER INSIGHT -->
+  <div class="cs-transfer">
+    <p>You don't need to know what you're feeling to start. That's the whole point.</p>
+  </div>
+
+  <!-- MORE CASE STUDIES -->
+  <div style="padding:0 0 80px 0">
+    <div style="font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-m);margin-bottom:20px">More case studies</div>
+    <div style="display:flex;flex-direction:column;border-top:1px solid var(--border);padding-top:14px">
+      <a href="../human-first-nlp.html" class="cs-more-row">
+        <span class="cs-more-num">01</span>
+        <span class="cs-more-title">What do you want to do today?</span>
+        <span class="cs-more-arrow">↗</span>
+      </a>
+      <a href="../mindure-dashboard-research.html" class="cs-more-row">
+        <span class="cs-more-num">03</span>
+        <span class="cs-more-title">Built to calm the fear. Found out why that was the wrong goal.</span>
+        <span class="cs-more-arrow">↗</span>
+      </a>
+      <div class="cs-more-row" style="cursor:default;pointer-events:none">
+        <span class="cs-more-num" style="color:var(--accent-d)">04</span>
+        <span class="cs-more-title" style="color:var(--text)">Because not every emotion fits into words</span>
+        <span class="cs-more-arrow" style="opacity:0">↗</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="../index.html" style="color:var(--text);text-decoration:none;opacity:.7;transition:opacity .2s" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.7'" aria-label="Orsolya G. — home">
+    <svg height="16" viewBox="0 0 1000 168.7" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="width:auto;display:block">
+      <g>
+        <path d="M145.6,64.9c-3.1-7.3-7.4-13.7-12.8-19c-5.5-5.3-11.9-9.5-19.2-12.4c-7.3-3-15.2-4.4-23.6-4.4c-8.3,0-16.1,1.5-23.4,4.4c-7.3,3-13.7,7.1-19.2,12.4c-5.5,5.3-9.8,11.6-12.9,19c-3.1,7.3-4.7,15.4-4.7,24.3c0,8.7,1.6,16.8,4.7,24.1c3.1,7.3,7.4,13.7,12.9,19.1c5.5,5.4,11.9,9.5,19.2,12.5c7.3,3,15.1,4.4,23.4,4.4c8.4,0,16.2-1.5,23.5-4.4c7.3-3,13.7-7.1,19.2-12.5c5.5-5.4,9.8-11.7,12.9-19.1c3.1-7.3,4.6-15.4,4.6-24.1C150.2,80.3,148.7,72.2,145.6,64.9z M112.9,114c-5.8,6.3-13.4,9.4-22.9,9.4c-9.5,0-17.1-3.1-22.8-9.4c-5.7-6.3-8.6-14.5-8.6-24.8c0-10.5,2.9-18.9,8.6-25c5.7-6.2,13.3-9.2,22.8-9.2c9.5,0,17.1,3.1,22.9,9.2c5.8,6.2,8.6,14.5,8.6,25C121.5,99.4,118.6,107.7,112.9,114z"/>
+        <path d="M335,88.8c-3.5-2.5-7.4-4.5-11.7-6.2c-4.3-1.7-8.5-3.2-12.7-4.4c-4.2-1.3-8.1-2.6-11.7-4c-3.6-1.4-6.4-3-8.6-5c-2.1-1.9-3.2-4.3-3.2-7.2c0-3.5,1.3-6.1,3.9-8c2.6-1.8,5.7-2.8,9.4-2.8c4,0,7.4,1.3,10.2,3.8c1.7,1.5,3.1,3.5,4.1,5.8c1.3,2.9,4.4,4.5,7.4,3.7l15.6-4.1c3.6-1,5.7-4.9,4.3-8.4c-2.3-6.1-6.4-11.3-12.1-15.4c-7.7-5.6-17.3-8.4-28.9-8.4c-8.5,0-15.9,1.4-22.3,4.1c-6.4,2.7-11.4,6.7-15,12c-3.6,5.3-5.5,11.6-5.5,19c0,5.6,1.1,10.3,3.2,14.1c2.1,3.8,5,7,8.5,9.5c3.5,2.5,7.4,4.6,11.6,6.3c4.2,1.7,8.4,3.2,12.6,4.5c4.2,1.3,8,2.7,11.5,4c3.5,1.3,6.3,3,8.4,5c2.1,2,3.2,4.4,3.2,7.5c0,3.4-1.3,6-3.9,8.1c-2.6,2-6.4,3-11.2,3c-4.6,0-8.5-1.6-11.8-4.7c-2.2-2.1-3.9-4.7-5.1-7.8c-1.2-2.9-4.1-4.5-7.1-3.8l-15.6,3.5c-3.7,0.8-5.9,4.8-4.6,8.4c2.7,7.4,7.3,13.4,13.9,18.3c8.5,6.3,19,9.4,31.6,9.4c8.4,0,15.9-1.7,22.4-5c6.5-3.3,11.7-7.7,15.4-13.1c3.7-5.4,5.6-11.4,5.6-18c0-5.6-1.1-10.3-3.3-14.1C341.4,94.4,338.5,91.2,335,88.8z"/>
+        <path d="M462.8,45c-5.5-5.3-11.9-9.5-19.2-12.4c-7.3-3-15.2-4.4-23.6-4.4c-8.3,0-16.1,1.5-23.4,4.4c-7.3,3-13.7,7.1-19.2,12.4c-5.5,5.3-9.8,11.6-12.9,19c-3.1,7.3-4.7,15.4-4.7,24.3c0,8.7,1.6,16.8,4.7,24.1c3.1,7.3,7.4,13.7,12.9,19.1c5.5,5.4,11.9,9.5,19.2,12.5c7.3,3,15.1,4.4,23.4,4.4c8.4,0,16.2-1.5,23.5-4.4c7.3-3,13.7-7.1,19.2-12.5c5.5-5.4,9.8-11.7,12.9-19.1c3.1-7.3,4.6-15.4,4.6-24.1c0-8.8-1.5-16.9-4.6-24.3C472.6,56.7,468.3,50.4,462.8,45z M442.9,113.1c-5.8,6.3-13.4,9.4-22.9,9.4c-9.5,0-17.1-3.1-22.8-9.4c-5.7-6.3-8.6-14.5-8.6-24.8c0-10.5,2.9-18.9,8.6-25c5.7-6.2,13.3-9.2,22.8-9.2c9.5,0,17.1,3.1,22.9,9.2c5.8,6.2,8.6,14.5,8.6,25C451.6,98.6,448.7,106.9,442.9,113.1z"/>
+        <path d="M628.8,27.5h-17.3c-2.5,0-4.7,1.4-5.8,3.7l-15.4,33.5c-2.3,4.9-9.2,4.9-11.5,0l-15.5-33.5c-1-2.2-3.3-3.7-5.8-3.7H540c-4.8,0-7.8,5-5.6,9.3l35.1,68.1c0.5,0.9,0.7,1.9,0.7,2.9V139c0,3.5,2.8,6.3,6.3,6.3h15.7c3.5,0,6.3-2.8,6.3-6.3v-31.2c0-1,0.2-2,0.7-2.9l35.1-68.1C636.6,32.6,633.5,27.5,628.8,27.5z"/>
+        <path d="M698.5,31.7c-0.9-2.5-3.3-4.2-6-4.2h-23.8c-2.7,0-5.1,1.7-6,4.2l-38,105.2c-1.5,4.1,1.6,8.5,6,8.5h16.1c2.7,0,5.1-1.7,6-4.3l4.1-12.2c0.9-2.6,3.3-4.3,6-4.3h35.2c2.7,0,5.2,1.8,6,4.4l4,12.1c0.9,2.6,3.3,4.4,6,4.4h16.3c4.4,0,7.5-4.4,6-8.5L698.5,31.7z M686.3,102.6h-11.7c-4.3,0-7.4-4.3-6-8.4l5.9-17.4c1.9-5.8,10.1-5.7,12,0l5.8,17.4C693.7,98.3,690.6,102.6,686.3,102.6z"/>
+        <path d="M240.3,113.6c-4.2-6.1-9.1-10.8-14.7-14.1c-2.7-1.6-2.4-5.2,0.4-6.5c4.4-2,8.1-4.8,11.1-8.3c4.8-5.6,7.2-12,7.2-19.3c0-10.9-4-19.6-12-26.2c-8-6.6-19.4-9.9-34.2-9.9h-46c-3.2,0-4.8,3.2-3.5,5.5c0,0.1,0.1,0.1,0.1,0.2c0,0,0.1,0.1,0.1,0.2c0.1,0.1,0.1,0.1,0.2,0.2c8.6,10.5,38.5,50.7,1.1,106.5c-1.3,1.9,0.1,4.4,2.4,4.4h28.2c1.1,0,2.1-0.6,2.5-1.6c2.3-4.6,8.9-18.8,11.6-37.3c3.2,1.2,6,2.7,8.6,4.5c5.1,3.7,9,8.6,11.6,14.6c2.2,5.2,3.7,10.9,4.4,17.3c0.2,1.9,1.9,3.3,3.9,3.3h24.4c2.4,0,4.3-2,3.9-4.3C249.5,131.4,245.8,121.6,240.3,113.6z M209.1,77.5c-2.9,2.8-7.2,4.2-12.8,4.2h-1c-1-9.6-3.6-19.5-8.4-29.4h9.4c5.5,0,9.7,1.3,12.7,3.9c3,2.6,4.5,6.1,4.5,10.3C213.5,71.1,212,74.7,209.1,77.5z"/>
+        <path d="M541,123.4h-20.2c5.6-23.6,8.8-62.8-14.3-94.5c-0.3-0.3,0-0.8-0.4-0.8l-6.5,0.1H483c-3.2,0-4.8,3.2-3.5,5.5c0,0.1,0.1,0.1,0.1,0.2c0,0,0.1,0.1,0.1,0.2c0.1,0.1,0.1,0.1,0.2,0.2c8.3,10.2,36.6,48.2,4.4,101.3c-2.6,4.2,0.5,9.6,5.4,9.6H511c0.3,0,0.6,0,0.9-0.1c0.4,0.3,0.9,0.4,1.4,0.4H541c3.5,0,6.3-2.8,6.3-6.3v-9.3C547.3,126.2,544.5,123.4,541,123.4z"/>
+        <path d="M912.7,78.3h-54.3c-2.1,0-3.8,1.7-3.8,3.8v14.4c0,2.1,1.7,3.8,3.8,3.8h25.2c2.9,0,4.8,3.2,3.3,5.7c-0.9,1.5-1.9,3-3.1,4.5c-2.6,3.2-5.7,5.8-9.5,7.8c-3.8,2-7.9,2.9-12.5,2.9c-6.5,0-12.2-1.4-17.2-4.2c-5-2.8-8.9-6.8-11.8-12c-2.9-5.2-4.3-11.5-4.3-18.9c0-10.3,2.8-18.6,8.4-24.8c5.6-6.2,13.1-9.3,22.5-9.3c6.4,0,11.7,1.6,16,4.7c3.4,2.5,6.1,5.7,8,9.7c0.9,1.8,2.9,2.7,4.8,2l20.4-7.5c2.1-0.8,3.1-3.1,2.2-5.1c-4-9.2-10.3-16.3-18.6-21.2c-9.5-5.6-20.4-8.4-32.7-8.4c-11.4,0-21.6,2.5-30.6,7.6c-9,5-16.1,12.1-21.3,21.1c-5.2,9-7.8,19.4-7.8,31.3c0,9,1.5,17.1,4.4,24.4c3,7.3,7.1,13.7,12.3,19.1c5.2,5.4,11.2,9.5,18,12.4c6.8,2.9,14,4.4,21.5,4.4c6.8,0,12.7-1.2,17.6-3.7c4.9-2.5,9-5.5,12.1-9.1c0,0,0.1-0.1,0.1-0.1c2.3-2.6,6.6-1.1,6.6,2.4v5.4c0,2.1,1.7,3.8,3.8,3.8h16.5c2.1,0,3.8-1.7,3.8-3.8V82.1C916.6,80,914.9,78.3,912.7,78.3z"/>
+        <circle cx="956.9" cy="129" r="18.9"/>
+      </g>
+    </svg>
+  </a>
+  <div style="display:flex;align-items:center;gap:20px">
+    <a href="mailto:hello@orsolyag.com" style="font-size:13px;color:var(--text-s);text-decoration:none;transition:color .2s" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text-s)'">hello@orsolyag.com</a>
+    <a href="https://linkedin.com/in/orsolyagorcz" target="_blank" style="font-size:13px;color:var(--text-s);text-decoration:none;transition:color .2s" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text-s)'">LinkedIn</a>
+    <a href="../resume.pdf" target="_blank" style="font-size:13px;color:var(--text-s);text-decoration:none;transition:color .2s" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text-s)'">Resume</a>
+    <span style="font-size:13px;color:var(--text-m)">© 2026</span>
+  </div>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const pf = document.getElementById('pf');
+  const fill = document.getElementById('progFill');
+  const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+  if(fill) fill.style.width = pct + '%';
+  if(pf) pf.style.width = pct + '%';
+}, {passive:true});
+
+// Section reveal
+const sections = document.querySelectorAll('.cs-section');
+const io = new IntersectionObserver(e => e.forEach(x => {
+  if(x.isIntersecting) x.target.classList.add('visible');
+}), {threshold:0.05});
+sections.forEach(s => io.observe(s));
+
+// Scrollspy nav
+const navItems = document.querySelectorAll('.cs-nav-item');
+const sectionEls = document.querySelectorAll('.cs-section,[id^="s-"]');
+function updateNav() {
+  const threshold = 120;
+  let cur = 's-overview';
+  sectionEls.forEach(s => {
+    if(s.getBoundingClientRect().top <= threshold) cur = s.id;
+  });
+  navItems.forEach(n => n.classList.toggle('active', n.dataset.s === cur));
+}
+window.addEventListener('scroll', updateNav, {passive:true});
+updateNav();
+
+// Email
+function doEmail() {
+  const el = document.createElement('a');
+  el.href = 'mailto:hello@orsolyag.com';
+  el.click();
+}
+
+// A11y panel
+let a11yOpen = false;
+function toggleA11y() {
+  a11yOpen = !a11yOpen;
+  document.getElementById('a11yPanel').classList.toggle('open', a11yOpen);
+  document.getElementById('btnA11y').setAttribute('aria-expanded', a11yOpen);
+}
+document.addEventListener('click', e => {
+  if(a11yOpen && !e.target.closest('[id="btnA11y"]') && !e.target.closest('[id="a11yPanel"]')) {
+    a11yOpen = false;
+    document.getElementById('a11yPanel').classList.remove('open');
+    document.getElementById('btnA11y').setAttribute('aria-expanded', 'false');
+  }
+});
+function toggleCT() {
+  document.body.classList.toggle('high-contrast');
+  document.getElementById('ctToggle').classList.toggle('on');
+}
+function toggleRM() {
+  document.body.classList.toggle('reduce-motion');
+  document.getElementById('rmToggle').classList.toggle('on');
+}
+</script>
+</body>
+</html>
