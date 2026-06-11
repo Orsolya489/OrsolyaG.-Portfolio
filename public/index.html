@@ -137,7 +137,6 @@ body::before{
 }
 .a11y-toggle.on .a11y-dot{transform:translateX(16px)}
 .a11y-note{font-size:13px;color:var(--text-m);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);line-height:1.5}
-#focusRow{display:none}
 .a11y-btn.active{background:var(--accent-d);color:#FFFFFF;border-color:var(--accent)}
 
 /* ── LAYOUT ── */
@@ -318,8 +317,6 @@ body::before{
   display:flex;align-items:center;justify-content:center;
   padding:28px 24px;
 }
-.cs-schema-inner .cs-schema-map-wrap .cs-schema-map{padding:0}
-#schema0 .cs-schema-map,#schema1 .cs-schema-map{height:260px;padding:20px 24px;overflow:hidden}
 .cs-schema-map svg{
   width:100%;
   max-width:100%;
@@ -337,14 +334,13 @@ body::before{
   padding-top:14px;padding-bottom:16px;
   border-top-width:1px;
 }
-.cs-schema-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;height:260px;padding:28px 24px;box-sizing:border-box}
+.cs-schema-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;height:220px;padding:28px 24px;box-sizing:border-box}
+.cs-schema-inner .cs-schema-map{padding:0}
 .cs-schema-map-wrap{flex:1 1 0;min-width:0;height:100%;display:flex;align-items:center}
 .cs-schema-map-wrap svg{width:100%;height:auto;display:block}
-.cs-schema-ui{flex:0 0 34%;align-self:stretch;border-radius:8px;overflow:hidden;opacity:0.88;transition:opacity 0.8s ease}
+.cs-schema-ui{flex:0 0 27%;height:160px;border-radius:8px;overflow:hidden;border:1px solid var(--border);opacity:0.88;transition:opacity 0.8s ease}
 .cs-schema-ui img{width:100%;height:100%;object-fit:contain;background:transparent;display:block}
 .cs-project:hover .cs-schema-ui{opacity:1}
-/* Tribe thumbnail — slightly smaller to match schematic density */
-/* schema0 uses embedded SVG image — no cs-schema-ui */
 .draw{stroke-dasharray:400;stroke-dashoffset:400}
 .draw.go{animation:stroke 1.1s var(--ease) forwards}
 @keyframes stroke{to{stroke-dashoffset:0}}
@@ -357,78 +353,48 @@ body::before{
   border:1px solid rgba(27,26,24,.09);
   box-shadow:0 1px 4px rgba(27,26,24,.06);
   overflow:hidden;
-  min-height:auto;
 }
-.cs-body{padding:24px 24px 20px;display:flex;flex-direction:column}
+.cs-body{padding:20px 22px 18px}
 .cs-num{
   font-size:11px;font-weight:400;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--text-m);
-  margin-bottom:6px;
+  text-transform:uppercase;color:var(--text-c);
+  margin-bottom:4px;
 }
 .cs-title{
-  font-size:22px;font-weight:400;color:var(--text);
-  line-height:1.28;letter-spacing:-.02em;
-  margin-bottom:18px;
-  flex:1;
+  font-size:20px;font-weight:400;color:var(--text);
+  line-height:1.25;letter-spacing:-.02em;
+  margin-bottom:10px;
 }
 .cs-hook{
   font-size:12px;color:var(--text-s);
   line-height:1.7;font-style:italic;
-  margin-bottom:18px;max-width:520px;
+  margin-bottom:16px;max-width:520px;
 }
 .cs-foot{
-  display:flex;align-items:center;
-  justify-content:space-between;
-  gap:6px;
+  display:flex;align-items:flex-start;
+  justify-content:space-between;gap:6px;
   flex-wrap:wrap;
-  padding-top:14px;
-  border-top:1px solid var(--border);
-  margin-top:auto;
 }
-.cs-foot .cs-link{margin-left:auto;flex-shrink:0;align-self:center}
-.cs-foot .cs-tag{flex-shrink:0}
+.cs-foot .cs-link{margin-left:auto;flex-shrink:0;align-self:center;}
+.cs-foot .cs-tag{flex-shrink:0;}
 .cs-tag{
-  font-size:12px;padding:3px 10px;border-radius:20px;
-  border:1px solid var(--border);color:var(--text-m);
+  font-size:13px;padding:3px 10px;border-radius:20px;
+  border:1px solid var(--border);color:var(--text-c);
   white-space:nowrap;background:var(--bg);
 }
 .cs-tag-wip{
-  font-size:12px;padding:3px 10px;border-radius:20px;
+  font-size:13px;padding:3px 10px;border-radius:20px;
   border:1px solid #C8A96E;color:#7A5A2E;
   white-space:nowrap;background:#FBF3E8;
 }
-.cs-wip-badges{
-  position:absolute;top:12px;right:12px;z-index:10;
-  display:flex;align-items:center;gap:6px;
-  pointer-events:none;
-}
-.cs-wip-badges--inline{
-  position:static;
-  display:none;
-  margin-bottom:10px;
-  pointer-events:none;
-}
-.cs-wip-badge{
-  font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  padding:4px 10px;border-radius:20px;
-  background:rgba(27,26,24,.72);color:rgba(246,244,241,.9);
-  backdrop-filter:blur(4px);
-  white-space:nowrap;
-}
-.cs-wip-badge--survey{
-  background:rgba(107,95,158,.82);color:#fff;
-}
 .cs-link{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:16px;font-weight:500;color:var(--accent-h);
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:13px;font-weight:500;color:var(--accent-h);
   text-decoration:none;white-space:nowrap;
-  cursor:pointer;border:none;font-family:inherit;
-  background:none;
-  padding:8px 14px;border-radius:10px;
-  transition:color var(--dur) var(--ease),background var(--dur) var(--ease);
+  cursor:pointer;background:none;border:none;font-family:inherit;
+  transition:color var(--dur);
 }
-.cs-link:hover{color:var(--accent-d);background:var(--accent-l)}
-.cs-link:active{background:var(--accent-l);color:var(--accent-d)}
+.cs-link:hover{color:var(--accent-d)}
 
 /* cs-card wrapper — holds schema + card together per project */
 .cs-project{margin-bottom:16px;display:flex;flex-direction:column;gap:8px}
@@ -504,58 +470,46 @@ body::before{
   :root{--sidebar:0px}
   .page{display:block}
   .main{padding:0 28px 96px;max-width:100%;margin:0;width:100%}
-  /* bottom tab bar — truly flush to screen bottom */
+  /* bottom tab bar */
   .sidebar{
     display:flex;flex-direction:row;
-    width:100%;
-    position:fixed;
-    bottom:0!important;
-    top:auto!important;
-    left:0;right:0;
-    transform:none!important;
+    height:auto;width:100%;
+    position:fixed;bottom:0;left:0;right:0;top:auto;
     border-right:none;border-top:1px solid var(--border);
-    padding:8px 4px;
-    padding-bottom:max(8px,env(safe-area-inset-bottom));
+    padding:8px 0 max(8px,env(safe-area-inset-bottom));
     background:rgba(253,252,250,.97);
     backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
     z-index:200;
-    overflow:hidden;
+    overflow:visible;
   }
   .nav-cap{
     display:flex;flex-direction:row;
     width:100%;border-radius:0;
     border:none;background:transparent;
-    box-shadow:none;padding:0;gap:2px;
+    box-shadow:none;padding:0;
   }
   .nav-item{
-    flex:1;min-width:0;
+    flex:1;
     display:flex;flex-direction:column;
     align-items:center;justify-content:center;
-    gap:3px;
-    padding:4px 2px;
-    border-radius:10px;
+    gap:4px;
+    padding:4px 6px;
+    border-radius:16px;
     text-align:center;
   }
   .nav-icon{
-    width:20px;height:20px;flex-shrink:0;
+    width:20px;height:20px;
     color:var(--text-m);
     transition:color var(--dur) var(--ease);
   }
   .nav-item:hover .nav-icon{color:var(--accent)}
   .nav-item.on .nav-icon{color:var(--accent)}
   .nav-label{
-    font-size:10px;
+    font-size:12px;
     font-weight:500;
     color:var(--text-m);
     transition:color .2s var(--ease);
     white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    max-width:100%;
-    display:block;
-    width:100%;
-    text-align:center;
   }
   .nav-item:hover .nav-label{color:var(--accent-d)}
   .nav-item.on .nav-label{color:var(--accent-d)}
@@ -565,92 +519,11 @@ body::before{
   /* hero */
   .hello{padding:56px 0 80px}
   .hero-h{
-    font-size:clamp(56px,12vw,72px);
+    font-size:clamp(26px,6vw,44px);
     margin-left:0;
     word-break:break-word;
     overflow-wrap:break-word;
-    line-height:1.03;
-    letter-spacing:-.04em;
   }
-  /* hide focus button on mobile — lives in a11y panel instead */
-  #btnFocus{display:none!important}
-  #focusRow{display:flex}
-  /* ── GLOBAL WRAP ── */
-  body{overflow-x:hidden}
-  *{max-width:100%;box-sizing:border-box}
-  img,svg,video,iframe,embed{max-width:100%;height:auto}
-  /* every flex row wraps */
-  .cs-foot{flex-wrap:wrap;justify-content:flex-start;gap:6px}
-  .cs-foot .cs-link{margin-left:0;width:100%;margin-top:8px;margin-bottom:4px;padding:12px 14px;font-size:18px}
-.cert-foot{flex-wrap:wrap;gap:8px}
-  .topbar-right{flex-wrap:wrap;gap:8px}
-  .cs-eyebrow{flex-wrap:wrap}
-  .snip-row{flex-wrap:wrap}
-  .about-slide-portrait{flex-wrap:wrap}
-  .about-wrap{flex-direction:column!important;gap:16px}
-  .cs-next{flex-wrap:wrap}
-  /* wide overview row in case studies */
-  [style*="display:flex"]{flex-wrap:wrap}
-  /* cert grid full width */
-  .cert-grid{grid-template-columns:1fr 1fr}
-  /* cred rows don't overflow */
-  .cred-row-title{min-width:0;word-break:break-word}
-  /* lens cards */
-  .lens-card{min-width:0;word-break:break-word}
-  /* about outside thumbs — spread out, tap to open */
-  .about-outside-thumbs{
-    height:auto;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    gap:8px;
-    padding-bottom:4px;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-  }
-  .about-outside-thumbs::-webkit-scrollbar{display:none}
-  .about-outside-thumb{
-    width:100px;height:80px;flex-shrink:0;
-    margin-left:0!important;
-    transform:none!important;
-  }
-  .about-outside-thumbs:hover .about-outside-thumb{margin-left:0!important;transform:none!important}
-  /* Leica images: swipeable carousel on mobile */
-  .snip-img-carousel{
-    display:flex!important;
-    flex-direction:row;
-    gap:10px;
-    overflow-x:auto;
-    scroll-snap-type:x mandatory;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-    padding-bottom:4px;
-  }
-  .snip-img-carousel::-webkit-scrollbar{display:none}
-  .snip-img-carousel img{
-    flex:0 0 85%;
-    scroll-snap-align:start;
-    height:220px;
-    border-radius:12px;
-  }
-  /* case study overview strip */
-  div[style*="justify-content:space-between"]{flex-wrap:wrap;gap:8px}
-  /* about main photo — full width, portrait crop */
-  .about-photo-fixed{width:100%!important;flex-shrink:0;border-radius:16px;overflow:hidden}
-  .about-photo-fixed img{
-    width:100%!important;
-    height:auto!important;
-    aspect-ratio:3/4!important;
-    object-fit:cover!important;
-    object-position:center top!important;
-    display:block!important;
-  }
-  /* email CTA */
-  .btn-email span{display:inline!important}
-  .btn-email{padding:12px 16px!important;font-size:16px!important;gap:8px;border-radius:16px!important}
-  /* footer: clear the bottom nav */
-  footer{padding-bottom:calc(72px + max(8px,env(safe-area-inset-bottom)))}
-  /* bottom nav: hug screen edge, safe area */
-  .main{padding-bottom:calc(72px + max(8px,env(safe-area-inset-bottom)))}
   .thesis{margin-left:0;max-width:100%}
   .sub{max-width:100%}
   /* grids */
@@ -658,33 +531,11 @@ body::before{
   .lens-grid{grid-template-columns:1fr}
   .snip-grid{grid-template-columns:1fr}
   /* project cards */
-  .cs-schema{height:auto;min-height:160px;padding:20px 28px}
-  .cs-schema svg{height:auto;overflow:visible}
-  .cs-schema-inner{height:auto;min-height:160px}
-  .cs-schema-ui{height:120px}
+  .cs-schema{height:160px;padding:20px 28px}
   .cs-body{padding:16px 18px 16px}
   .cs-title{font-size:20px}
   .cs-hook{font-size:13px;max-width:100%}
   .cs-card{margin:0 8px 8px}
-  /* wip badges: hide absolute, show inline inside card */
-  .cs-wip-badges:not(.cs-wip-badges--inline){display:none}
-  .cs-wip-badges--inline{display:flex}
-  /* floatBtns above bottom tab bar */
-  #floatBtns{bottom:calc(56px + max(8px,env(safe-area-inset-bottom)) + 16px) !important}
-  /* a11y panel — same as desktop, no squeeze */
-  .a11y-panel{
-    width:218px!important;
-    min-width:218px;
-    left:auto!important;
-    right:0!important;
-    padding:14px!important;
-    font-size:13px;
-  }
-  .a11y-lbl{font-size:13px;white-space:nowrap}
-  .a11y-title{font-size:13px}
-  .a11y-note{font-size:13px}
-  /* nav labels */
-  .nav-label{font-size:10px;overflow:hidden;text-overflow:ellipsis;max-width:56px}
   /* section cards */
   .sec-card{padding:24px}
   /* about */
@@ -736,34 +587,30 @@ body::before{
   .main{padding:0 16px 64px}
   .hello{padding:40px 0 64px}
   .hero-h{
-    font-size:clamp(52px,13vw,68px);
-    letter-spacing:-.04em;
-    line-height:1.03;
+    font-size:clamp(22px,8vw,36px);
+    letter-spacing:-.02em;
+    line-height:1.15;
   }
-  .cs-title{font-size:clamp(28px,6.5vw,34px);line-height:1.2}
   .thesis{font-size:12px}
   .sub{font-size:14px}
-  /* topbar */
+  /* topbar — hide resume label, keep icon */
   .btn-resume span{display:none}
   .btn-resume{padding:8px 10px}
-  /* btn-email padding preserved from 960px rule */
-  /* pills */
+  .btn-email{padding:8px 12px}
+  /* pills wrap naturally */
   .pills{gap:4px}
   .pill{font-size:13px;padding:4px 11px}
-  /* focus button icon-only */
-  #btnFocus{width:40px;height:40px;padding:0;justify-content:center}
-  .focus-label{display:none}
+  /* toc */
+  
+  
+  
   /* project cards */
-  .cs-schema{height:auto;min-height:120px;padding:16px 20px}
-  .cs-schema-inner{height:auto;min-height:120px;flex-direction:column;align-items:flex-start}
-  .cs-schema-map-wrap{width:100%}
-  .cs-schema-ui{width:100%;height:160px;flex:none}
-  .cs-schema-ui img{object-fit:contain}
+  .cs-schema{height:120px;padding:16px 20px}
   .cs-title{font-size:18px}
   .cs-hook{font-size:13px;margin-bottom:12px}
   .cs-body{padding:14px 16px 14px}
   .cs-card{margin:0 6px 6px}
-  .cs-foot{flex-wrap:wrap;justify-content:flex-start;gap:6px}
+  .cs-foot{flex-wrap:wrap;gap:8px}
   /* section cards */
   .sec-card{padding:16px;border-radius:12px}
   .sec-ey{margin-bottom:12px}
@@ -777,17 +624,17 @@ body::before{
   .snip-title{font-size:13px}
   .snip-body{font-size:12px}
   /* nav */
-  .nav-label{font-size:10px;overflow:hidden;text-overflow:ellipsis;max-width:56px}
-  .nav-icon{width:18px;height:18px}
+  .nav-label{font-size:12px}
+  .nav-icon{width:12px;height:12px}
 }
 
 /* Very small — 375px */
 @media(max-width:400px){
-  .hero-h{font-size:52px;letter-spacing:-.04em;line-height:1.03}
-  .cs-title{font-size:26px;line-height:1.2}
-  .cs-schema{height:auto;min-height:100px;padding:12px 16px}
+  .hero-h{font-size:22px}
+  .cs-schema{height:100px;padding:12px 16px}
   .topbar{padding:0 14px}
-  .btn-email span{display:inline!important}
+  .btn-email span{display:none}
+  .btn-email{padding:8px}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -957,7 +804,7 @@ body::before{
 .about-banner{display:flex;align-items:center;justify-content:space-between;background:var(--bg-deep);border-radius:14px;padding:16px 20px;margin-top:24px}
 .about-banner-text strong{font-size:13px;font-weight:500;color:var(--text);display:block;margin-bottom:2px}
 .about-banner-text span{font-size:13px;color:var(--text-c)}
-@media(max-width:700px){.about-wrap{flex-direction:column}.about-photo-fixed{width:100%}}
+@media(max-width:700px){.about-wrap{flex-direction:column}.about-photo-fixed{width:100%}.about-photo-fixed img{height:200px}}
 
 /* ── SNIPPET LIST ── */
 .snip-list{display:flex;flex-direction:column}
@@ -1112,17 +959,6 @@ body::before{
 .snip-row:focus-visible{outline:2px solid var(--accent-d);outline-offset:-2px}
 a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radius:2px}
 </style>
-<!-- Microsoft Clarity -->
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "x1uudieetp");
-</script>
-<!-- Vercel Analytics -->
-<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
-<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 <a href="#hello" style="
@@ -1161,7 +997,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
   <div class="topbar-right">
 
     <!-- Resume -->
-    <a class="btn btn-resume" id="btnResume" href="https://drive.google.com/file/d/1kflSsk7C7KdIAf9MSk8i0qDHDP_skxz9/view?usp=sharing" target="_blank" onclick="handleBtn(this,'Opened ↗')">
+    <a class="btn btn-resume" id="btnResume" href="resume.pdf" target="_blank" onclick="handleBtn(this,'Opened ↗')">
       <span class="btn-label">Resume</span>
       <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 13V19C18 19.5304 17.7893 20.0391 17.4142 20.4142C17.0391 20.7893 16.5304 21 16 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V8C3 7.46957 3.21071 6.96086 3.58579 6.58579C3.96086 6.21071 4.46957 6 5 6H11M21 9V3H15M21 3L10 14"/>
@@ -1188,7 +1024,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
       </svg>
     </button>
   </div>
-  <a class="btn btn-resume" id="btnResumeBar" href="https://drive.google.com/file/d/1kflSsk7C7KdIAf9MSk8i0qDHDP_skxz9/view?usp=sharing" target="_blank"
+  <a class="btn btn-resume" id="btnResumeBar" href="resume.pdf" target="_blank"
      onclick="document.getElementById('btnResume').classList.add('done');this.classList.add('done')">
     <div class="ico-wrap" style="width:14px;height:16px">
       <div class="i-rest">
@@ -1320,72 +1156,60 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
       <div class="cs-cards">
 
         <!-- 01 -->
-                <div class="cs-project" onclick="location.href='human-first-nlp.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='human-first-nlp.html'" style="cursor:pointer">
+                <div class="cs-project" onclick="location.href='tribe/tribe-case-study-final.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='tribe/tribe-case-study-final.html'" style="cursor:pointer">
           <div class="cs-schema" id="schema0">
     <div class="cs-schema-map">
-      <svg width="100%" height="100%" viewBox="0 0 580 224" fill="none" style="display:block;max-height:100%">
-        <defs>
-          <clipPath id="vgImgClip">
-            <rect x="127" y="88" width="80" height="128" rx="6" ry="6"/>
-          </clipPath>
-        </defs>
+      <svg width="100%" height="132" viewBox="0 0 580 132" fill="none">
 
-          <!-- Node 1: User Intent -->
-          <circle cx="50" cy="66" r="30" stroke="#6B5F9E" stroke-width="1.2" class="draw"/>
-          <text x="50" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#3A3045" text-anchor="middle" font-weight="500">user</text>
-          <text x="50" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#3A3045" text-anchor="middle" font-weight="500">intent</text>
+        <!-- Node 1: User Intent -->
+        <circle cx="50" cy="66" r="30" stroke="#6B5F9E" stroke-width="1.5" class="draw"/>
+        <text x="50" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="600">user</text>
+        <text x="50" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="600">intent</text>
 
-          <!-- 1 → 2 -->
-          <line x1="80" y1="66" x2="108" y2="66" stroke="#B8B3C0" stroke-width="1" class="draw"/>
+        <!-- 1 → 2 -->
+        <line x1="80" y1="66" x2="108" y2="66" stroke="#9E9AAA" stroke-width="1.2" class="draw"/>
 
-          <!-- Node 2: Validation Gap -->
-          <rect x="108" y="52" width="118" height="28" rx="5" stroke="#6B5F9E" stroke-width="1.5" fill="#F0ECF4" class="draw"/>
-          <text x="167" y="69" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#3A2E6A" text-anchor="middle" font-weight="500">validation gap</text>
+        <!-- Node 2: Validation Gap -->
+        <rect x="108" y="52" width="118" height="28" rx="5" stroke="#6B5F9E" stroke-width="2" fill="#F0ECF4" class="draw"/>
+        <text x="167" y="69" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A2E6A" text-anchor="middle" font-weight="700">validation gap</text>
 
-          <!-- Validation gap → UI mockup (downward connector) -->
-          <line x1="167" y1="80" x2="167" y2="84" stroke="#8C7E96" stroke-width="1" stroke-dasharray="4 3" class="draw"/>
-          <polygon points="163,82 167,88 171,82" fill="#8C7E96"/>
+        <!-- 2 → 3 + label -->
+        <line x1="226" y1="66" x2="290" y2="66" stroke="#9E9AAA" stroke-width="1.2" class="draw"/>
+        <text x="258" y="80" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#5A5268" text-anchor="middle">NLP engine</text>
 
-          <!-- UI mockup image embedded below validation gap -->
-          <image href="tribe/mockup.png" x="127" y="88" width="80" height="128" preserveAspectRatio="xMidYMid meet" clip-path="url(#vgImgClip)"/>
+        <!-- Node 3: Semantic Match -->
+        <circle cx="320" cy="66" r="30" stroke="#8C7E96" stroke-width="1.5" class="draw"/>
+        <text x="320" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="500">semantic</text>
+        <text x="320" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="500">match</text>
 
-          <!-- 2 → 3 + label -->
-          <line x1="226" y1="66" x2="290" y2="66" stroke="#B8B3C0" stroke-width="1" class="draw"/>
-          <text x="258" y="80" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#6B6A68" text-anchor="middle">NLP engine</text>
+        <!-- 3 → 4 + label -->
+        <line x1="350" y1="66" x2="412" y2="66" stroke="#9E9AAA" stroke-width="1.2" class="draw"/>
+        <text x="381" y="80" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#5A5268" text-anchor="middle">prog. disclosure</text>
 
-          <!-- Node 3: Semantic Match -->
-          <circle cx="320" cy="66" r="30" stroke="#8C7E96" stroke-width="1.2" class="draw"/>
-          <text x="320" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#3A3045" text-anchor="middle" font-weight="500">semantic</text>
-          <text x="320" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#3A3045" text-anchor="middle" font-weight="500">match</text>
+        <!-- Node 4: Anon. Reveal (dashed) -->
+        <circle cx="440" cy="66" r="28" stroke="#9E9AAA" stroke-width="1.2" stroke-dasharray="4 3" class="draw"/>
+        <text x="440" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#6B6070" text-anchor="middle" font-weight="500">anon.</text>
+        <text x="440" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#6B6070" text-anchor="middle" font-weight="500">reveal</text>
 
-          <!-- 3 → 4 + label -->
-          <line x1="350" y1="66" x2="412" y2="66" stroke="#B8B3C0" stroke-width="1" class="draw"/>
-          <text x="381" y="80" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#6B6A68" text-anchor="middle">prog. disclosure</text>
+        <!-- 4 → 5 -->
+        <line x1="468" y1="66" x2="506" y2="66" stroke="#9E9AAA" stroke-width="1.2" class="draw"/>
 
-          <!-- Node 4: Anon. Reveal (dashed) -->
-          <circle cx="440" cy="66" r="28" stroke="#8C7E96" stroke-width="1.2" stroke-dasharray="4 3" class="draw"/>
-          <text x="440" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#3A3045" text-anchor="middle" font-weight="500">anon.</text>
-          <text x="440" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#3A3045" text-anchor="middle" font-weight="500">reveal</text>
+        <!-- Node 5: Meetup -->
+        <circle cx="530" cy="66" r="24" stroke="#8C7E96" stroke-width="1.5" class="draw"/>
+        <text x="530" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="500">meet</text>
+        <text x="530" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3045" text-anchor="middle" font-weight="500">up</text>
 
-          <!-- 4 → 5 -->
-          <line x1="468" y1="66" x2="506" y2="66" stroke="#B8B3C0" stroke-width="1" class="draw"/>
+        <!-- Evaluation Apprehension arc -->
+        <path d="M50,36 Q108,6 167,52" stroke="#6B5F9E" stroke-width="1" stroke-dasharray="3 2" fill="none" class="draw"/>
+        <text x="108" y="14" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#4A3F7A" text-anchor="middle" font-weight="500">evaluation apprehension</text>
 
-          <!-- Node 5: Meetup -->
-          <circle cx="530" cy="66" r="24" stroke="#8C7E96" stroke-width="1.2" class="draw"/>
-          <text x="530" y="63" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#3A3045" text-anchor="middle" font-weight="500">meet</text>
-          <text x="530" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#3A3045" text-anchor="middle" font-weight="500">up</text>
+        <!-- No-match branch -->
+        <line x1="320" y1="96" x2="320" y2="108" stroke="#9E9AAA" stroke-width="1" stroke-dasharray="3 2" class="draw"/>
+        <text x="320" y="121" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#5A5268" text-anchor="middle">no match</text>
 
-          <!-- Evaluation Apprehension arc -->
-          <path d="M50,36 Q108,6 167,52" stroke="#6B5F9E" stroke-width="1" stroke-dasharray="4 3" fill="none" class="draw"/>
-          <text x="108" y="14" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#5A4F7A" text-anchor="middle" font-weight="400">evaluation apprehension</text>
-
-          <!-- No-match branch -->
-          <line x1="320" y1="96" x2="320" y2="108" stroke="#B8B3C0" stroke-width="1" stroke-dasharray="4 3" class="draw"/>
-          <text x="320" y="121" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#6B6A68" text-anchor="middle">no match</text>
-
-          <!-- Safety exit branch -->
-          <line x1="440" y1="94" x2="440" y2="108" stroke="#B8B3C0" stroke-width="1" stroke-dasharray="4 3" class="draw"/>
-          <text x="440" y="121" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#6B6A68" text-anchor="middle">safety exit</text>
+        <!-- Safety exit branch -->
+        <line x1="440" y1="94" x2="440" y2="108" stroke="#9E9AAA" stroke-width="1" stroke-dasharray="3 2" class="draw"/>
+        <text x="440" y="121" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#5A5268" text-anchor="middle">safety exit</text>
 
       </svg>
     </div>
@@ -1397,134 +1221,111 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
             <div class="cs-title">What do you want to do today?</div>
             <div class="cs-foot">
               <span class="cs-tag">MVP</span><span class="cs-tag">Product Design</span><span class="cs-tag">Human-AI Interaction</span>
-              <a class="cs-link" href="human-first-nlp.html">Open case study ↗</a>
+              <a class="cs-link" href="tribe/tribe-case-study-final.html">Open case study ↗</a>
             </div>
           </div>
         </div>
         </div>
 
         <!-- 02 -->
-                <div class="cs-project" style="cursor:default;position:relative">
-          <div class="cs-wip-badges">
-            <span class="cs-wip-badge">In progress</span>
-            <span class="cs-wip-badge cs-wip-badge--survey">Survey re-opened</span>
-          </div>
+                <div class="cs-project" onclick="location.href='case-study-guardrail.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='case-study-guardrail.html'" style="cursor:pointer">
           <div class="cs-schema" id="schema1">
     <div class="cs-schema-map">
-      <svg width="100%" viewBox="0 0 520 78" fill="none" style="display:block;height:100%">
-              <circle cx="32" cy="39" r="20" stroke="#8C7E96" stroke-width="1.2" class="draw"/>
-              <circle cx="32" cy="39" r="9" stroke="#8C7E96" stroke-width="1" stroke-dasharray="4 3" class="draw"/>
-              <line x1="52" y1="39" x2="96" y2="39" stroke="#B8B3C0" stroke-width="1" class="draw"/>
-              <polygon points="93,35 101,39 93,43" fill="#B8B3C0"/>
-              <rect x="101" y="26" width="62" height="26" rx="5" stroke="#6B5F9E" stroke-width="1.5" class="draw"/>
-              <text x="132" y="41" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#3A3045" text-anchor="middle" font-weight="500">AI system</text>
-              <line x1="163" y1="39" x2="200" y2="24" stroke="#B8B3C0" stroke-width="1" class="draw"/>
-              <line x1="163" y1="39" x2="200" y2="54" stroke="#B8B3C0" stroke-width="1" class="draw"/>
-              <rect x="200" y="14" width="138" height="20" rx="4" stroke="#6B5F9E" stroke-width="1.5" class="draw"/>
-              <rect x="200" y="46" width="138" height="20" rx="4" stroke="#8C7E96" stroke-width="1.2" class="draw" opacity=".45"/>
-              <text x="269" y="26" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#3A2E6A" text-anchor="middle" font-weight="500">uncertain → guardrail fires</text>
-              <text x="269" y="58" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#6B6A68" text-anchor="middle">certain → no intervention</text>
-              <line x1="338" y1="24" x2="372" y2="24" stroke="#8C7E96" stroke-width="1" stroke-dasharray="4 3" class="draw"/>
-              <rect x="372" y="11" width="128" height="26" rx="5" stroke="#8C7E96" stroke-width="1.2" stroke-dasharray="4 3" class="draw"/>
-              <text x="436" y="22" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#6B6A68" text-anchor="middle">haptic + peripheral</text>
-              <text x="436" y="31" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#6B6A68" text-anchor="middle">signal to human</text>
-              <text x="32" y="70" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#6B6A68" text-anchor="middle">human</text>
-      </svg>
+      <svg width="100%" height="120" viewBox="0 0 520 78" fill="none">
+              <circle cx="32" cy="39" r="20" stroke="#8C7E96" stroke-width="1" class="draw"/>
+              <circle cx="32" cy="39" r="9" stroke="#8C7E96" stroke-width="1" stroke-dasharray="3 2" class="draw"/>
+              <line x1="52" y1="39" x2="96" y2="39" stroke="#C4C1BC" stroke-width="1" class="draw"/>
+              <polygon points="93,35 101,39 93,43" fill="#C4C1BC"/>
+              <rect x="101" y="26" width="62" height="26" rx="5" stroke="#1B1A18" stroke-width="1" class="draw"/>
+              <text x="132" y="41" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#8A8784" text-anchor="middle">AI system</text>
+              <line x1="163" y1="39" x2="200" y2="24" stroke="#C4C1BC" stroke-width="1" class="draw"/>
+              <line x1="163" y1="39" x2="200" y2="54" stroke="#C4C1BC" stroke-width="1" class="draw"/>
+              <rect x="200" y="14" width="138" height="20" rx="4" stroke="#8C7E96" stroke-width="1.2" class="draw"/>
+              <rect x="200" y="46" width="138" height="20" rx="4" stroke="#DEDAD5" stroke-width="1" class="draw"/>
+              <text x="269" y="26" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#8C7E96" text-anchor="middle">uncertain → guardrail fires</text>
+              <text x="269" y="58" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#C4C1BC" text-anchor="middle">certain → no intervention</text>
+              <line x1="338" y1="24" x2="372" y2="24" stroke="#8C7E96" stroke-width="1" stroke-dasharray="3 2" class="draw"/>
+              <rect x="372" y="11" width="128" height="26" rx="5" stroke="#8C7E96" stroke-width="1" stroke-dasharray="3 2" class="draw"/>
+              <text x="436" y="22" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#8C7E96" text-anchor="middle">haptic + peripheral</text>
+              <text x="436" y="31" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#8C7E96" text-anchor="middle">signal to human</text>
+              <text x="32" y="70" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#8A8784" text-anchor="middle">human</text>
+            </svg>
     </div>
     <div class="cs-schema-desc">A multi-modal sensory feedback system for LLMs — designed for the moment AI is uncertain but the human in the loop has no way of knowing.</div>
 </div>
           <div class="cs-card" id="cs1" style="scroll-margin-top:80px">
             <div class="cs-body">
-            <div class="cs-wip-badges cs-wip-badges--inline">
-              <span class="cs-wip-badge">In progress</span>
-              <span class="cs-wip-badge cs-wip-badge--survey">Survey re-opened</span>
-            </div>
             <div class="cs-num">Multi-modal Feedback Design · LLM Uncertainty</div>
             <div class="cs-title">When AI is most uncertain, humans are least equipped to notice</div>
             <div class="cs-foot">
-              <span class="cs-tag">Human Factors</span><span class="cs-tag">Human-AI Interaction</span>
-              <a class="cs-link" href="https://docs.google.com/forms/d/e/1FAIpQLScUGaVmknaF3fdoSA8XJl7O3H1-aps5p4rMU6ZrJ7tLUl--fQ/viewform?usp=dialog" target="_blank" rel="noopener" onclick="event.stopPropagation()">Open research survey ↗</a>
+              <span class="cs-tag-wip">In progress</span><span class="cs-tag">Human Factors</span><span class="cs-tag">Human-AI Interaction</span>
+              <a class="cs-link" href="case-study-guardrail.html">Open case study ↗</a>
             </div>
           </div>
         </div>
         </div>
 
         <!-- 03 -->
-                <div class="cs-project" onclick="location.href='mindure-dashboard-research.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='mindure-dashboard-research.html'" style="cursor:pointer">
+                <div class="cs-project" onclick="location.href='case-study-mindure-v3.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='case-study-mindure-v3.html'" style="cursor:pointer">
           <div class="cs-schema" id="schema2">
-    <div class="cs-schema-inner">
-      <div class="cs-schema-map-wrap">
-        <svg width="100%" height="120" viewBox="0 0 520 78" fill="none">
-                <line x1="16" y1="62" x2="504" y2="62" stroke="#B8B3C0" stroke-width="1" class="draw"/>
-                <path d="M16 62 C60 62 70 40 110 40 C138 40 152 54 186 54 C216 54 230 26 275 18 C310 12 350 12 400 12 C440 12 468 12 504 12" stroke="#6B5F9E" stroke-width="1.5" fill="none" class="draw"/>
-                <line x1="110" y1="40" x2="110" y2="62" stroke="#B8B3C0" stroke-width="1" stroke-dasharray="4 3"/>
-                <line x1="275" y1="18" x2="275" y2="62" stroke="#8C7E96" stroke-width="1" stroke-dasharray="4 3"/>
-                <rect x="78" y="28" width="64" height="13" rx="3" fill="#F2EFE8" stroke="#B8B3C0" stroke-width="1"/>
-                <text x="110" y="36" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#6B6A68" text-anchor="middle">anxiety triggers</text>
-                <rect x="241" y="6" width="68" height="13" rx="3" fill="#F0ECF4" stroke="#6B5F9E" stroke-width="1.2"/>
-                <text x="275" y="14" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#3A2E6A" text-anchor="middle" font-weight="500">peak cognitive load</text>
-                <text x="410" y="8" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#8C7E96" text-anchor="middle" font-weight="500">window closes</text>
-                <text x="260" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#6B6A68" text-anchor="middle">attentional window narrows as fear and uncertainty compound</text>
-                <line x1="410" y1="12" x2="510" y2="12" stroke="#8C7E96" stroke-width="1" stroke-dasharray="4 3" class="draw"/>
-                <polygon points="504,9 510,12 504,15" fill="#8C7E96"/>
-              </svg>
-      </div>
-      <div class="cs-schema-ui">
-        <img src="Mindure/workcard_casestudy1_thumbnail_nobackground.png" alt="">
-      </div>
+    <div class="cs-schema-map">
+      <svg width="100%" height="120" viewBox="0 0 520 78" fill="none">
+              <line x1="16" y1="62" x2="504" y2="62" stroke="#DEDAD5" stroke-width="1" class="draw"/>
+              <path d="M16 62 C60 62 70 40 110 40 C138 40 152 54 186 54 C216 54 230 26 275 18 C310 12 350 12 400 12 C440 12 468 12 504 12" stroke="#8C7E96" stroke-width="1.5" fill="none" class="draw"/>
+              <line x1="110" y1="40" x2="110" y2="62" stroke="#DEDAD5" stroke-width=".5" stroke-dasharray="3 2"/>
+              <line x1="275" y1="18" x2="275" y2="62" stroke="#8C7E96" stroke-width="1" stroke-dasharray="3 2"/>
+              <rect x="78" y="28" width="64" height="13" rx="3" fill="#F2EFE8" stroke="#DEDAD5" stroke-width=".5"/>
+              <text x="110" y="36" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#8A8784" text-anchor="middle">anxiety triggers</text>
+              <rect x="241" y="6" width="68" height="13" rx="3" fill="#F0ECF4" stroke="#8C7E96" stroke-width=".8"/>
+              <text x="275" y="14" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#5A4F63" text-anchor="middle">peak cognitive load</text>
+              <text x="410" y="8" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#8C7E96" text-anchor="middle">window closes</text>
+              <text x="260" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#8A8784" text-anchor="middle">attentional window narrows as fear and uncertainty compound</text>
+            </svg>
     </div>
     <div class="cs-schema-desc">Researching the multi-faceted complexity of automation anxiety and future career-blindedness — and what it actually costs people when the system speaks at the wrong moment.</div>
 </div>
           <div class="cs-card" id="cs2" style="scroll-margin-top:80px">
             <div class="cs-body">
             <div class="cs-num">Career Anxiety Research · Dashboard Design</div>
-            <div class="cs-title">Built to calm the fear. Realised the data was the threat, not the answer.</div>
+            <div class="cs-title">Built to calm the fear. Found out why that was the wrong goal.</div>
             <div class="cs-foot">
               <span class="cs-tag">Research prototype</span><span class="cs-tag">Human Factors</span><span class="cs-tag">Human-AI Interaction</span>
-              <a class="cs-link" href="mindure-dashboard-research.html">Open case study ↗</a>
+              <a class="cs-link" href="case-study-mindure-v3.html">Open case study ↗</a>
             </div>
           </div>
         </div>
         </div>
 
         <!-- 04 -->
-                <div class="cs-project" onclick="location.href='ness/ness-creative-therapy.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='ness/ness-creative-therapy.html'" style="cursor:pointer">
+                <div class="cs-project" onclick="location.href='case-study-therapy.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='case-study-therapy.html'" style="cursor:pointer">
           <div class="cs-schema" id="schema3">
     <div class="cs-schema-inner">
       <div class="cs-schema-map-wrap">
-        <svg width="100%" height="120" viewBox="0 0 520 84" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- baseline axis -->
-  <line x1="8" y1="63" x2="512" y2="63" stroke="#C8C4D0" stroke-width="0.8" opacity=".5"/>
-  <!-- engagement curve: rises from left, plateau inside window, drops right -->
-  <path d="M0 61 C40 61 90 27 148 26 C185 25 230 24 260 24 C290 24 335 25 372 26 C430 27 480 61 520 61" stroke="#C8C4D0" stroke-width="1.5" fill="none"/>
-  <!-- lavender intervention window -->
-  <rect x="148" y="13" width="224" height="52" rx="3" fill="#EAE8F4" opacity=".6"/>
-  <!-- dashed box around window -->
-  <line x1="148" y1="13" x2="372" y2="13" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="4 3" opacity=".6"/>
-  <line x1="148" y1="65" x2="372" y2="65" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="4 3" opacity=".5"/>
-  <line x1="148" y1="9"  x2="148" y2="67" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="4 3" opacity=".6"/>
-  <line x1="372" y1="9"  x2="372" y2="67" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="4 3" opacity=".6"/>
-  <!-- bracket: "canvas holds the person here" -->
-  <line x1="150" y1="8" x2="370" y2="8" stroke="#4A4272" stroke-width="0.8" opacity=".6"/>
-  <line x1="150" y1="6" x2="150" y2="10" stroke="#4A4272" stroke-width="0.8" opacity=".6"/>
-  <line x1="370" y1="6" x2="370" y2="10" stroke="#4A4272" stroke-width="0.8" opacity=".6"/>
-  <text x="260" y="6" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#4A4272" text-anchor="middle" font-weight="500">canvas holds the person here</text>
-  <!-- purple dot at curve peak -->
-  <circle cx="260" cy="24" r="3.5" fill="#6B5F9E"/>
-  <!-- dashed drop line from dot to pill -->
-  <line x1="260" y1="28" x2="260" y2="40" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="3 2" opacity=".7"/>
-  <!-- "Johnathan speaks here" outlined pill -->
-  <rect x="196" y="40" width="128" height="16" rx="8" fill="none" stroke="#6B5F9E" stroke-width="1.2"/>
-  <text x="260" y="51" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#4A4272" text-anchor="middle" font-weight="500">Johnathan speaks here</text>
-  <!-- left side labels -->
-  <text x="68" y="36" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#9B96A3" text-anchor="middle">defended</text>
-  <text x="68" y="46" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#B8B4C4" text-anchor="middle">no words yet</text>
-  <!-- right side labels -->
-  <text x="452" y="36" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#9B96A3" text-anchor="middle">disengaged</text>
-  <text x="452" y="46" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#B8B4C4" text-anchor="middle" text-decoration="line-through">window closed</text>
-  <!-- bottom axis label -->
-  <text x="260" y="77" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#B8B4C4" text-anchor="middle">time in session</text>
-</svg>
+        <svg width="100%" viewBox="0 0 420 128" fill="none" role="img">
+<title>Ness — the intervention window</title>
+<line x1="14" y1="94" x2="406" y2="94" stroke="#DEDAD5" stroke-width="1"/>
+<text x="210" y="112" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#9A9690">time in session</text>
+<rect x="110" y="22" width="180" height="72" fill="#EDE9F5" opacity="0.85"/>
+<line x1="110" y1="22" x2="290" y2="22" stroke="#7B6FAE" stroke-width="0.8" stroke-dasharray="3 2"/>
+<line x1="110" y1="94" x2="290" y2="94" stroke="#7B6FAE" stroke-width="0.8" stroke-dasharray="3 2"/>
+<line x1="110" y1="22" x2="110" y2="94" stroke="#7B6FAE" stroke-width="0.8" stroke-dasharray="3 2"/>
+<line x1="290" y1="22" x2="290" y2="94" stroke="#7B6FAE" stroke-width="0.8" stroke-dasharray="3 2"/>
+<text x="200" y="8" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="8" fill="#4A3F7A">canvas holds the person here</text>
+<line x1="110" y1="13" x2="290" y2="13" stroke="#7B6FAE" stroke-width="0.8"/>
+<line x1="110" y1="13" x2="110" y2="22" stroke="#7B6FAE" stroke-width="0.8"/>
+<line x1="290" y1="13" x2="290" y2="22" stroke="#7B6FAE" stroke-width="0.8"/>
+<path d="M14 91 C44 91 68 78 96 64 C110 57 122 38 148 31 C170 25 196 27 200 27 C204 27 230 25 252 31 C278 38 290 57 304 64 C332 78 356 91 386 91 L406 92" stroke="#BFBAB4" stroke-width="1.5" fill="none" class="draw"/>
+<rect x="14" y="54" width="78" height="28" rx="4" fill="#F2EFE8"/>
+<text x="53" y="64" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="8.5" font-weight="500" fill="#5A5856" dominant-baseline="central">defended</text>
+<text x="53" y="76" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="8.5" fill="#7A7774" dominant-baseline="central">no words yet</text>
+<rect x="293" y="54" width="90" height="28" rx="4" fill="#F2EFE8"/>
+<text x="338" y="64" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="8.5" font-weight="500" fill="#5A5856" dominant-baseline="central">disengaged</text>
+<text x="338" y="76" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="8.5" fill="#7A7774" dominant-baseline="central">window closed</text>
+<circle cx="200" cy="27" r="5" fill="#6B5F9E"/>
+<line x1="200" y1="32" x2="200" y2="94" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="2 2"/>
+<rect x="138" y="44" width="124" height="22" rx="4" fill="#6B5F9E"/>
+<text x="200" y="55" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="9" font-weight="500" fill="#FFFFFF" dominant-baseline="central">Johnathan speaks here</text>
+        </svg>
       </div>
       <div class="cs-schema-ui">
         <img src="ness/ness_thumbnail_no_background_casestudy2.png" alt="">
@@ -1534,11 +1335,11 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
 </div>
           <div class="cs-card" id="cs3" style="scroll-margin-top:80px">
             <div class="cs-body">
-            <div class="cs-num">Ness — Creative Therapy App</div>
-            <div class="cs-title">The making is the session. Words come after.</div>
+            <div class="cs-num">Therapy on Artboard with Real Time Guidance</div>
+            <div class="cs-title">Because not every emotion fits into words</div>
             <div class="cs-foot">
               <span class="cs-tag">Product Design</span><span class="cs-tag">UX/UI</span><span class="cs-tag">Branding</span>
-              <a class="cs-link" href="ness/ness-creative-therapy.html">Open case study ↗</a>
+              <a class="cs-link" href="case-study-therapy.html">Open case study ↗</a>
             </div>
           </div>
         </div>
@@ -1568,7 +1369,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
           </div>
           <div class="snip-expand" id="se0"><div class="snip-expand-inner">
             <p class="snip-insight">Three design variants resolving the same manufacturing constraints differently — logo clearance, hole radius, corner tolerance. Proof that design decisions have physical consequences.</p>
-            <div class="snip-img-grid snip-img-carousel">
+            <div class="snip-img-grid">
               <img src="snippets_leica__technical_drawing_1.png" alt="Leica variant 1" onclick="openImg(this.src)">
               <img src="snippets_leica__technical_drawing_2.png" alt="Leica variant 2" onclick="openImg(this.src)">
               <img src="snippets_leica__technical_drawing_3.png" alt="Leica variant 3" onclick="openImg(this.src)">
@@ -1774,12 +1575,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
           <strong>Open to opportunities</strong>
           <span>Available for full-time roles · Remote or relocation</span>
         </div>
-        <button class="btn btn-email" id="btnEmail2" onclick="doEmail()">
-          <span class="btn-label">Email me</span>
-          <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>
-        </button>
+        <button class="btn btn-email" onclick="doEmail()">Email me</button>
       </div>
 
     </div>
@@ -1819,7 +1615,7 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
   <div style="display:flex;align-items:center;gap:20px">
     <a href="mailto:orsigorcz@gmail.com" id="footerEmail" style="font-size:13px;color:var(--text-s);text-decoration:none;transition:color .2s" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text-s)'" onclick="copyEmail(event,this)">orsigorcz@gmail.com</a>
     <a href="https://www.linkedin.com/in/orsolya-gorcz-b0783a212/" target="_blank" style="font-size:13px;color:var(--text-s);text-decoration:none;transition:color .2s" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text-s)'">LinkedIn</a>
-    <a href="https://drive.google.com/file/d/1kflSsk7C7KdIAf9MSk8i0qDHDP_skxz9/view?usp=sharing" target="_blank" style="font-size:13px;color:var(--text-s);text-decoration:none;transition:color .2s" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text-s)'">Resume</a>
+    <a href="resume.pdf" target="_blank" style="font-size:13px;color:var(--text-s);text-decoration:none;transition:color .2s" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text-s)'">Resume</a>
     <span style="font-size:13px;color:var(--text-m)">© 2026</span>
   </div>
 </footer>
@@ -2090,22 +1886,21 @@ function copyEmail(e,el){
 }
 function doEmail(){
   navigator.clipboard.writeText('orsigorcz@gmail.com').catch(()=>{window.open('mailto:orsigorcz@gmail.com','_blank');});
-  [$('btnEmail'),$('btnEmail2')].forEach(b=>{
-    if(b&&!b.classList.contains('done')){
-      setTimeout(()=>{
-        b.classList.add('done');
-        const lbl=b.querySelector('.btn-label');
-        if(lbl)lbl.textContent='Copied ✓';
-      },400);
-    }
-  });
+  const b=$('btnEmail');
+  if(b&&!b.classList.contains('done')){
+    setTimeout(()=>{
+      b.classList.add('done');
+      const lbl=b.querySelector('.btn-label');
+      if(lbl)lbl.textContent='Copied ✓';
+    },400);
+  }
 }
 const lbImages=[
-  {src:'about_me_ducks.jpg',caption:'How I guide user\'s attention'},
-  {src:'about_me_ha_giang_lookout.jpg',caption:'Zooming out to see the big picture.'},
-  {src:'about_me_image_2.png',caption:'How I face a complex design challenge'},
-  {src:'about_me_image_3.png',caption:'When the brief finally clicks and everyone\'s looking the same direction'},
-  {src:'about_me_terrain.jpeg',caption:'Mapping out the problem before I touch it.'}
+  {src:'public/about_me_ducks.jpg',caption:'How I guide user\'s attention'},
+  {src:'public/about_me_ha_giang_lookout.jpg',caption:'Zooming out to see the big picture.'},
+  {src:'public/about_me_image_2.PNG',caption:'How I face a complex design challenge'},
+  {src:'public/about_me_image_3.PNG',caption:'When the brief finally clicks and everyone\'s looking the same direction'},
+  {src:'public/about_me_terrain.jpeg',caption:'Mapping out the problem before I touch it.'}
 ];
 let lbIdx=0;
 function openLb(idx){
@@ -2144,7 +1939,6 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft')lbNav(-1);
   if(e.key==='ArrowRight')lbNav(1);
 });
-// schema-ui thumbnails are part of the schematic — not openable fullscreen
 </script>
 
 <!-- ══ FIXED CORNER BUTTONS — bottom right ══ -->
@@ -2162,12 +1956,7 @@ document.addEventListener('keydown',e=>{
         <path d="M19.07 4.93C20.94 6.8 22 9.35 22 12C22 14.65 20.94 17.2 19.07 19.07M15.54 8.46C16.48 9.4 17 10.67 17 12C17 13.32 16.48 14.59 15.54 15.54M11 5L6 9H2V15H6L11 19V5Z"/>
       </svg>
     </span>
-    <span class="focus-label">NOISE FOR FOCUS</span>
-    <span class="focus-vol" id="focusVol" onclick="event.stopPropagation()">
-      <input type="range" id="focusVolSlider" min="0" max="100" value="40" step="1"
-        oninput="setFocusVol(this.value)"
-        style="width:64px;height:3px;accent-color:currentColor;cursor:pointer;vertical-align:middle">
-    </span>
+    NOISE FOR FOCUS
   </button>
 
   <!-- A11y trigger -->
@@ -2196,12 +1985,6 @@ document.addEventListener('keydown',e=>{
     <div class="a11y-row">
       <span class="a11y-lbl">Reduce motion</span>
       <div class="a11y-toggle" id="rmToggle" onclick="toggleRM()"><div class="a11y-dot"></div></div>
-    </div>
-    <div class="a11y-row" id="focusRow">
-      <span class="a11y-lbl">Focus noise</span>
-      <button onclick="toggleFocus()" aria-label="Toggle focus noise" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--text-c);display:flex;align-items:center;border-radius:6px;transition:color .2s" id="btnFocusPanel">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 9L17 15M17 9L23 15M11 5L6 9H2V15H6L11 19V5Z"/></svg>
-      </button>
     </div>
     <div class="a11y-note">Respects your system preferences by default.</div>
   </div>
@@ -2232,47 +2015,6 @@ document.addEventListener('keydown',e=>{
 }
 #btnFocus.active .focus-icon-off{display:none!important}
 #btnFocus.active .focus-icon-on{display:flex!important}
-/* volume slider — only visible when active + hovered */
-.focus-vol{
-  display:flex;align-items:center;
-  max-width:0;overflow:hidden;opacity:0;
-  transition:max-width .3s var(--ease),opacity .25s var(--ease);
-  pointer-events:none;
-}
-#btnFocus.active:hover .focus-vol{
-  max-width:80px;opacity:1;pointer-events:all;
-}
-/* purple slider track + circle thumb */
-#focusVolSlider{
-  -webkit-appearance:none;appearance:none;
-  width:64px;height:3px;border-radius:2px;
-  background:rgba(107,95,158,.3);
-  cursor:pointer;outline:none;border:none;
-}
-#focusVolSlider::-webkit-slider-thumb{
-  -webkit-appearance:none;appearance:none;
-  width:14px;height:14px;border-radius:50%;
-  background:var(--accent);
-  cursor:grab;
-  box-shadow:0 1px 4px rgba(107,95,158,.45);
-  transition:transform .15s var(--ease),box-shadow .15s;
-}
-#focusVolSlider::-moz-range-thumb{
-  width:14px;height:14px;border-radius:50%;border:none;
-  background:var(--accent);
-  cursor:grab;
-  box-shadow:0 1px 4px rgba(107,95,158,.45);
-}
-#focusVolSlider::-webkit-slider-thumb:hover,
-#focusVolSlider::-webkit-slider-thumb:active{
-  transform:scale(1.2);
-  box-shadow:0 2px 8px rgba(107,95,158,.6);
-  cursor:grabbing;
-}
-#focusVolSlider::-webkit-slider-runnable-track{
-  height:3px;border-radius:2px;
-  background:linear-gradient(to right, var(--accent) calc(var(--vol,40)*1%), rgba(107,95,158,.25) calc(var(--vol,40)*1%));
-}
 </style>
 <script>
 (function(){
@@ -2294,7 +2036,6 @@ document.addEventListener('keydown',e=>{
 
   window.toggleFocus = function(){
     const btn = document.getElementById('btnFocus');
-    const slider = document.getElementById('focusVolSlider');
     if(!active){
       ctx = new (window.AudioContext || window.webkitAudioContext)();
       const buf = brownNoise(ctx);
@@ -2302,9 +2043,8 @@ document.addEventListener('keydown',e=>{
       source.buffer = buf;
       source.loop = true;
       gainNode = ctx.createGain();
-      const vol = slider ? (slider.value / 100) * 0.8 : 0.4;
       gainNode.gain.setValueAtTime(0, ctx.currentTime);
-      gainNode.gain.linearRampToValueAtTime(vol, ctx.currentTime + 1.2);
+      gainNode.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 1.2);
       source.connect(gainNode);
       gainNode.connect(ctx.destination);
       source.start();
@@ -2319,18 +2059,6 @@ document.addEventListener('keydown',e=>{
       active = false;
     }
   };
-
-  window.setFocusVol = function(val){
-    document.getElementById('focusVolSlider').style.setProperty('--vol', val);
-    if(gainNode && active){
-      gainNode.gain.setTargetAtTime((val / 100) * 0.8, ctx.currentTime, 0.05);
-    }
-  };
-  // Init track fill on load
-  document.addEventListener('DOMContentLoaded', function(){
-    var s = document.getElementById('focusVolSlider');
-    if(s) s.style.setProperty('--vol', s.value);
-  });
 })();
 </script>
 </body>
