@@ -313,6 +313,7 @@ body::before{
   background:var(--bg-deep);
   display:flex;flex-direction:column;justify-content:center;
   overflow:hidden;
+  position:relative;
 }
 .cs-schema-map{
   display:flex;align-items:center;justify-content:center;
@@ -323,9 +324,11 @@ body::before{
   max-width:100%;
 }
 .cs-schema-desc{
+  position:absolute;bottom:0;left:0;right:0;
   max-height:0;overflow:hidden;opacity:0;
   font-size:13px;color:var(--text-s);line-height:1.7;
   padding:0 48px;
+  background:var(--bg-deep);
   border-top:0px solid var(--border);
   transition:max-height .7s var(--ease),opacity .55s ease .15s,padding-top .7s var(--ease),padding-bottom .7s var(--ease),border-top-width .4s ease;
   box-sizing:border-box;
