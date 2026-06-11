@@ -1203,16 +1203,16 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
         <!-- Evaluation Apprehension arc -->
         <path d="M50,26 Q108,8 167,40" stroke="#6B5F9E" stroke-width="1" stroke-dasharray="3 2" fill="none" class="draw"/>
 
-        <!-- Dashed line from midpoint of 1→2 connector down to label -->
-        <line x1="92" y1="56" x2="92" y2="86" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="3 2"/>
+        <!-- Dashed line from 1→2 connector midpoint diagonally to centered group -->
+        <line x1="92" y1="56" x2="290" y2="86" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="3 2"/>
 
-        <!-- Evaluation apprehension label, centered at x=92 to align with line -->
-        <text x="92" y="97" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#4A3F7A" text-anchor="middle" font-weight="500">evaluation apprehension</text>
+        <!-- Evaluation apprehension label centered on card -->
+        <text x="290" y="97" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#4A3F7A" text-anchor="middle" font-weight="500">evaluation apprehension</text>
 
       </svg>
-      <!-- thumbnail centered under evaluation apprehension (x=92/580 = 15.86%) -->
-      <div style="position:relative;height:200px;width:100%">
-        <img src="tribe/mockup.png" alt="" style="position:absolute;left:23%;transform:translateX(-50%);height:200px;width:auto;display:block">
+      <!-- thumbnail grouped with label, centered on card -->
+      <div style="display:flex;justify-content:center">
+        <img src="tribe/mockup.png" alt="" style="height:200px;width:auto;display:block">
       </div>
     </div>
     <div class="cs-schema-desc">A human-first search engine using NLP — built to help people find what they actually need, without being consumed by the app parasitism that surrounds AI tools.</div>
