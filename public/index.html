@@ -1157,60 +1157,59 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
 
         <!-- 01 -->
                 <div class="cs-project" onclick="location.href='tribe/tribe-case-study-final.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='tribe/tribe-case-study-final.html'" style="cursor:pointer">
-          <div class="cs-schema" id="schema0">
-    <div class="cs-schema-inner">
-      <div class="cs-schema-map-wrap">
-      <svg width="100%" height="132" viewBox="0 0 580 110" fill="none">
+          <div class="cs-schema" id="schema0" style="height:auto">
+    <div style="display:flex;flex-direction:column;padding:20px 24px 12px;box-sizing:border-box;width:100%;gap:6px">
+      <svg width="100%" height="100" viewBox="0 0 580 100" fill="none">
 
         <!-- Node 1: User Intent -->
-        <circle cx="50" cy="55" r="30" stroke="#6B5F9E" stroke-width="1.5" class="draw"/>
-        <text x="50" y="52" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">user</text>
-        <text x="50" y="64" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">intent</text>
+        <circle cx="50" cy="50" r="30" stroke="#6B5F9E" stroke-width="1.5" class="draw"/>
+        <text x="50" y="47" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">user</text>
+        <text x="50" y="59" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">intent</text>
 
         <!-- 1 → 2 -->
-        <line x1="80" y1="55" x2="104" y2="55" stroke="#9E9AAA" stroke-width="1" class="draw"/>
+        <line x1="80" y1="50" x2="104" y2="50" stroke="#9E9AAA" stroke-width="1" class="draw"/>
 
         <!-- Node 2: Validation Gap -->
-        <rect x="104" y="39" width="126" height="32" rx="4" stroke="#6B5F9E" stroke-width="1.5" fill="#F0ECF4" class="draw"/>
-        <text x="167" y="55" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#4A3F7A" text-anchor="middle" font-weight="600" dominant-baseline="middle">validation gap</text>
+        <rect x="104" y="34" width="126" height="32" rx="4" stroke="#6B5F9E" stroke-width="1.5" fill="#F0ECF4" class="draw"/>
+        <text x="167" y="50" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#4A3F7A" text-anchor="middle" font-weight="600" dominant-baseline="middle">validation gap</text>
 
-        <!-- 2 → 3 + chip -->
-        <line x1="230" y1="55" x2="290" y2="55" stroke="#9E9AAA" stroke-width="1" class="draw"/>
-        <rect x="229" y="32" width="62" height="18" rx="4" fill="#F2EFE8"/>
-        <text x="260" y="41" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle" dominant-baseline="middle" font-weight="500">NLP engine</text>
+        <!-- 2 → 3 + text only -->
+        <line x1="230" y1="50" x2="290" y2="50" stroke="#9E9AAA" stroke-width="1" class="draw"/>
+        <text x="260" y="43" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#3A3836" text-anchor="middle" font-weight="500">NLP engine</text>
 
         <!-- Node 3: Semantic Match -->
-        <circle cx="320" cy="55" r="30" stroke="#8C7E96" stroke-width="1.5" class="draw"/>
-        <text x="320" y="52" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">semantic</text>
-        <text x="320" y="64" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">match</text>
+        <circle cx="320" cy="50" r="30" stroke="#8C7E96" stroke-width="1.5" class="draw"/>
+        <text x="320" y="47" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">semantic</text>
+        <text x="320" y="59" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">match</text>
 
-        <!-- 3 → 4 + chip -->
-        <line x1="350" y1="55" x2="412" y2="55" stroke="#9E9AAA" stroke-width="1" class="draw"/>
-        <rect x="343" y="32" width="76" height="18" rx="4" fill="#F2EFE8"/>
-        <text x="381" y="41" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle" dominant-baseline="middle" font-weight="500">prog. disclosure</text>
+        <!-- 3 → 4 + text only -->
+        <line x1="350" y1="50" x2="412" y2="50" stroke="#9E9AAA" stroke-width="1" class="draw"/>
+        <text x="381" y="43" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#3A3836" text-anchor="middle" font-weight="500">prog. disclosure</text>
 
         <!-- Node 4: Anon. Reveal (dashed = not yet reached) -->
-        <circle cx="440" cy="55" r="28" stroke="#9E9AAA" stroke-width="1.2" stroke-dasharray="4 3" class="draw"/>
-        <text x="440" y="52" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#8C7E96" text-anchor="middle" font-weight="500">anon.</text>
-        <text x="440" y="64" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#8C7E96" text-anchor="middle" font-weight="500">reveal</text>
+        <circle cx="440" cy="50" r="28" stroke="#9E9AAA" stroke-width="1.2" stroke-dasharray="4 3" class="draw"/>
+        <text x="440" y="47" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#8C7E96" text-anchor="middle" font-weight="500">anon.</text>
+        <text x="440" y="59" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#8C7E96" text-anchor="middle" font-weight="500">reveal</text>
 
         <!-- 4 → 5 -->
-        <line x1="468" y1="55" x2="506" y2="55" stroke="#9E9AAA" stroke-width="1" class="draw"/>
+        <line x1="468" y1="50" x2="506" y2="50" stroke="#9E9AAA" stroke-width="1" class="draw"/>
 
         <!-- Node 5: Meetup -->
-        <circle cx="530" cy="55" r="24" stroke="#8C7E96" stroke-width="1.5" class="draw"/>
-        <text x="530" y="52" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">meet</text>
-        <text x="530" y="64" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">up</text>
+        <circle cx="530" cy="50" r="24" stroke="#8C7E96" stroke-width="1.5" class="draw"/>
+        <text x="530" y="47" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">meet</text>
+        <text x="530" y="59" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">up</text>
 
-        <!-- Evaluation Apprehension arc -->
-        <path d="M50,25 Q108,2 167,39" stroke="#6B5F9E" stroke-width="1" stroke-dasharray="3 2" fill="none" class="draw"/>
-        <rect x="50" y="82" width="116" height="18" rx="4" fill="#F0ECF4"/>
-        <text x="108" y="91" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#4A3F7A" text-anchor="middle" font-weight="500" dominant-baseline="middle">evaluation apprehension</text>
+        <!-- Evaluation Apprehension arc + text only -->
+        <path d="M50,20 Q108,2 167,34" stroke="#6B5F9E" stroke-width="1" stroke-dasharray="3 2" fill="none" class="draw"/>
+        <text x="108" y="96" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#4A3F7A" text-anchor="middle" font-weight="500">evaluation apprehension</text>
 
       </svg>
-      </div>
-      <div class="cs-schema-ui">
-        <img src="tribe/mockup.png" alt="">
+      <!-- thumbnail aligned under validation gap (x=104–230 / 580 ≈ 18–40% of width) -->
+      <div style="display:flex">
+        <div style="flex:0 0 18%"></div>
+        <div class="cs-schema-ui" style="flex:0 0 22%;height:68px">
+          <img src="tribe/mockup.png" alt="">
+        </div>
       </div>
     </div>
     <div class="cs-schema-desc">A human-first search engine using NLP — built to help people find what they actually need, without being consumed by the app parasitism that surrounds AI tools.</div>
