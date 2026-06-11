@@ -1210,12 +1210,9 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
         <text x="92" y="97" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#4A3F7A" text-anchor="middle" font-weight="500">evaluation apprehension</text>
 
       </svg>
-      <!-- thumbnail centered under evaluation apprehension (x=92 / 580 ≈ 16%, thumbnail 22% wide → spacer 5%) -->
-      <div style="display:flex">
-        <div style="flex:0 0 5%"></div>
-        <div style="flex:0 0 56%;height:200px;overflow:hidden">
-          <img src="tribe/mockup.png" alt="" style="width:100%;height:100%;object-fit:contain;display:block">
-        </div>
+      <!-- thumbnail centered under evaluation apprehension (x=92/580 = 15.86%) -->
+      <div style="position:relative;height:200px;width:100%">
+        <img src="tribe/mockup.png" alt="" style="position:absolute;left:15.86%;transform:translateX(-50%);height:200px;width:auto;display:block">
       </div>
     </div>
     <div class="cs-schema-desc">A human-first search engine using NLP — built to help people find what they actually need, without being consumed by the app parasitism that surrounds AI tools.</div>
