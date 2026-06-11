@@ -1158,7 +1158,8 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
         <!-- 01 -->
                 <div class="cs-project" onclick="location.href='tribe/tribe-case-study-final.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='tribe/tribe-case-study-final.html'" style="cursor:pointer">
           <div class="cs-schema" id="schema0">
-    <div class="cs-schema-map">
+    <div class="cs-schema-inner">
+      <div class="cs-schema-map-wrap">
       <svg width="100%" height="132" viewBox="0 0 580 132" fill="none">
 
         <!-- Node 1: User Intent -->
@@ -1167,15 +1168,16 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
         <text x="50" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#3A3836" text-anchor="middle" font-weight="600">intent</text>
 
         <!-- 1 → 2 -->
-        <line x1="80" y1="66" x2="108" y2="66" stroke="#9E9AAA" stroke-width="1" class="draw"/>
+        <line x1="80" y1="66" x2="104" y2="66" stroke="#9E9AAA" stroke-width="1" class="draw"/>
 
         <!-- Node 2: Validation Gap -->
-        <rect x="108" y="52" width="118" height="28" rx="4" stroke="#6B5F9E" stroke-width="1.5" fill="#F0ECF4" class="draw"/>
-        <text x="167" y="69" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#4A3F7A" text-anchor="middle" font-weight="600">validation gap</text>
+        <rect x="104" y="50" width="126" height="32" rx="4" stroke="#6B5F9E" stroke-width="1.5" fill="#F0ECF4" class="draw"/>
+        <text x="167" y="66" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#4A3F7A" text-anchor="middle" font-weight="600" dominant-baseline="middle">validation gap</text>
 
         <!-- 2 → 3 + label -->
-        <line x1="226" y1="66" x2="290" y2="66" stroke="#9E9AAA" stroke-width="1" class="draw"/>
-        <text x="258" y="80" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle">NLP engine</text>
+        <line x1="230" y1="66" x2="290" y2="66" stroke="#9E9AAA" stroke-width="1" class="draw"/>
+        <rect x="229" y="71" width="62" height="16" rx="3" fill="#F2EFE8"/>
+        <text x="260" y="79" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle" dominant-baseline="middle">NLP engine</text>
 
         <!-- Node 3: Semantic Match -->
         <circle cx="320" cy="66" r="30" stroke="#8C7E96" stroke-width="1.5" class="draw"/>
@@ -1184,7 +1186,8 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
 
         <!-- 3 → 4 + label -->
         <line x1="350" y1="66" x2="412" y2="66" stroke="#9E9AAA" stroke-width="1" class="draw"/>
-        <text x="381" y="80" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle">prog. disclosure</text>
+        <rect x="343" y="71" width="76" height="16" rx="3" fill="#F2EFE8"/>
+        <text x="381" y="79" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle" dominant-baseline="middle">prog. disclosure</text>
 
         <!-- Node 4: Anon. Reveal (dashed) -->
         <circle cx="440" cy="66" r="28" stroke="#9E9AAA" stroke-width="1.2" stroke-dasharray="4 3" class="draw"/>
@@ -1201,17 +1204,24 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
 
         <!-- Evaluation Apprehension arc -->
         <path d="M50,36 Q108,6 167,52" stroke="#6B5F9E" stroke-width="1" stroke-dasharray="3 2" fill="none" class="draw"/>
-        <text x="108" y="14" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#4A3F7A" text-anchor="middle" font-weight="500">evaluation apprehension</text>
+        <rect x="50" y="5" width="116" height="17" rx="3" fill="#F0ECF4"/>
+        <text x="108" y="13" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#4A3F7A" text-anchor="middle" font-weight="500" dominant-baseline="middle">evaluation apprehension</text>
 
         <!-- No-match branch -->
         <line x1="320" y1="96" x2="320" y2="108" stroke="#9E9AAA" stroke-width="0.8" stroke-dasharray="3 2" class="draw"/>
-        <text x="320" y="121" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle">no match</text>
+        <rect x="289" y="110" width="62" height="16" rx="3" fill="#F2EFE8"/>
+        <text x="320" y="118" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle" dominant-baseline="middle">no match</text>
 
         <!-- Safety exit branch -->
         <line x1="440" y1="94" x2="440" y2="108" stroke="#9E9AAA" stroke-width="0.8" stroke-dasharray="3 2" class="draw"/>
-        <text x="440" y="121" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle">safety exit</text>
+        <rect x="409" y="110" width="62" height="16" rx="3" fill="#F2EFE8"/>
+        <text x="440" y="118" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle" dominant-baseline="middle">safety exit</text>
 
       </svg>
+      </div>
+      <div class="cs-schema-ui">
+        <img src="tribe/mockup.png" alt="">
+      </div>
     </div>
     <div class="cs-schema-desc">A human-first search engine using NLP — built to help people find what they actually need, without being consumed by the app parasitism that surrounds AI tools.</div>
 </div>
@@ -1231,24 +1241,25 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
                 <div class="cs-project" onclick="location.href='case-study-guardrail.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='case-study-guardrail.html'" style="cursor:pointer">
           <div class="cs-schema" id="schema1">
     <div class="cs-schema-map">
-      <svg width="100%" height="120" viewBox="0 0 520 78" fill="none">
+      <svg width="100%" height="120" viewBox="0 0 520 84" fill="none">
               <circle cx="32" cy="39" r="20" stroke="#8C7E96" stroke-width="1.5" class="draw"/>
               <circle cx="32" cy="39" r="9" stroke="#8C7E96" stroke-width="0.8" stroke-dasharray="3 2" class="draw"/>
               <line x1="52" y1="39" x2="96" y2="39" stroke="#C4C1BC" stroke-width="1" class="draw"/>
               <polygon points="93,35 101,39 93,43" fill="#C4C1BC"/>
-              <rect x="101" y="26" width="62" height="26" rx="4" stroke="#8C7E96" stroke-width="1.2" class="draw"/>
-              <text x="132" y="41" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle">AI system</text>
+              <rect x="101" y="24" width="62" height="30" rx="4" stroke="#8C7E96" stroke-width="1.2" class="draw"/>
+              <text x="132" y="39" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle" dominant-baseline="middle">AI system</text>
               <line x1="163" y1="39" x2="200" y2="24" stroke="#C4C1BC" stroke-width="1" class="draw"/>
-              <line x1="163" y1="39" x2="200" y2="54" stroke="#C4C1BC" stroke-width="1" class="draw"/>
-              <rect x="200" y="14" width="138" height="20" rx="4" stroke="#8C7E96" stroke-width="1.2" class="draw"/>
-              <rect x="200" y="46" width="138" height="20" rx="4" stroke="#DEDAD5" stroke-width="1" class="draw"/>
-              <text x="269" y="26" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#8C7E96" text-anchor="middle">uncertain → guardrail fires</text>
-              <text x="269" y="58" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#C4C1BC" text-anchor="middle">certain → no intervention</text>
+              <line x1="163" y1="39" x2="200" y2="56" stroke="#C4C1BC" stroke-width="1" class="draw"/>
+              <rect x="200" y="12" width="138" height="24" rx="4" stroke="#8C7E96" stroke-width="1.2" class="draw"/>
+              <rect x="200" y="44" width="138" height="24" rx="4" stroke="#DEDAD5" stroke-width="1" class="draw"/>
+              <text x="269" y="24" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#8C7E96" text-anchor="middle" dominant-baseline="middle">uncertain → guardrail fires</text>
+              <text x="269" y="56" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#C4C1BC" text-anchor="middle" dominant-baseline="middle">certain → no intervention</text>
               <line x1="338" y1="24" x2="372" y2="24" stroke="#8C7E96" stroke-width="0.8" stroke-dasharray="3 2" class="draw"/>
-              <rect x="372" y="11" width="128" height="26" rx="4" stroke="#8C7E96" stroke-width="1" stroke-dasharray="3 2" class="draw"/>
-              <text x="436" y="22" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#8C7E96" text-anchor="middle">haptic + peripheral</text>
-              <text x="436" y="31" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#8C7E96" text-anchor="middle">signal to human</text>
-              <text x="32" y="70" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle">human</text>
+              <rect x="372" y="9" width="128" height="30" rx="4" stroke="#8C7E96" stroke-width="1" stroke-dasharray="3 2" class="draw"/>
+              <text x="436" y="20" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#8C7E96" text-anchor="middle" dominant-baseline="middle">haptic + peripheral</text>
+              <text x="436" y="32" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#8C7E96" text-anchor="middle" dominant-baseline="middle">signal to human</text>
+              <rect x="10" y="66" width="44" height="16" rx="3" fill="#F2EFE8"/>
+              <text x="32" y="74" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle" dominant-baseline="middle">human</text>
             </svg>
     </div>
     <div class="cs-schema-desc">A multi-modal sensory feedback system for LLMs — designed for the moment AI is uncertain but the human in the loop has no way of knowing.</div>
@@ -1268,19 +1279,25 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
         <!-- 03 -->
                 <div class="cs-project" onclick="location.href='case-study-mindure-v3.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='case-study-mindure-v3.html'" style="cursor:pointer">
           <div class="cs-schema" id="schema2">
-    <div class="cs-schema-map">
-      <svg width="100%" height="120" viewBox="0 0 520 78" fill="none">
+    <div class="cs-schema-inner">
+      <div class="cs-schema-map-wrap">
+      <svg width="100%" height="120" viewBox="0 0 520 84" fill="none">
               <line x1="16" y1="62" x2="504" y2="62" stroke="#DEDAD5" stroke-width="1" class="draw"/>
               <path d="M16 62 C60 62 70 40 110 40 C138 40 152 54 186 54 C216 54 230 26 275 18 C310 12 350 12 400 12 C440 12 468 12 504 12" stroke="#8C7E96" stroke-width="1.5" fill="none" class="draw"/>
               <line x1="110" y1="40" x2="110" y2="62" stroke="#DEDAD5" stroke-width="0.8" stroke-dasharray="3 2"/>
               <line x1="275" y1="18" x2="275" y2="62" stroke="#8C7E96" stroke-width="0.8" stroke-dasharray="3 2"/>
-              <rect x="78" y="28" width="64" height="13" rx="3" fill="#F2EFE8" stroke="#DEDAD5" stroke-width="0.8"/>
-              <text x="110" y="36" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle">anxiety triggers</text>
-              <rect x="241" y="6" width="68" height="13" rx="3" fill="#F0ECF4" stroke="#8C7E96" stroke-width="0.8"/>
-              <text x="275" y="14" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#4A3F7A" text-anchor="middle">peak cognitive load</text>
-              <text x="410" y="8" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#8C7E96" text-anchor="middle">window closes</text>
-              <text x="260" y="75" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle">attentional window narrows as fear and uncertainty compound</text>
+              <rect x="74" y="26" width="72" height="18" rx="3" fill="#F2EFE8" stroke="#DEDAD5" stroke-width="0.8"/>
+              <text x="110" y="35" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle" dominant-baseline="middle">anxiety triggers</text>
+              <rect x="237" y="4" width="76" height="18" rx="3" fill="#F0ECF4" stroke="#8C7E96" stroke-width="0.8"/>
+              <text x="275" y="13" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#4A3F7A" text-anchor="middle" dominant-baseline="middle">peak cognitive load</text>
+              <rect x="371" y="2" width="78" height="16" rx="3" fill="#F2EFE8"/>
+              <text x="410" y="10" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#8C7E96" text-anchor="middle" dominant-baseline="middle">window closes</text>
+              <text x="260" y="76" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#5A5552" text-anchor="middle">attentional window narrows as fear and uncertainty compound</text>
             </svg>
+      </div>
+      <div class="cs-schema-ui">
+        <img src="Mindure/workcard_casestudy1_thumbnail_nobackground.png" alt="">
+      </div>
     </div>
     <div class="cs-schema-desc">Researching the multi-faceted complexity of automation anxiety and future career-blindedness — and what it actually costs people when the system speaks at the wrong moment.</div>
 </div>
