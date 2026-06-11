@@ -396,10 +396,12 @@ body::before{
   display:inline-flex;align-items:center;gap:3px;
   font-size:13px;font-weight:500;color:var(--accent-h);
   text-decoration:none;white-space:nowrap;
-  cursor:pointer;background:none;border:none;font-family:inherit;
-  transition:color var(--dur);
+  cursor:pointer;border:none;font-family:inherit;
+  background:transparent;border-radius:6px;
+  padding:8px 8px;margin:-8px -8px;
+  transition:color var(--dur),background var(--dur);
 }
-.cs-link:hover{color:var(--accent-d);background:#EDE9F5;border-radius:6px;padding:12px 8px;margin:-12px -8px}
+.cs-link:hover{color:var(--accent-d);background:#EDE9F5;}
 
 /* cs-card wrapper — holds schema + card together per project */
 .cs-project{margin-bottom:16px;display:flex;flex-direction:column;gap:8px}
