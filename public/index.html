@@ -1490,29 +1490,45 @@ a:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px;border-radi
         <!-- 04 -->
                 <div class="cs-project" onclick="location.href='ness/ness-creative-therapy.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')location.href='ness/ness-creative-therapy.html'" style="cursor:pointer">
           <div class="cs-schema" id="schema3">
-    <div class="cs-schema-map" style="height:260px;padding:24px 28px;overflow:hidden;display:flex;align-items:center">
-      <svg width="100%" viewBox="0 0 580 78" fill="none" style="display:block" xmlns="http://www.w3.org/2000/svg">
-  <!-- baseline -->
-  <line x1="10" y1="62" x2="570" y2="62" stroke="#B8B3C0" stroke-width="1" opacity=".35"/>
-  <!-- engagement curve: low on left (defended), rises into window, drops back (disengaged) -->
-  <path d="M10 58 C50 58 70 28 130 24 C175 21 205 22 270 23 C330 24 355 58 430 57 C480 56 530 57 570 57" stroke="#B8B3C0" stroke-width="1.5" fill="none" opacity=".55" class="draw"/>
-  <!-- intervention window lavender band -->
-  <rect x="128" y="14" width="144" height="50" rx="3" fill="#EAE8F4" opacity=".65"/>
-  <!-- window boundary dashes -->
-  <line x1="128" y1="8" x2="128" y2="67" stroke="#6B5F9E" stroke-width="1" stroke-dasharray="3 2"/>
-  <line x1="272" y1="8" x2="272" y2="67" stroke="#6B5F9E" stroke-width="1" stroke-dasharray="3 2"/>
-  <!-- window top label -->
-  <rect x="133" y="16" width="134" height="13" rx="2" fill="#6B5F9E" opacity=".1"/>
-  <text x="200" y="25.5" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#4A4272" text-anchor="middle" font-weight="500">canvas holds the person here</text>
-  <!-- Johnathan pill -->
-  <rect x="148" y="36" width="104" height="14" rx="7" fill="#6B5F9E"/>
-  <text x="200" y="46" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#fff" text-anchor="middle" font-weight="500">Johnathan speaks here</text>
-  <!-- accent dot on curve inside window -->
-  <circle cx="200" cy="23" r="3.5" fill="#6B5F9E"/>
-  <!-- edge labels -->
-  <text x="62" y="73" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#9B96A3" text-anchor="middle">defended</text>
-  <text x="490" y="73" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#9B96A3" text-anchor="middle">disengaged</text>
+    <div class="cs-schema-inner">
+      <div class="cs-schema-map-wrap">
+        <svg width="100%" height="120" viewBox="0 0 520 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- baseline axis -->
+  <line x1="8" y1="63" x2="512" y2="63" stroke="#C8C4D0" stroke-width="0.8" opacity=".5"/>
+  <!-- engagement curve: rises from left, plateau inside window, drops right -->
+  <path d="M0 61 C40 61 90 27 148 26 C185 25 230 24 260 24 C290 24 335 25 372 26 C430 27 480 61 520 61" stroke="#C8C4D0" stroke-width="1.5" fill="none"/>
+  <!-- lavender intervention window -->
+  <rect x="148" y="13" width="224" height="52" rx="3" fill="#EAE8F4" opacity=".6"/>
+  <!-- dashed box around window -->
+  <line x1="148" y1="13" x2="372" y2="13" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="4 3" opacity=".6"/>
+  <line x1="148" y1="65" x2="372" y2="65" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="4 3" opacity=".5"/>
+  <line x1="148" y1="9"  x2="148" y2="67" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="4 3" opacity=".6"/>
+  <line x1="372" y1="9"  x2="372" y2="67" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="4 3" opacity=".6"/>
+  <!-- bracket: "canvas holds the person here" -->
+  <line x1="150" y1="8" x2="370" y2="8" stroke="#4A4272" stroke-width="0.8" opacity=".6"/>
+  <line x1="150" y1="6" x2="150" y2="10" stroke="#4A4272" stroke-width="0.8" opacity=".6"/>
+  <line x1="370" y1="6" x2="370" y2="10" stroke="#4A4272" stroke-width="0.8" opacity=".6"/>
+  <text x="260" y="6" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#4A4272" text-anchor="middle" font-weight="500">canvas holds the person here</text>
+  <!-- purple dot at curve peak -->
+  <circle cx="260" cy="24" r="3.5" fill="#6B5F9E"/>
+  <!-- dashed drop line from dot to pill -->
+  <line x1="260" y1="28" x2="260" y2="40" stroke="#6B5F9E" stroke-width="0.8" stroke-dasharray="3 2" opacity=".7"/>
+  <!-- "Johnathan speaks here" outlined pill -->
+  <rect x="196" y="40" width="128" height="16" rx="8" fill="none" stroke="#6B5F9E" stroke-width="1.2"/>
+  <text x="260" y="51" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#4A4272" text-anchor="middle" font-weight="500">Johnathan speaks here</text>
+  <!-- left side labels -->
+  <text x="68" y="36" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#9B96A3" text-anchor="middle">defended</text>
+  <text x="68" y="46" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#B8B4C4" text-anchor="middle">no words yet</text>
+  <!-- right side labels -->
+  <text x="452" y="36" font-family="Plus Jakarta Sans,sans-serif" font-size="7.5" fill="#9B96A3" text-anchor="middle">disengaged</text>
+  <text x="452" y="46" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#B8B4C4" text-anchor="middle" text-decoration="line-through">window closed</text>
+  <!-- bottom axis label -->
+  <text x="260" y="77" font-family="Plus Jakarta Sans,sans-serif" font-size="7" fill="#B8B4C4" text-anchor="middle">time in session</text>
 </svg>
+      </div>
+      <div class="cs-schema-ui">
+        <img src="ness/ness_thumbnail_no_background_casestudy2.png" alt="">
+      </div>
     </div>
     <div class="cs-schema-desc">A creative therapy app for people who process emotionally through making, not talking. The AI guide observes without naming — and speaks only when the window is open.</div>
 </div>
