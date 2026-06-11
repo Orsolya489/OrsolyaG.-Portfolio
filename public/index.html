@@ -325,18 +325,18 @@ body::before{
 }
 .cs-schema-desc{
   position:absolute;bottom:0;left:0;right:0;
-  max-height:0;overflow:hidden;opacity:0;
+  padding:14px 48px 16px;
   font-size:13px;color:var(--text-s);line-height:1.7;
-  padding:0 48px;
   background:var(--bg-deep);
-  border-top:0px solid var(--border);
-  transition:max-height .7s var(--ease),opacity .55s ease .15s,padding-top .7s var(--ease),padding-bottom .7s var(--ease),border-top-width .4s ease;
+  border-top:1px solid var(--border);
   box-sizing:border-box;
+  transform:translateY(100%);
+  opacity:0;
+  transition:transform .55s var(--ease),opacity .4s ease;
 }
 .cs-project:hover .cs-schema-desc{
-  max-height:80px;opacity:1;
-  padding-top:14px;padding-bottom:16px;
-  border-top-width:1px;
+  transform:translateY(0);
+  opacity:1;
 }
 .cs-schema-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;padding:28px 24px;box-sizing:border-box}
 .cs-schema-inner .cs-schema-map{padding:0}
@@ -394,7 +394,7 @@ body::before{
 }
 .cs-link{
   display:inline-flex;align-items:center;gap:3px;
-  font-size:13px;font-weight:500;color:var(--accent-h);
+  font-size:13px;font-weight:500;line-height:1;color:var(--accent-h);
   text-decoration:none;white-space:nowrap;
   cursor:pointer;border:none;font-family:inherit;
   background:transparent;border-radius:6px;
