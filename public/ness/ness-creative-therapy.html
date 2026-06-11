@@ -72,7 +72,6 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
 .back-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;border:1px solid var(--border);font-family:inherit;font-size:14px;font-weight:500;color:var(--text-c);cursor:pointer;background:transparent;text-decoration:none;transition:background var(--dur),color var(--dur)}.back-btn:hover{background:var(--bg-alt);color:var(--text)}
 .cs-nav{display:flex;flex-direction:column;gap:2px}
 .cs-nav-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);margin-bottom:10px;padding-left:10px}
-.cs-nav-group{font-size:8px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--text-c);opacity:.5;padding-left:10px;margin-top:12px;margin-bottom:4px}
 .cs-nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;text-decoration:none;font-size:14px;color:var(--text-c);transition:background var(--dur),color var(--dur);position:relative}
 .cs-nav-item:hover{background:var(--bg-alt);color:var(--text)}
 .cs-nav-item.active{color:var(--accent-d);font-weight:500}
@@ -306,18 +305,16 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     All work
   </a>
-  <nav class="cs-nav" style="margin-top:16px">
+  <div class="cs-nav-label" style="margin-top:16px">In this study</div>
+  <nav class="cs-nav">
     <a href="#s-overview"   class="cs-nav-item active" data-s="s-overview">Overview</a>
-    <div class="cs-nav-group">Discover</div>
     <a href="#s-research"   class="cs-nav-item" data-s="s-research">Research</a>
     <a href="#s-hmw"        class="cs-nav-item" data-s="s-hmw">How might we</a>
-    <div class="cs-nav-group">Design</div>
     <a href="#s-checkin"    class="cs-nav-item" data-s="s-checkin">Check-in flow</a>
     <a href="#s-guide"      class="cs-nav-item" data-s="s-guide">AI guide</a>
     <a href="#s-iteration"  class="cs-nav-item" data-s="s-iteration">Iteration</a>
     <a href="#s-progress"   class="cs-nav-item" data-s="s-progress">Progress tracking</a>
     <a href="#s-ds"         class="cs-nav-item" data-s="s-ds">Design system</a>
-    <div class="cs-nav-group">Wrap</div>
     <a href="#s-reflection" class="cs-nav-item" data-s="s-reflection">Reflection</a>
   </nav>
   <div class="cs-meta-block">
