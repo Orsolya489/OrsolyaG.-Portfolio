@@ -51,7 +51,7 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
 .a11y-title{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text-c);margin-bottom:12px}
 .a11y-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.a11y-row:last-of-type{margin-bottom:0}
 .a11y-lbl{font-size:14px;color:var(--text-s)}
-.a11y-toggle{width:36px;height:20px;border-radius:10px;border:1px solid var(--border);background:var(--bg-alt);cursor:pointer;position:relative;transition:background .2s,border-color .2s}
+.a11y-toggle{width:36px;height:20px;border-radius:10px;background:var(--bg-alt);cursor:pointer;position:relative;transition:background .2s,border-color .2s}
 .a11y-toggle.on{background:var(--accent-d);border-color:var(--accent-h)}
 .a11y-dot{width:14px;height:14px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s var(--spring)}
 .a11y-toggle.on .a11y-dot{transform:translateX(16px)}
@@ -63,13 +63,13 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
 /* SIDEBAR */
 .cs-sidebar{position:fixed;left:0;top:var(--topbar);width:var(--sidebar);height:calc(100vh - var(--topbar));overflow-y:auto;overflow-x:hidden;padding:40px 24px 24px 32px;background:var(--bg);z-index:100;scrollbar-width:thin;scrollbar-color:var(--border) transparent;display:flex;flex-direction:column}
 .cs-sidebar::-webkit-scrollbar{width:3px}.cs-sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-.cs-next-case{margin-top:auto;text-decoration:none;display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg-lifted);transition:background var(--dur),border-color var(--dur)}
+.cs-next-case{margin-top:auto;text-decoration:none;display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:12px;background:var(--bg-lifted);transition:background var(--dur),border-color var(--dur)}
 .cs-next-case:hover{background:var(--bg-alt);border-color:var(--border-a)}
 .cs-next-case-label{font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-c)}
 .cs-next-case-title{font-size:14px;font-weight:500;color:var(--text);line-height:1.3}
 .cs-next-case-arrow{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
 .cs-next-case-arrow span{font-size:14px;color:var(--accent-d)}
-.back-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;border:1px solid var(--border);font-family:inherit;font-size:14px;font-weight:500;color:var(--text-c);cursor:pointer;background:transparent;text-decoration:none;transition:background var(--dur),color var(--dur)}.back-btn:hover{background:var(--bg-alt);color:var(--text)}
+.back-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;color:var(--text-c);cursor:pointer;background:transparent;text-decoration:none;transition:background var(--dur),color var(--dur)}.back-btn:hover{background:var(--bg-alt);color:var(--text)}
 .cs-nav{display:flex;flex-direction:column;gap:2px}
 .cs-nav-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-c);margin-bottom:10px;padding-left:10px}
 .cs-nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;text-decoration:none;font-size:14px;color:var(--text-c);transition:background var(--dur),color var(--dur);position:relative}
@@ -124,7 +124,7 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
 .cs-3col-text{font-size:13px;color:var(--text-c);line-height:1.6}
 
 /* FULL WIDTH IMAGE */
-.cs-full-img{width:100%;border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:0}
+.cs-full-img{width:100%;border-radius:10px;overflow:hidden;margin-bottom:0}
 .cs-full-img img{width:100%;height:auto;display:block}
 
 /* ACCORDION */
@@ -182,17 +182,17 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
 
 /* WIREFRAME COMPARISON */
 .cs-wire-pair{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
-.cs-wire-img{width:100%;border-radius:8px;border:1px solid var(--border);display:block}
+.cs-wire-img{width:100%;border-radius:8px;display:block}
 .cs-wire-annotation{font-size:13px;color:var(--text-s);font-style:italic;margin-top:10px;line-height:1.5;padding-left:2px;border-left:2px solid var(--accent)}
 .cs-wire-annotation::before{content:'↑ ';color:var(--accent-d);font-style:normal}
 
 /* TWO SCREENSHOT ROW */
 .cs-img-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px}
-.cs-img-pair img{width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)}
+.cs-img-pair img{width:100%;height:auto;display:block;border-radius:8px}
 
 /* THREE SCREENSHOT ROW */
 .cs-img-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
-.cs-img-trio img{width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)}
+.cs-img-trio img{width:100%;height:auto;display:block;border-radius:8px}
 
 /* PULL QUOTE */
 .cs-pullquote{padding:48px 0;text-align:center;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:40px 0}
@@ -200,7 +200,7 @@ body::before{content:'';position:fixed;inset:0;background-image:var(--grain);bac
 
 /* DESIGN SYSTEM 2-COL */
 .cs-ds-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px}
-.cs-ds-img{width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin-bottom:14px}
+.cs-ds-img{width:100%;border-radius:8px;display:block;margin-bottom:14px}
 .cs-ds-notes{font-size:13px;color:var(--text-s);line-height:1.7}
 .cs-ds-notes p{margin-bottom:4px}
 
@@ -336,7 +336,7 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
     </div>
     <h1 class="cs-title">The making is the session. Words come after.</h1>
     <p class="cs-subtitle">Ness — Creative Therapy App</p>
-    <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-top:40px">
+    <div style="width:100%;border-radius:12px;overflow:hidden;margin-top:40px">
       <img src="ness_hero_image.png" alt="Ness app hero — artboard interface with Johnathan AI guide" style="width:100%;height:auto;display:block">
     </div>
   </div>
@@ -362,10 +362,10 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
 
   <p class="cs-body-p">Most therapy apps ask you to describe how you feel. But some people can't. Not because they won't — because the words aren't there yet. Yet every tool assumes verbal clarity at the exact moment people have the least access to words.</p>
 
-  <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin:32px 0 24px">
+  <div style="width:100%;border-radius:12px;overflow:hidden;margin:32px 0 24px">
     <img src="ness_finalUI_landing_mockup_desktop.png" alt="Ness landing screen — desktop UI mockup showing the welcome interface" style="width:100%;height:auto;display:block">
   </div>
-  <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:72px">
+  <div style="width:100%;border-radius:12px;overflow:hidden;margin-bottom:72px">
     <img src="ness_user_retention_illustration_desktop.png" alt="User retention chart showing the gap between existing apps and Ness's engagement approach" style="width:100%;height:auto;display:block">
   </div>
 
@@ -483,7 +483,7 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
 
     <p class="cs-body-p">Johnathan observes pattern. He reflects without labelling. The person stays in control of what the observation means — or whether it means anything at all.</p>
 
-    <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-top:32px">
+    <div style="width:100%;border-radius:12px;overflow:hidden;margin-top:32px">
       <img src="ness_finalUI_artboard_mockup_desktop.png" alt="Final artboard UI — full desktop mockup showing the creative canvas with Johnathan's observation panel" style="width:100%;height:auto;display:block">
     </div>
   </section>
@@ -580,7 +580,7 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
       </div>
     </div>
 
-    <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-top:32px">
+    <div style="width:100%;border-radius:12px;overflow:hidden;margin-top:32px">
       <img src="ness_finalUI_test_mockup_desktop.png" alt="Final tested interface — the validated design after two rounds of usability testing" style="width:100%;height:auto;display:block">
     </div>
   </section>
@@ -596,7 +596,7 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
       <img src="desktop/Profile%20Creations.png" alt="Creations gallery" style="width:100%;height:auto;display:block;border-radius:8px">
     </div>
 
-    <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin:20px 0 24px">
+    <div style="width:100%;border-radius:12px;overflow:hidden;margin:20px 0 24px">
       <img src="ness_finalUI_profile_mockup_desktop.png" alt="Full profile view desktop mockup — mood arc, journal and Johnathan's weekly reflection in context" style="width:100%;height:auto;display:block">
     </div>
 
@@ -664,7 +664,7 @@ footer{border-top:1px solid var(--border);padding:32px;background:var(--bg);widt
   </section>
 
   <!-- BOTTOM BANNER -->
-  <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:0">
+  <div style="width:100%;border-radius:12px;overflow:hidden;margin-bottom:0">
     <img src="ness_bottom_banner.png" alt="Ness — create to heal" style="width:100%;height:auto;display:block">
   </div>
 
