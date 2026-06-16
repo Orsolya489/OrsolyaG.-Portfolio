@@ -595,7 +595,7 @@ body::before{
   .main{padding:0 16px 64px}
   .hello{padding:40px 0 64px}
   .hero-h{
-    font-size:clamp(22px,8vw,36px);
+    font-size:64px;
     letter-spacing:-.02em;
     line-height:1.15;
   }
@@ -604,14 +604,14 @@ body::before{
   /* topbar — hide resume label, keep icon */
   .btn-resume span{display:none}
   .btn-resume{padding:8px 10px}
-  .btn-email{padding:8px 12px}
+  .btn-email{padding:12px 24px}
   /* pills wrap naturally */
   .pills{gap:4px}
   .pill{font-size:13px;padding:4px 11px}
   /* toc */
-  
-  
-  
+
+
+
   /* project cards */
   .cs-schema{height:120px;padding:16px 20px}
   .cs-title{font-size:18px}
@@ -631,18 +631,18 @@ body::before{
   /* snip */
   .snip-title{font-size:13px}
   .snip-body{font-size:12px}
-  /* nav */
-  .nav-label{font-size:12px}
-  .nav-icon{width:12px;height:12px}
+  /* nav — responsive sizing */
+  .nav-label{font-size:11px}
+  .nav-item{padding:5px 3px;gap:2px;min-height:40px}
+  .nav-icon{width:18px;height:18px}
 }
 
 /* Very small — 375px */
 @media(max-width:400px){
-  .hero-h{font-size:22px}
+  .hero-h{font-size:clamp(48px,12vw,64px)}
   .cs-schema{height:100px;padding:12px 16px}
   .topbar{padding:0 14px}
-  .btn-email span{display:none}
-  .btn-email{padding:8px}
+  .btn-email{padding:10px 16px}
 }
 
 @media(prefers-reduced-motion:reduce){
