@@ -592,57 +592,66 @@ body::before{
 
 /* Mobile — compact everything */
 @media(max-width:600px){
-  .main{padding:0 16px 64px}
-  .hello{padding:40px 0 64px}
+  .main{padding:0 12px 72px}
+  .hello{padding:32px 0 48px}
   .hero-h{
-    font-size:64px;
+    font-size:clamp(48px,11vw,60px);
     letter-spacing:-.02em;
     line-height:1.15;
   }
-  .thesis{font-size:12px}
-  .sub{font-size:14px}
+  .thesis{font-size:11px}
+  .sub{font-size:12px}
   /* topbar — hide resume label, keep icon */
   .btn-resume span{display:none}
-  .btn-resume{padding:8px 10px}
-  .btn-email{padding:12px 24px}
+  .btn-resume{padding:8px 8px}
+  .btn-email{padding:10px 16px;font-size:12px}
   /* pills wrap naturally */
-  .pills{gap:4px}
-  .pill{font-size:13px;padding:4px 11px}
+  .pills{gap:3px}
+  .pill{font-size:12px;padding:3px 9px}
   /* toc */
 
 
 
   /* project cards */
-  .cs-schema{height:120px;padding:16px 20px}
-  .cs-title{font-size:18px}
-  .cs-hook{font-size:13px;margin-bottom:12px}
-  .cs-body{padding:14px 16px 14px}
-  .cs-card{margin:0 6px 6px}
-  .cs-foot{flex-wrap:wrap;gap:8px}
+  .cs-schema{height:120px;padding:14px 16px}
+  .cs-project{margin:0;overflow:hidden}
+  .cs-title{font-size:16px}
+  .cs-hook{font-size:12px;margin-bottom:10px}
+  .cs-body{padding:12px 14px 12px}
+  .cs-card{margin:0 0 8px;border-radius:10px}
+  .cs-foot{flex-wrap:wrap;gap:6px;row-gap:8px}
   /* section cards */
-  .sec-card{padding:16px;border-radius:12px}
-  .sec-ey{margin-bottom:12px}
+  .sec-card{padding:14px;border-radius:10px}
+  .sec-ey{margin-bottom:10px;font-size:12px}
   /* lens grid */
-  .lens-card{padding:12px 14px}
-  .lens-claim{font-size:12px}
+  .lens-card{padding:10px 12px}
+  .lens-claim{font-size:11px}
   /* about */
-  .about-p::first-letter{font-size:2.4em}
-  .hu{font-size:12px}
+  .about-p::first-letter{font-size:2em}
+  .hu{font-size:11px}
   /* snip */
-  .snip-title{font-size:13px}
-  .snip-body{font-size:12px}
+  .snip-title{font-size:12px}
+  .snip-body{font-size:11px}
   /* nav — responsive sizing */
-  .nav-label{font-size:11px}
-  .nav-item{padding:5px 3px;gap:2px;min-height:40px}
-  .nav-icon{width:18px;height:18px}
+  .nav-label{font-size:9px}
+  .nav-item{padding:4px 2px;gap:1px;min-height:36px}
+  .nav-icon{width:16px;height:16px}
+  .sidebar{padding:6px 4px max(12px,env(safe-area-inset-bottom))}
 }
 
 /* Very small — 375px */
 @media(max-width:400px){
-  .hero-h{font-size:clamp(48px,12vw,64px)}
-  .cs-schema{height:100px;padding:12px 16px}
-  .topbar{padding:0 14px}
-  .btn-email{padding:10px 16px}
+  .main{padding:0 10px 68px}
+  .hello{padding:24px 0 40px}
+  .hero-h{font-size:clamp(40px,13vw,54px)}
+  .cs-schema{height:100px;padding:12px 14px}
+  .topbar{padding:0 10px}
+  .btn-email{padding:9px 14px;font-size:11px}
+  .btn-resume{padding:6px 6px}
+  .nav-label{font-size:8px}
+  .nav-item{padding:3px 1px;gap:1px;min-height:34px}
+  .nav-icon{width:14px;height:14px}
+  .sidebar{padding:5px 3px max(10px,env(safe-area-inset-bottom))}
 }
 
 @media(prefers-reduced-motion:reduce){
