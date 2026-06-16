@@ -632,26 +632,30 @@ body::before{
   /* snip */
   .snip-title{font-size:12px}
   .snip-body{font-size:11px}
-  /* nav — responsive sizing */
+  /* header — compact */
+  .topbar{padding:0 10px}
+  .topbar-right{gap:12px}
+  /* footer/nav — responsive sizing */
   .nav-label{font-size:9px}
-  .nav-item{padding:4px 2px;gap:1px;min-height:36px}
+  .nav-item{padding:4px 2px;gap:1px;min-height:36px;font-size:11px}
   .nav-icon{width:16px;height:16px}
-  .sidebar{padding:6px 4px max(12px,env(safe-area-inset-bottom))}
+  .sidebar{padding:5px 3px max(10px,env(safe-area-inset-bottom));gap:2px}
 }
 
 /* Very small — 375px */
 @media(max-width:400px){
-  .main{padding:0 10px 68px}
-  .hello{padding:24px 0 40px}
+  .main{padding:0 8px 64px}
+  .hello{padding:20px 0 32px}
   .hero-h{font-size:clamp(40px,13vw,54px)}
-  .cs-schema{height:100px;padding:12px 14px}
-  .topbar{padding:0 10px}
-  .btn-email{padding:9px 14px;font-size:11px}
-  .btn-resume{padding:6px 6px}
-  .nav-label{font-size:8px}
-  .nav-item{padding:3px 1px;gap:1px;min-height:34px}
+  .cs-schema{height:100px;padding:12px 12px}
+  .topbar{padding:0 8px}
+  .topbar-right{gap:8px}
+  .btn-email{padding:9px 12px;font-size:10px}
+  .btn-resume{padding:6px 6px;font-size:10px}
+  .nav-label{font-size:7px}
+  .nav-item{padding:3px 1px;gap:0px;min-height:32px;font-size:10px}
   .nav-icon{width:14px;height:14px}
-  .sidebar{padding:5px 3px max(10px,env(safe-area-inset-bottom))}
+  .sidebar{padding:4px 2px max(8px,env(safe-area-inset-bottom));gap:1px}
 }
 
 @media(prefers-reduced-motion:reduce){
